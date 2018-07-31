@@ -72,7 +72,7 @@ class ReadXlsx(object):
         # 数字转字符串
 
         # 日期格式
-        self.time_fmt = "%Y-%m-%d"
+        self.time_fmt = "%Y-%m-%d" # YYYY-MM-DD
             # self.time_fmt = "%Y-%m"
 
         # self.excel = 'xlsx'
@@ -124,18 +124,29 @@ class ReadXlsx(object):
             # row_vals = [c.value for c in row]
             # print(row)
             for c in row:
+                # fill = c.fill
+                # fg_color = fill.start_color.rgb  # start_color fgColor
+                # if 'Values must be of type' in str(fg_color):
+                #     fg_color = '00000000'
+                # print(fg_color)
+                # bg_color = fill.end_color.rgb  # end_color bgColor
+                # print(bg_color)
+                # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
                 if c.data_type == "n" :
                     if c.number_format != "General" and is_date_format(c.number_format):
                         # print('number_format 日期',c.number_format,c.value)
                         if c.value is not None:
                             cell_value = c.value.strftime(self.time_fmt)
+                            # print(cell_value)
                         else:
                             cell_value = ''
                     else:
                         if c.value is not None:
                             cell_value = str(c.value)  # 数字转换为字符串
                         else:
-                            cell_value = 0
+                            cell_value = ''
+                elif c.data_type == "d" :
+                    cell_value = c.value.strftime(self.time_fmt)
                 else:
                     cell_value = c.value
                 row_vals.append(cell_value)
@@ -160,6 +171,7 @@ class ReadXlsx(object):
                 #     self.index = 0
                 return None
 
+        # 通过名字获取 sheet
         self.sheet = self.wb[self.sheet_names[self.index]]
 
         return self.index

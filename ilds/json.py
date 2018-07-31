@@ -38,7 +38,7 @@ def json_save(obj, path):
     else:
         try:
             with open(path, 'w', encoding='utf-8') as f:
-                json.dump(obj, f, ensure_ascii=False, indent=4)
+                json.dump(obj, f, ensure_ascii=False, indent=2)
             return True
         except Exception as e:
             print('json_save', e)

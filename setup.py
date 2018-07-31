@@ -1,7 +1,7 @@
 ﻿from setuptools import setup, find_packages  
 import os, sys
 
-version = '0.0.11'
+version = '0.1.2'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -39,7 +39,7 @@ pip --no-cache-dir install -U ilds
 
 
 # 使用 twine 上传到官方的pip服务器
-cd tools\lds
+cd tools\ilds
 python setup.py sdist bdist_wheel
 上传到PyPI:
 twine upload dist/*
@@ -92,7 +92,7 @@ setup(
     license = "GNU GPL 3",
 
     # 官网地址
-    url = "https://github.com/ldsxp/lds",
+    url = "https://github.com/ldsxp/ilds",
     # 程序的下载地址
     # download_url = "http://ldsxp.com",
     # 作者

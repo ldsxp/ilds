@@ -32,11 +32,7 @@ class ReadXlsx(object):
         """
         读取 Excel 文件的类
 
-        xlsx data_only=True # 不读取公式
-        xlsx read_only=True # 读取大文件的使用使用只读模式
-
-        xls_file = r"E:\my - 数据\资料\20180504 比较深圳导出数据\歌曲授权明细2018-4-15最新(数据库标准格式20180424）2.xlsx"
-        # xlsx = ReadExcel(xlsx_file, data_only=True) # data_only=True 的时候不读取公式 , index=10
+        xls_file = r"(数据库标准格式20180424）2.xlsx"
 
         xls = ReadXlsx(xls_file)
         # time_fmt = "%Y-%m"
@@ -180,8 +176,7 @@ def doc():
 
 if __name__ == "__main__":
     t1 = time()
-    xls_file = r"E:\my - 数据\资料\20180504 比较深圳导出数据\歌曲授权明细2018-4-15最新(数据库标准格式20180424）2.xlsx"
-    # xlsx = ReadExcel(xlsx_file, data_only=True) # data_only=True 的时候不读取公式 , index=10
+    xls_file = r"(数据库标准格式20180424）2.xlsx"
 
     xls = ReadXlsx(xls_file)
     # time_fmt = "%Y-%m"

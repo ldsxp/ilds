@@ -1,7 +1,7 @@
 ﻿from setuptools import setup, find_packages  
-import os, sys
+# import os, sys
 
-version = '0.1.3'
+version = '0.1.4'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -94,7 +94,7 @@ setup(
     # 官网地址
     url = "https://github.com/ldsxp/ilds",
     # 程序的下载地址
-    # download_url = "http://ldsxp.com",
+    download_url = "https://pypi.org/project/ilds",
     # 作者
     author = "lds",
     # 作者的邮箱地址

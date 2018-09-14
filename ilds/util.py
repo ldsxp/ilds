@@ -84,6 +84,43 @@ def get_kuohao_feijie(value):
             return value
 
 
+def xl_col_to_name(col_num, col_abs=False):
+    """
+    将零索引列单元格引用转换为字符串。
+
+    来自 ： xlsxwriter 中的 utility.py
+
+    Args:
+       col:     列 数字
+       col_abs: 用于使列绝对的可选标志。布尔。
+
+    Returns:
+        列样式字符串。
+
+    """
+    col_num += 1  # 改为 1-index.
+    col_str = ''
+    col_abs = '$' if col_abs else ''
+
+    while col_num:
+        # 提醒从 1 .. 26 设置序号
+        remainder = col_num % 26
+
+        if remainder == 0:
+            remainder = 26
+
+        # 将余数转换为字符。
+        col_letter = chr(ord('A') + remainder - 1)
+
+        # 从右到左累积列字母。
+        col_str = col_letter + col_str
+
+        # 获得下一个数量级
+        col_num = int((col_num - 1) / 26)
+
+    return col_abs + col_str
+
+
 def doc():
     """
     打印模块说明文档
@@ -94,6 +131,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=dict_val_to_key)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_to_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_kuohao_feijie)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=xl_col_to_name)
     print(doc_text)
 
 

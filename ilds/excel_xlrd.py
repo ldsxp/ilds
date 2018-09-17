@@ -164,6 +164,42 @@ class ReadXlsx(object):
         return self.index
 
 
+def xlrd_string(xlrdfloat):
+    """转换 excel 的浮点数到字符串"""
+    if xlrdfloat == int(xlrdfloat):  # 检查是不是整数:
+        s = str(int(xlrdfloat))
+    else:
+        s = str(xlrdfloat)
+    # s = str(cell.value)
+    # s = float(cell.value)
+    return s
+
+
+def gequ_re(gequ):
+    """ 统一歌曲名中的标点符号"""
+    try:
+        gequ = gequ.replace('	', ' ').replace('(', '（').replace(')', '）').replace('  ', ' ').replace('\n','')\
+            .replace('|','/').strip()
+        # .replace('/', ' ').replace('+', ' ')
+    except Exception as e:
+        if isinstance(gequ, float):
+            gequ = xlrd_string(gequ)
+        else:
+            print('问题：------------------- 歌名：%s -------------------' % (gequ))
+    return gequ
+
+
+def geshou_re(geshou):
+    """ 统一歌手名中的标点符号"""
+    geshou = geshou.replace('+', ' ').replace('/', ' ').replace('	', ' ').replace('(', '（').replace(
+        ')', '）').replace('&', ' ').replace('|', ' ').replace('•', '·') \
+        .replace('；', ' ').replace('  ', ' ').replace('\n','').strip()
+    if "（" in geshou:
+        return geshou
+    else:
+        return geshou.replace('、', ' ').replace('  ', ' ')
+
+
 def doc():
     """
     打印模块说明文档
@@ -171,6 +207,9 @@ def doc():
     doc_text = """"""
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ReadXlsx)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=xlrd_string)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=gequ_re)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=geshou_re)
 
     print(doc_text)
 

@@ -35,7 +35,9 @@ class ReadXlsx(object):
 
         # 例子
         xlsx_file = r"E:\my - 数据\其他\20180731 阿玲 参考\申请单G1.5(1)(1).xlsx"
-        # xlsx = ReadExcel(xlsx_file, data_only=True) # data_only=True 的时候不读取公式 , index=10
+        # data_only=True 的时候不读取公式 , index=10
+        # 读取大文件的时候添加 read_only=True
+        # xlsx = ReadExcel(xlsx_file, data_only=True)
 
         xlsx = ReadXlsx(xlsx_file)
         # time_fmt = "%Y-%m"
@@ -192,7 +194,9 @@ if __name__ == "__main__":
 
     # 例子
     xlsx_file = r"E:\my - 数据\其他\20180731 阿玲 参考\申请单G1.5(1)(1).xlsx"
-    # xlsx = ReadExcel(xlsx_file, data_only=True) # data_only=True 的时候不读取公式 , index=10
+    # data_only=True 的时候不读取公式 , index=10
+    # 读取大文件的时候添加 read_only=True
+    # xlsx = ReadExcel(xlsx_file, data_only=True)
 
     xlsx = ReadXlsx(xlsx_file)
     # time_fmt = "%Y-%m"

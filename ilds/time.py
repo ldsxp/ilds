@@ -8,10 +8,10 @@
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
-
+import re
 import time
 from time import strptime
-
+import datetime
 
 def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S"):
     """
@@ -106,6 +106,90 @@ def form_time_to_year_mon_day(_time):
         raise ValueError(time_str + '不是有效的日期日期')
 
 
+def date_from_str(date_str):
+    """
+    从字符串返回日期时间对象，格式为 YYYYMMDD 或（现在|今日）+ - ] [0-9]（天|周|月|年）？（S）
+    Return a datetime object from a string in the format YYYYMMDD or
+    (now|today)[+-][0-9](day|week|month|year)(s)?
+    """
+    today = datetime.date.today()
+    if date_str in ('now', 'today'):
+        return today
+    if date_str == 'yesterday':
+        return today - datetime.timedelta(days=1)
+    match = re.match(r'(now|today)(?P<sign>[+-])(?P<time>\d+)(?P<unit>day|week|month|year)(s)?', date_str)
+    if match is not None:
+        sign = match.group('sign')
+        time = int(match.group('time'))
+        if sign == '-':
+            time = -time
+        unit = match.group('unit')
+        # A bad approximation?
+        if unit == 'month':
+            unit = 'day'
+            time *= 30
+        elif unit == 'year':
+            unit = 'day'
+            time *= 365
+        unit += 's'
+        delta = datetime.timedelta(**{unit: time})
+        return today + delta
+    return datetime.datetime.strptime(date_str, '%Y%m%d').date()
+
+
+def hyphenate_date(date_str):
+    """
+    将“YYYYMMDD”格式的日期转换为“YYYY-MM-DD”格式
+    Convert a date in 'YYYYMMDD' format to 'YYYY-MM-DD' format
+    """
+    match = re.match(r'^(\d\d\d\d)(\d\d)(\d\d)$', date_str)
+    if match is not None:
+        return '-'.join(match.groups())
+    else:
+        return date_str
+
+class DateRange(object):
+    """
+    表示两个日期之间的时间间隔
+    Represents a time interval between two dates
+    """
+
+    def __init__(self, start=None, end=None):
+        """start and end must be strings in the format accepted by date"""
+        if start is not None:
+            self.start = date_from_str(start)
+        else:
+            self.start = datetime.datetime.min.date()
+        if end is not None:
+            self.end = date_from_str(end)
+        else:
+            self.end = datetime.datetime.max.date()
+        if self.start > self.end:
+            raise ValueError('Date range: "%s" , the start date must be before the end date' % self)
+
+    @classmethod
+    def day(cls, day):
+        """Returns a range that only contains the given day"""
+        return cls(day, day)
+
+    def __contains__(self, date):
+        """Check if the date is in the range"""
+        if not isinstance(date, datetime.date):
+            date = date_from_str(date)
+        return self.start <= date <= self.end
+
+    def __str__(self):
+        return '%s - %s' % (self.start.isoformat(), self.end.isoformat())
+
+
+def srt_subtitles_timecode(seconds):
+    """
+    秒转换为时间字符串 01:02:03,000
+    """
+    return '%02d:%02d:%02d,%03d' % (seconds / 3600, (seconds % 3600) / 60, seconds % 60, (seconds % 1) * 1000)
+
+
+
 def doc():
     """
     打印模块说明文档
@@ -120,7 +204,11 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=date_style_transfomation)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=is_vaild_date)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=form_time_to_year_mon_day)
-
+    # youtube_dl\utils.py
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=date_from_str)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=hyphenate_date)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=DateRange)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=srt_subtitles_timecode)
     print(doc_text)
 
 

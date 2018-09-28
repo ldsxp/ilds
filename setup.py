@@ -1,7 +1,7 @@
 ﻿from setuptools import setup, find_packages  
 # import os, sys
 
-version = '0.1.8'
+version = '0.1.10'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。

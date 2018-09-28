@@ -28,6 +28,29 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.10
+^^^^^^^^^^
+* 添加了几个时间相关的函数
+
+* form_time_to_year_mon_day
+解析数字形式的日期 为 year-mon-day
+
+* date_from_str
+从字符串返回日期时间对象，格式为 YYYYMMDD 或（现在|今日）+ - ] [0-9]（天|周|月|年）？（S）
+
+* hyphenate_date
+将“YYYYMMDD”格式的日期转换为“YYYY-MM-DD”格式
+
+* DateRange
+表示两个日期之间的时间间隔
+
+* srt_subtitles_timecode
+秒转换为时间字符串 01:02:03,000
+
+0.1.9
+^^^^^^^^^^
+* 添加字典排序
+
 0.1.8
 ^^^^^^^^^^
 * excel_xlrd 添加歌曲名和歌手名中标点符号的处理

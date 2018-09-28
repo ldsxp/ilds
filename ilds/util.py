@@ -58,6 +58,20 @@ def list_to_dict(list1,list2):
     return ku_field_row_dict
 
 
+def sort_dict(dict_, reverse=False):
+    """
+    按字典（键）重新排序
+    :param dict_: 字典
+    :param reverse: 排序方式 True False
+    :return: 排序好的字典
+    """
+    dict_sort = {}
+
+    for k in sorted(dict_.keys(), reverse=reverse):
+        dict_sort[k] = dict_[k]
+
+    return dict_sort
+
 
 def get_kuohao_feijie(value):
     """
@@ -130,6 +144,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=print_doc)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=dict_val_to_key)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_to_dict)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=sort_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_kuohao_feijie)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=xl_col_to_name)
     print(doc_text)

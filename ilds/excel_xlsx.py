@@ -27,6 +27,25 @@ from openpyxl.styles import numbers, is_date_format
 ) = range(7)
 
 
+def get_title_style(workbook, style_colour):
+    """
+    获取自定义颜色的标题风格
+    """
+    head_style = workbook.add_format()
+    # 设置粗体
+    head_style.set_bold()
+    # 设置对齐
+    head_style.set_align('center')
+    head_style.set_align('vcenter')
+    # 设置颜色
+    head_style.set_bg_color(style_colour)
+    # 设置边框
+    head_style.set_border()
+    # 调整行的高度以适应文本
+    head_style.set_text_wrap()
+    return head_style
+
+
 class ReadXlsx(object):
 
     def __init__(self, *args, **kwargs):
@@ -186,6 +205,7 @@ def doc():
     doc_text = """"""
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ReadXlsx)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_title_style)
 
     print(doc_text)
 

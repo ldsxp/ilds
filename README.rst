@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.11
+^^^^^^^^^^
+* 添加了 excel_xlsx.get_title_style （excel表头颜色）
+
 0.1.10
 ^^^^^^^^^^
 * 添加了几个时间相关的函数

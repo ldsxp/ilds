@@ -176,10 +176,13 @@ def xlrd_string(xlrdfloat):
 
 
 def gequ_re(gequ):
-    """ 统一歌曲名中的标点符号"""
+    """处理歌曲名称
+    最后修改时间：20181015
+    """
     try:
-        gequ = gequ.replace('	', ' ').replace('(', '（').replace(')', '）').replace('  ', ' ').replace('\n','')\
-            .replace('|','/').strip()
+        gequ = gequ.replace('	', ' ').replace('(', '（').replace(')', '）').replace('\n', '')\
+            .replace('|', '/').replace(' ', ' ').replace(' （', '（')\
+            .replace('  ', ' ').replace('  ', ' ').strip()
         # .replace('/', ' ').replace('+', ' ')
     except Exception as e:
         if isinstance(gequ, float):
@@ -190,10 +193,13 @@ def gequ_re(gequ):
 
 
 def geshou_re(geshou):
-    """ 统一歌手名中的标点符号"""
+    """处理表演者
+    最后修改时间：20181015
+    """
     geshou = geshou.replace('+', ' ').replace('/', ' ').replace('	', ' ').replace('(', '（').replace(
         ')', '）').replace('&', ' ').replace('|', ' ').replace('•', '·') \
-        .replace('；', ' ').replace('  ', ' ').replace('\n','').strip()
+        .replace('；', ' ').replace('\n', '').replace(',', ' ').replace(' ', ' ').replace(' （', '（')\
+        .replace('  ', ' ').replace('  ', ' ').strip()
     if "（" in geshou:
         return geshou
     else:

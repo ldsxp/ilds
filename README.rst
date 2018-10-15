@@ -22,13 +22,17 @@ pip install -U ilds
    import ilds
 
    from lds.file import is_file
- 
+
 
 
 更新日志
 -------------
 
-0.1.11
+0.1.13
+^^^^^^^^^^
+* 20181015 更新了歌曲名和歌手的字符
+
+0.1.12
 ^^^^^^^^^^
 * 添加了 excel_xlsx.get_title_style （excel表头颜色）
 

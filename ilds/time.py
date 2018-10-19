@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：mytime.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2018-7-5
+#   日期：2018-10-19
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
@@ -12,6 +12,7 @@ import re
 import time
 from time import strptime
 import datetime
+
 
 def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S"):
     """
@@ -189,6 +190,26 @@ def srt_subtitles_timecode(seconds):
     return '%02d:%02d:%02d,%03d' % (seconds / 3600, (seconds % 3600) / 60, seconds % 60, (seconds % 1) * 1000)
 
 
+def second_to_time_str(seconds):
+    """
+    秒转换为人类阅读的时间显示，用来显示已用时间
+    例如：'1小时1分1.099秒'
+    """
+    time_str = ''
+    hour = '%01d小时' % (seconds / 3600)
+    minute = '%01d分' % ((seconds % 3600) / 60)
+
+    if hour != '0小时':
+        time_str += hour
+
+    if minute != '0分':
+        time_str += minute
+
+    # seconds
+    time_str += '%01d.%03d秒' % (seconds % 60, (seconds % 1) * 1000)
+
+    return time_str
+
 
 def doc():
     """
@@ -209,6 +230,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=hyphenate_date)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=DateRange)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=srt_subtitles_timecode)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=second_to_time_str)
     print(doc_text)
 
 

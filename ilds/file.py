@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2018-07-05
+#   日期：2018-10-23
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -86,6 +86,21 @@ def validate_title(title):
     # 替换为空格，也可以替换为“_”
     new_title = re.sub(rstr, " ", title)
     return new_title
+
+
+def replace_invalid_filename_char(filename, replaced_char='_'):
+    """
+    替换文件名中无效的字符。 默认用'_'替换。
+
+    :param filename:  要替换的文件名
+    :param replaced_char:  替换的字符
+    :return:
+    """
+    invalid_characaters = '\\/:*?"<>|'
+    for c in invalid_characaters:
+        filename = filename.replace(c, replaced_char)
+
+    return filename
 
 
 def get_file_md5(filename):
@@ -192,7 +207,6 @@ def exists_file_to_bak(_file):
         shutil.move(_file, _file2)
         # print(shutil.move(_file, _file2))
         # print((_file, _file2))
-
 
 
 def get_name(path):
@@ -302,6 +316,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=exist_or_makedir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_encoding)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=validate_title)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=replace_invalid_filename_char)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_md5)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir_2)
@@ -321,5 +336,11 @@ if __name__ == '__main__':
     start_time = t1 = time()
 
     doc()
+
+    # 性能测试
+    # from timeit import timeit
+    # print(timeit('validate_title("\\fasdf/f:*?dasfdddddddddddddddddddddda<fasf>|")', 'from file import validate_title', number=1000000))
+    # replace_invalid_filename_char 稍微快一点
+    # print(timeit('replace_invalid_filename_char("\\fasdf/f:*?dasfdddddddddddddddddddddda<fasf>|")', 'from file import replace_invalid_filename_char', number=1000000))
 
     print('运行时间 %.2f 秒' % (time() - start_time))

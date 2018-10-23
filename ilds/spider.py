@@ -21,7 +21,7 @@ import requests
 from requests.exceptions import RequestException
 # download_file
 import re
-from lds.file import is_file
+from ilds.file import is_file
 from urllib import parse
 
 

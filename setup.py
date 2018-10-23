@@ -1,7 +1,7 @@
 ﻿from setuptools import setup, find_packages  
 # import os, sys
 
-version = '0.1.14'
+version = '0.1.15'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -40,6 +40,8 @@ pip --no-cache-dir install -U ilds
 
 # 使用 twine 上传到官方的pip服务器
 cd tools\ilds
+rmdir /S/Q build
+rmdir /S/Q dist
 python setup.py sdist bdist_wheel
 上传到PyPI:
 twine upload dist/*

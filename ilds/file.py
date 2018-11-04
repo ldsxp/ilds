@@ -120,7 +120,7 @@ def get_file_md5(filename):
             if not data:
                 break
             md5_.update(data)
-    return md5_.hexdigest().upper()
+    return md5_.hexdigest()
 
 
 def from_this_dir(filename):

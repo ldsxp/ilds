@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.17
+^^^^^^^^^^
+* 获取文件md5的时候，不转换为大写
+
 0.1.16
 ^^^^^^^^^^
 * 添加库 lib.hexdump 来自：https://bitbucket.org/techtonik/hexdump/

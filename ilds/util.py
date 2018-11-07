@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2018-07-05
+#   日期：2018-11-07
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
@@ -38,6 +38,13 @@ def print_doc(fun, is_all=True):
     print(' '.join(siyou))
     print(' '.join(siyou2))
     print('\n'.join(doc))
+
+
+def prints(frame, *args):
+    """
+    打印的时候，包括当前行信息，方便 pycharm 直接跳转到当前位置
+    """
+    print(f'File "{frame.f_code.co_filename}", line {frame.f_lineno}, {frame.f_code.co_name}\n   ', *args)
 
 
 def dict_val_to_key(mydict):
@@ -142,6 +149,7 @@ def doc():
     doc_text = """"""
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=print_doc)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=prints)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=dict_val_to_key)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_to_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=sort_dict)

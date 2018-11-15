@@ -43,6 +43,8 @@ def print_doc(fun, is_all=True):
 def prints(frame, *args):
     """
     打印的时候，包括当前行信息，方便 pycharm 直接跳转到当前位置
+    例子：
+    prints(sys._getframe(), 1, dict)
     """
     print(f'File "{frame.f_code.co_filename}", line {frame.f_lineno}, {frame.f_code.co_name}\n   ', *args)
 

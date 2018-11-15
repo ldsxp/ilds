@@ -1,31 +1,43 @@
 # -*- coding: utf-8 -*-
 #
 # ---------------------------------------
-#   程序：mytime.py
-#   版本：0.3
+#   程序：time.py
+#   版本：0.4
 #   作者：lds
-#   日期：2018-10-19
+#   日期：2018-11-15
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
 import re
 import time
-from time import strptime
 import datetime
 
 
-def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S"):
+def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None):
     """
-    将10位时间戳转换为时间字符串，默认为2017-10-01 13:37:04格式
+    将 10 位时间戳转换为时间字符串，默认为 2018-01-23 01:23:45 格式
     """
-    time_array = time.localtime(time_stamp)
-    str_date = time.strftime(format_string, time_array)
+    # time_array = time.localtime(time_stamp)
+    # str_date = time.strftime(format_string, time_array)
+    # 时间戳转换成字符串日期时间(另一种方法)
+    d = datetime.datetime.fromtimestamp(time_stamp, tz)
+    str_date = d.strftime(format_string)
     return str_date
+
+
+def timestamp13_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None):
+    """
+    将 13 位时间戳转换为时间字符串，默认为 2018-01-23 01:23:45 格式
+    """
+    if len(str(time_stamp)) != 13:
+        raise ValueError(time_stamp + '不是有效的 13 位 unix 时间戳')
+    time_stamp = float(time_stamp) / 1000
+    return timestamp_to_date(time_stamp, format_string, tz)
 
 
 def date_to_timestamp(date, format_string="%Y-%m-%d %H:%M:%S"):
     """
-    将时间字符串转换为10位时间戳，时间字符串默认为2017-10-01 13:37:04格式
+    将时间字符串转换为 10 位时间戳，时间字符串默认为 2018-01-23 01:23:45 格式
     """
     time_array = time.strptime(date, format_string)
     time_stamp = int(time.mktime(time_array))
@@ -34,12 +46,12 @@ def date_to_timestamp(date, format_string="%Y-%m-%d %H:%M:%S"):
 
 def now_to_timestamp(digits=10):
     """
-    生成当前时间的时间戳，只有一个参数即时间戳的位数，默认为10位，
+    生成当前时间的时间戳，只有一个参数即时间戳的位数，默认为 10 位，
     输入位数即生成相应位数的时间戳，比如可以生成常用的13位时间戳
     """
     time_stamp = time.time()
-    digits = 10 ** (digits -10)
-    time_stamp = int(round(time_stamp*digits))
+    digits = 10 ** (digits - 10)
+    time_stamp = int(round(time_stamp * digits))
     return time_stamp
 
 
@@ -47,13 +59,13 @@ def timestamp_to_timestamp10(time_stamp):
     """
     将时间戳规范为10位时间戳
     """
-    time_stamp = int (time_stamp* (10 ** (10-len(str(time_stamp)))))
+    time_stamp = int(time_stamp * (10 ** (10 - len(str(time_stamp)))))
     return time_stamp
 
 
 def now_to_date(format_string="%Y-%m-%d %H:%M:%S"):
     """
-    将当前时间转换为时间字符串，默认为2017-10-01 13:37:04格式
+    将当前时间转换为时间字符串，默认为 2018-01-23 01:23:45 格式
     """
     time_stamp = int(time.time())
     time_array = time.localtime(time_stamp)
@@ -61,11 +73,11 @@ def now_to_date(format_string="%Y-%m-%d %H:%M:%S"):
     return str_date
 
 
-def date_style_transfomation(date, format_string1="%Y-%m-%d %H:%M:%S",format_string2="%Y-%m-%d %H-%M-%S"):
+def date_style_transfomation(date, format_string1="%Y-%m-%d %H:%M:%S", format_string2="%Y-%m-%d %H-%M-%S"):
     """
     不同时间格式字符串的转换
     """
-    time_array  = time.strptime(date, format_string1)
+    time_array = time.strptime(date, format_string1)
     str_date = time.strftime(format_string2, time_array)
     return str_date
 
@@ -76,9 +88,9 @@ def is_vaild_date(date):
     """
     try:
         if ":" in date:
-            strptime(date, "%Y-%m-%d %H:%M:%S")
+            time.strptime(date, "%Y-%m-%d %H:%M:%S")
         else:
-            strptime(date, "%Y-%m-%d")
+            time.strptime(date, "%Y-%m-%d")
         return True
     except:
         return False
@@ -89,22 +101,23 @@ def form_time_to_year_mon_day(_time):
     解析数字形式的日期 为 year-mon-day
     """
     time_str = str(_time)
+    year_mon_day = None
     if len(time_str) == 6:
         year_s = time_str[:4]
         mon_s = time_str[4:6]
         # print((int(year_s), int(mon_s), int(day_s)))
-        year_mon_day = '%s-%s-01'%(year_s, mon_s)
+        year_mon_day = '%s-%s-01' % (year_s, mon_s)
     elif len(time_str) == 8:
         year_s = time_str[:4]
         mon_s = time_str[4:6]
         day_s = time_str[6:8]
         # print((int(year_s), int(mon_s), int(day_s)))
-        year_mon_day = '%s-%s-%s'%(year_s, mon_s, day_s)
+        year_mon_day = '%s-%s-%s' % (year_s, mon_s, day_s)
 
     if is_vaild_date(year_mon_day):
         return year_mon_day
     else:
-        raise ValueError(time_str + '不是有效的日期日期')
+        raise ValueError(time_str + '不是有效的日期')
 
 
 def date_from_str(date_str):
@@ -148,6 +161,7 @@ def hyphenate_date(date_str):
         return '-'.join(match.groups())
     else:
         return date_str
+
 
 class DateRange(object):
     """
@@ -218,6 +232,7 @@ def doc():
     doc_text = """"""
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=timestamp_to_date)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=timestamp13_to_date)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=date_to_timestamp)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=now_to_timestamp)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=timestamp_to_timestamp10)
@@ -236,13 +251,27 @@ def doc():
 
 if __name__ == '__main__':
     # 记录运行时间 --------------------------------------------------
-    from time import time, sleep
 
-    start_time = t1 = time()
+    start_time = t1 = time.time()
 
     doc()
 
-    print('运行时间 %.2f 秒' % (time() - start_time))
+    # # 例子
+    # print(now_to_date())
+    # print(timestamp_to_date(1516641825))
+    # print(timestamp13_to_date(1516641825000))
+    # print(date_to_timestamp('2018-01-23 01:23:45'))
+    # print(timestamp_to_timestamp10(1516641825000))
+    # print(date_style_transfomation('2018-01-23 01:23:45'))
+    # # 结果为：
+    # # 2018-11-15 11:19:23
+    # # 2018-01-23 01:23:45
+    # # 2018-01-23 01:23:45
+    # # 1516641825
+    # # 1516641825
+    # # 2018-01-23 01-23-45
+
+    print('运行时间 %.2f 秒' % (time.time() - start_time))
 
 """
 
@@ -265,22 +294,5 @@ time.strptime()根据时间格式化字符串生成时间元组。time.strptime(
 time.localtime()根据时间戳生成当前时区的时间元组。
 time.mktime()根据时间元组生成时间戳。
 
-
-实验
-
-print(now_to_date())
-print(timestamp_to_date(1506816572))
-print(date_to_timestamp('2017-10-01 08:09:32'))
-print(timestamp_to_timestamp10(1506816572546))
-print(date_style_transfomation('2017-10-01 08:09:32'))
-
-结果为
-
-1506836224000
-2017-10-01 13:37:04
-2017-10-01 08:09:32
-1506816572
-1506816572
-2017-10-01 08-09-32
 
 """

@@ -123,6 +123,15 @@ def get_file_md5(filename):
     return md5_.hexdigest()
 
 
+def get_text_md5(text):
+    """
+    计算文件的 MD5
+    :param filename:
+    :return:
+    """
+    return hashlib.md5(text. encode('utf-8')).hexdigest()
+
+
 def from_this_dir(filename):
     """
     获取运行模块所在路径的全路径
@@ -318,6 +327,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=validate_title)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=replace_invalid_filename_char)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_md5)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_text_md5)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir_2)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_line_info)

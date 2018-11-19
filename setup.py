@@ -1,7 +1,8 @@
-﻿from setuptools import setup, find_packages  
+﻿from setuptools import setup, find_packages
+
 # import os, sys
 
-version = '0.1.19'
+version = '0.1.20'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -58,6 +59,7 @@ pip install -U "/Users/lds/Library/Mobile Documents/iCloud~com~omz-software~Pyth
 
 """
 
+
 # twine upload dist/* 使用 twine 上传
 
 # error: invalid command 'bdist_wheel' 需要安装wheel ： pip install -U wheel
@@ -65,49 +67,50 @@ pip install -U "/Users/lds/Library/Mobile Documents/iCloud~com~omz-software~Pyth
 def read_md_convert(f):
     return convert(f, 'md')
 
+
 def read_md_open(f):
     return open(f, 'r').read()
 
 
 try:
     from pypandoc import convert
+
     read_md = read_md_convert
 except ImportError:
     read_md = read_md_open
 
-
 setup(
     # 名称
-    name = "ilds",
+    name="ilds",
     # 版本
-    version = version,
+    version=version,
     # version=".".join(map(str, __import__('html2text').__version__)),
     # 关键字列表
     # keywords = ("test", "xxx"),
     # 简单描述
-    description = "常用模块的集合，为了多平台，多电脑调用方便!",
+    description="常用模块的集合，为了多平台，多电脑调用方便!",
     # 详细描述
     # long_description = "常用爬虫功能的封装",
     # long_description = read_md('README.md'),
-    long_description=open('README.rst',encoding='utf-8').read(),
+    long_description=open('README.rst', encoding='utf-8').read(),
     # 授权信息
-    license = "GNU GPL 3",
+    license="GNU GPL 3",
 
     # 官网地址
-    url = "https://github.com/ldsxp/ilds",
+    url="https://github.com/ldsxp/ilds",
     # 程序的下载地址
-    download_url = "https://pypi.org/project/ilds",
+    download_url="https://pypi.org/project/ilds",
     # 作者
-    author = "lds",
+    author="lds",
     # 作者的邮箱地址
-    author_email = "85176878@qq.com",
+    author_email="85176878@qq.com",
     # 维护者
     # maintainer = "lds2",
     # 维护者的邮箱地址
     # maintainer_email = "85176878@qq.com",
 
     # 需要处理的包目录（包含__init__.py的文件夹）
-    packages = find_packages(),
+    packages=find_packages(),
     # packages = ['lds'],
     # 需要打包的python文件列表
     # py_modules = "any",
@@ -116,7 +119,7 @@ setup(
     # 使用 MANIFEST.in 设置 include_package_data
     # include_package_data = True,
     # 软件平台列表
-    platforms = "any",
+    platforms="any",
     # 所属分类列表
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -132,6 +135,7 @@ setup(
     install_requires=[
         'xlrd>=1.1.0',
         'colorama',
+        'chardet',
         # 'setuptools>=16.0',
     ],
 
@@ -157,5 +161,3 @@ setup(
     #     html2text=html2text.cli:main
     # """,
 )
-
-

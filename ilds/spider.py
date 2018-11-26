@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：spider.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2018-7-4
+#   日期：2018-11-26
 #   语言：Python 3.X
 #   说明：爬虫用到的函数集合
 # ---------------------------------------
@@ -138,7 +138,7 @@ def url_to_dict(url):
         #print(param)
         k, v = param.split('=')
         params[k] = v
-        print("'{}': '{}',".format(k, v),)
+        # print("'{}': '{}',".format(k, v),)
     return params
 
 
@@ -151,7 +151,7 @@ def get_cookie_dict(cookie):
     for param in cookie.split(';'):
         k, v = param.split('=')
         params[k.strip()] = v.strip()
-        print("'{}': '{}',".format(k, v), )
+        # print("'{}': '{}',".format(k, v), )
     return params
 
 

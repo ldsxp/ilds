@@ -28,6 +28,11 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.22
+^^^^^^^^^^
+* 添加库 lib.browsercookie 来自：https://bitbucket.org/richardpenman/browsercookie
+* browsercookie 获取浏览器 cookie
+
 0.1.21
 ^^^^^^^^^^
 * 添加 转换 md 文件的函数（html_to_md 在 md 模块中）

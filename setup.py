@@ -136,6 +136,7 @@ setup(
         'xlrd>=1.1.0',
         'colorama',
         'chardet',
+        'pyperclip',
         # 'setuptools>=16.0',
     ],
 

@@ -28,6 +28,13 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.23
+^^^^^^^^^^
+* 添加 获取当前日期和时间的函数
+* get_now 当前日期和时间
+* get_now_date 当前日期
+* get_now_time 当前时间
+
 0.1.22
 ^^^^^^^^^^
 * 添加库 lib.browsercookie 来自：https://bitbucket.org/richardpenman/browsercookie

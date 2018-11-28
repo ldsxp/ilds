@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：time.py
-#   版本：0.4
+#   版本：0.5
 #   作者：lds
-#   日期：2018-11-15
+#   日期：2018-11-28
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
@@ -71,6 +71,30 @@ def now_to_date(format_string="%Y-%m-%d %H:%M:%S"):
     time_array = time.localtime(time_stamp)
     str_date = time.strftime(format_string, time_array)
     return str_date
+
+
+def get_now():
+    """
+    获取当前日期和时间
+    :return: 格式 2018-11-28 15:03:08
+    """
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def get_now_date():
+    """
+    获取当前日期
+    :return: 格式 2018-11-28
+    """
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
+def get_now_time():
+    """
+    获取当前时间
+    :return: 格式 15:03:08
+    """
+    return datetime.datetime.now().strftime("%H:%M:%S")
 
 
 def date_style_transfomation(date, format_string1="%Y-%m-%d %H:%M:%S", format_string2="%Y-%m-%d %H-%M-%S"):
@@ -237,6 +261,9 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=now_to_timestamp)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=timestamp_to_timestamp10)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=now_to_date)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_now)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_now_date)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_now_time)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=date_style_transfomation)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=is_vaild_date)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=form_time_to_year_mon_day)

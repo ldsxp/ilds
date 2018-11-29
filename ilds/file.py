@@ -222,11 +222,37 @@ def get_name(path):
     """
     获取路径中最后的文件名 不包括后缀名
     """
-    # 分离路径的目录名和文件名(dirname(), basename()) 元组，后一部分总是最后级别的目录或文件名
-    _, name = os.path.split(path)
+    # os.path.split 分离路径的目录名和文件名(dirname(), basename()) 元组，后一部分总是最后级别的目录或文件名
+    _, name = os.path.basename(path)
     # 分离文件名和扩展名， 返回(filename,extension)元组，没有扩展名，扩展名返回空
     ret_name, _ = os.path.splitext(name)
     return ret_name
+
+
+def list_dir(file_dir):
+    """
+    获取文件夹下的文件列表
+    跳过目录、文件名前缀是.的文件
+
+    :param file_dir:
+    :return: 返回文件列表的生成器
+    """
+    if os.path.isdir(file_dir):
+        for name in os.listdir(file_dir):
+            file = os.path.join(file_dir, name)
+
+            # 跳过目录
+            if os.path.isdir(file):
+                continue
+
+            # 跳过文件名前缀是.的文件
+            if name.startswith('.'):
+                continue
+
+            # print(file)
+            yield file
+    else:
+        raise NotADirectoryError(file_dir)
 
 
 def from_dir_func(dir_path, func, endswith='', *args, **kwargs):

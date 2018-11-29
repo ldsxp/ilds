@@ -18,6 +18,12 @@ from collections import OrderedDict
 20170814 整理了下模型调用
 20170814 把模型操作分离出来，以后调用模型都通过这里
 20180807 去掉不通用的模型操作，并改成共享库
+
+批量导入例子
+loadList = []
+kwargs = 需要添加的字段字典
+loadList.append(kwargs)
+print('成功导入 %s 行' % len(models_ku.objects.bulk_create(loadList)))
 """
 
 

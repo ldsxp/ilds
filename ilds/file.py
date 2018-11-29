@@ -4,7 +4,7 @@
 #   程序：file.py
 #   版本：0.3
 #   作者：lds
-#   日期：2018-10-23
+#   日期：2018-11-29
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -361,6 +361,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=exists_file)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=exists_file_to_bak)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_name)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_dir_func)
     print(doc_text)
 

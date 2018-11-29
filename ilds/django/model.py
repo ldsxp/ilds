@@ -22,7 +22,7 @@ from collections import OrderedDict
 批量导入例子
 loadList = []
 kwargs = 需要添加的字段字典
-loadList.append(kwargs)
+loadList.append(需要添加的库模型(**kwargs))
 print('成功导入 %s 行' % len(models_ku.objects.bulk_create(loadList)))
 """
 

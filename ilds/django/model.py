@@ -1,8 +1,8 @@
 ﻿# from django.apps import apps
 
-from django.forms.models import model_to_dict # 获取模型实例的字典
+from django.forms.models import model_to_dict  # 获取模型实例的字典
 # from django.db.models.base import ModelBase
-# from django.conf import settings
+from django.conf import settings
 # # from django.db.models import FileField
 from django.db.models import Sum
 # from django.apps import apps
@@ -13,11 +13,11 @@ from django.db.models import Count
 from django.db.models import QuerySet
 from collections import OrderedDict
 
-
 """
+20181130 添加 确认是否修改线上数据库（本地操作，因为如果没有修改会直接退出，防止误操作）
+20180807 去掉不通用的模型操作，并改成共享库
 20170814 整理了下模型调用
 20170814 把模型操作分离出来，以后调用模型都通过这里
-20180807 去掉不通用的模型操作，并改成共享库
 """
 
 
@@ -46,7 +46,7 @@ def get_model_verbose_name_dict(modelobj, exclude=None):
     return field_dict
 
 
-def get_model_name_dict(modelobj,exclude=None):
+def get_model_name_dict(modelobj, exclude=None):
     """
     获取 model 的 name 字段 和 verbose_name
 
@@ -161,8 +161,23 @@ def get_queryset_date_range(queryset, date_field='shujuriqi_date'):
     """
 
     fromdate = queryset.order_by(date_field)[:1].values_list(date_field)[0][0].strftime("%Y-%m-%d")
-    todate = queryset.order_by('-'+date_field)[:1].values_list(date_field)[0][0].strftime("%Y-%m-%d")
-    return fromdate,todate
+    todate = queryset.order_by('-' + date_field)[:1].values_list(date_field)[0][0].strftime("%Y-%m-%d")
+    return fromdate, todate
+
+
+def confirm_db():
+    """
+    确认是否修改线上数据库
+    本地操作，因为如果没有修改会直接退出，防止误操作
+    """
+    import wx
+    app = wx.App()
+    if not settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
+        dlg = wx.MessageDialog(None, "正在修改服务器数据库，是否继续？", "警告：不是连接的本地数据库", wx.YES_NO | wx.ICON_QUESTION)
+        if dlg.ShowModal() == wx.ID_YES:
+            print("修改服务器数据库......")
+        else:
+            exit()
 
 
 def doc():
@@ -179,14 +194,16 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_queryset_sum)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=group_by)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_queryset_date_range)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=confirm_db)
 
     print(doc_text)
 
+
 if __name__ == "__main__":
     from time import time
+
     t1 = time()
 
     doc()
 
     print('用时 %.2f 秒' % (time() - t1))
-

@@ -10,7 +10,12 @@ from django.db.models import QuerySet
 # # from django.db.models import FileField
 from django.db.models import Sum
 
+import operator
+from functools import reduce
+from django.db import models
+
 """
+20181203 添加 搜索多个字段的函数
 20181203 ModelFields 添加 获取模型对象
 20181203 添加了获取模型的字段，名字和类型的类
 20181130 添加 确认是否修改线上数据库（本地操作，因为如果没有修改会直接退出，防止误操作）
@@ -24,6 +29,35 @@ kwargs = 需要添加的字段字典
 loadList.append(需要添加的库模型(**kwargs))
 print('成功导入 %s 行' % len(models_ku.objects.bulk_create(loadList)))
 """
+
+
+def get_search_results(queryset, search_fields, search_term):
+    """
+    搜索，返回包含查询集的
+    来自：from django.contrib.admin.options import ModelAdmin
+    """
+
+    # 应用关键字搜索。
+    def construct_search(field_name):
+        if field_name.startswith('^'):
+            return "%s__istartswith" % field_name[1:]
+        elif field_name.startswith('='):
+            return "%s__iexact" % field_name[1:]
+        elif field_name.startswith('@'):
+            return "%s__search" % field_name[1:]
+        else:
+            return "%s__icontains" % field_name
+
+    if search_fields and search_term:
+        orm_lookups = [construct_search(str(search_field))
+                       for search_field in search_fields]
+        for bit in search_term.split():
+            or_queries = [models.Q(**{orm_lookup: bit})
+                          for orm_lookup in orm_lookups]
+            #
+            queryset = queryset.filter(reduce(operator.or_, or_queries))
+
+    return queryset
 
 
 class ModelFields():

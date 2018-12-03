@@ -11,6 +11,7 @@ from django.db.models import QuerySet
 from django.db.models import Sum
 
 """
+20181203 ModelFields 添加 获取模型对象
 20181203 添加了获取模型的字段，名字和类型的类
 20181130 添加 确认是否修改线上数据库（本地操作，因为如果没有修改会直接退出，防止误操作）
 20170814 整理了下模型调用
@@ -49,6 +50,7 @@ class ModelFields():
         self.field_list = []
         self.verbose_list = []
         self.type_list = []
+        self.fields = []
 
         if exclude is None:
             exclude = []
@@ -61,6 +63,7 @@ class ModelFields():
             self.field_list.append(field_name)
             self.verbose_list.append(verbose_name)
             self.type_list.append(type_name)
+            self.fields.append(f)
 
         self.count = len(self.field_list)
         # print(self.field_list)
@@ -86,6 +89,16 @@ class ModelFields():
         """通过 verbose_name 获取 type_name"""
         if field in self.verbose_list:
             return self.type_list[self.verbose_list.index(field)]
+
+    def get_field(self, name):
+        """通过 名字获取 field 属性
+        按 field_name -> verbose_name 的顺序查找，
+        已经找到就不在继续查找，没有找到返回空
+        """
+        if name in self.field_list:
+            return self.fields[self.field_list.index(name)]
+        elif name in self.verbose_list:
+            return self.fields[self.verbose_list.index(name)]
 
     def iter(self, *args):
         """获取指定字段的生成器"""

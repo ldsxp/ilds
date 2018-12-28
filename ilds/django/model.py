@@ -1,14 +1,23 @@
 ﻿from collections import OrderedDict
 
+
 # from django.apps import apps
 # from django.db.models.base import ModelBase
 from django.conf import settings
+
+from django.forms.models import model_to_dict  # 获取模型实例的字典
+# from django.db.models.base import ModelBase
+from django.conf import settings
+# # from django.db.models import FileField
+from django.db.models import Sum
+
 # from django.apps import apps
 # group_by 这个分组 我喜欢
 from django.db.models import Count
 from django.db.models import QuerySet
 # # from django.db.models import FileField
 from django.db.models import Sum
+
 
 import operator
 from functools import reduce

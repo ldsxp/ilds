@@ -2,11 +2,14 @@
 #
 # ---------------------------------------
 #   程序：md.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2018-11-23
+#   日期：2019-01-02
 #   语言：Python 3.X
 #   说明：处理 markdown 的函数集合
+"""
+20190102 html_to_md 添加按序号重命名图片文件
+"""
 # ---------------------------------------
 
 import os
@@ -21,7 +24,7 @@ import html2text
 IMG_LINK_COMPILE = re.compile(r'!\[.*?\]\((.*?)\)')
 
 
-def html_to_md(html_file, save_file=None, end=False):
+def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start_index=0):
     """
     转换 html 为 markdown
     :param html_file: 要转换的文件
@@ -29,6 +32,8 @@ def html_to_md(html_file, save_file=None, end=False):
     # :param img_fun: 本来打算用来修复图片链接，但是有问题所以暂停使用
     :param save_file: 保存文件名（默认是）
     :param end:
+    :param rename_img: 重命名 md 文件中的图片为序号(如：000001.jpg)
+    :param img_start_index: 开始重命名图片的序号
     :return:
     """
 
@@ -80,6 +85,12 @@ def html_to_md(html_file, save_file=None, end=False):
 
                 # 图片名称
                 image_name = os.path.split(result)[1]
+                if rename_img:
+                    _ext = os.path.splitext(image_name)[1]
+                    if _ext:
+                        image_name = "%06d%s" % (img_start_index, _ext)
+                    else:
+                        image_name = "%06d.jpg" % (img_start_index)
                 # 图片文件
                 file = os.path.join(file_path, result)
 
@@ -107,6 +118,7 @@ def html_to_md(html_file, save_file=None, end=False):
                 new_image = f'./img/{save_dir_name}/{image_name}'
                 text = text.replace(result, new_image)
                 # print(new_image)
+                img_start_index += 1
 
         with open(save_file, 'w', encoding='utf-8') as output_file:
             output_file.write(text)

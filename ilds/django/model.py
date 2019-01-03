@@ -286,6 +286,14 @@ def get_queryset_sum(queryset, field_list, *args):
 def group_by(query_set, group_by):
     """
     util:django 获取分类列表 ( 对某些取到的QuerySet分组)
+
+    例如获取厂牌名称
+    print(group_by(objs,'shouquan_changpai'))
+    》 ['厂牌名称1', '厂牌名称2', ...]
+
+    :param query_set:
+    :param group_by: 需要分组的字段
+    :return: 分组字段的内容列表
     """
 
     assert isinstance(query_set, QuerySet)

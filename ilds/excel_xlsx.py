@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：excel_xlsx.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2018-7-31
+#   日期：2019-01-14
 #   语言：Python 3.X
 #   说明：读取excel文件内容
 # ---------------------------------------
@@ -27,13 +27,18 @@ from openpyxl.styles import numbers, is_date_format
 ) = range(7)
 
 
-def get_title_style(workbook, style_colour):
+def get_title_style(workbook, style_colour='#daeef3', is_bold=False):
     """
     获取自定义颜色的标题风格
+    :param workbook:
+    :param style_colour: 默认颜色为什么浅色
+    :param is_bold: 是否设置粗体字体
+    :return:
     """
     head_style = workbook.add_format()
     # 设置粗体
-    head_style.set_bold()
+    if is_bold:
+        head_style.set_bold()
     # 设置对齐
     head_style.set_align('center')
     head_style.set_align('vcenter')

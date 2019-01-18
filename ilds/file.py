@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2018-11-29
+#   日期：2019-01-18
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -129,7 +129,7 @@ def get_text_md5(text):
     :param filename:
     :return:
     """
-    return hashlib.md5(text. encode('utf-8')).hexdigest()
+    return hashlib.md5(text.encode('utf-8')).hexdigest()
 
 
 def from_this_dir(filename):
@@ -179,7 +179,7 @@ def file_string_replace(file, old, new, count=None):
             f_w.write(line)
 
     if counts:
-        print("在 %s 中替换了 %s 为 %s，总共 %s个" % (file, old, new,counts))
+        print("在 %s 中替换了 %s 为 %s，总共 %s个" % (file, old, new, counts))
     else:
         print("没有内容替换")
 
@@ -209,7 +209,7 @@ def exists_file_to_bak(_file):
         while True:
             file_path, file_name = os.path.split(_file)
             f_name, f_ext = os.path.splitext(file_name)
-            _file2 = os.path.join(file_path, 'bak',f_name + '-' + datetime.now().strftime('%Y%m%d%H%M%S') + f_ext)
+            _file2 = os.path.join(file_path, 'bak', f_name + '-' + datetime.now().strftime('%Y%m%d%H%M%S') + f_ext)
             if _file != _file2:
                 break
         make_dir(os.path.dirname(_file2))
@@ -331,6 +331,12 @@ def get_dir_files(path, ext=''):
     # return files
 
 
+def save_file(s, file, mode='w', encoding='utf-8'):
+    """保存字符内容到文件"""
+    with open(file, mode, encoding=encoding) as fp:
+        fp.write(s)
+
+
 def doc():
     """
     打印模块说明文档
@@ -363,6 +369,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_name)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_dir_func)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=save_file)
     print(doc_text)
 
 

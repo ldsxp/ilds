@@ -2,7 +2,7 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
 #   日期：2019-01-21
 #   语言：Python 3.X
@@ -10,7 +10,7 @@
 # ---------------------------------------
 import os
 import sys
-
+import random
 
 # 最后修改时间：20181016
 CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
@@ -38,6 +38,18 @@ def django_setup(project_name=None, site_path=None):
     except ModuleNotFoundError as e:
         print("注：如果找不到 Django，请安装它: pip install django\n错误提示：", e)
         exit()
+
+
+def random_key():
+    """
+    生成 Django 使用的 SECRET_KEY
+
+    from ilds.django.util import random_key
+    print(random_key())
+    """
+
+    return ''.join(
+        [random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
 
 
 def doc():

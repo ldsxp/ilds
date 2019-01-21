@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.34
+^^^^^^^^^^
+* 20190121 添加 django.util.random_key 生成 Django 使用的 SECRET_KEY
+
 0.1.33
 ^^^^^^^^^^
 * 20190121 添加 django.util.django_setup 设置 Django 运行环境

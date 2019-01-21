@@ -19,7 +19,8 @@ CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "
 
 # https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell
 def django_setup(project_name=None, site_path=None):
-    """设置 Django 运行环境
+    """
+    设置 Django 运行环境
 
     from ilds.django.util import django_setup
     django_setup(r'mysite', site_path=None)
@@ -58,7 +59,9 @@ def doc():
     """
     doc_text = """"""
     doc_text += '\n'
-    doc_text += 'CLEAN_STR\n    需要清洗的字符（用在歌曲名，表演者匹配的时候）'
+    doc_text += 'CLEAN_STR\n    需要清洗的字符（用在歌曲名，表演者匹配的时候）\n\n'
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=django_setup)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=random_key)
     print(doc_text)
 
 

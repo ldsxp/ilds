@@ -2,17 +2,42 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2018-12-28
+#   日期：2019-01-21
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
+import os
+import sys
 
 
 # 最后修改时间：20181016
-CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">"\
+CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
     , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-"
+
+
+# https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell
+def django_setup(project_name=None, site_path=None):
+    """设置 Django 运行环境
+
+    from ilds.django.util import django_setup
+    django_setup(r'mysite', site_path=None)
+    """
+
+    if site_path is not None:
+        sys.path.insert(0, site_path)
+
+    if project_name is None:
+        project_name = os.path.split(os.path.dirname(__file__))[-1]
+    print('项目：', project_name)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{}.settings".format(project_name))
+    try:
+        import django
+        django.setup()
+    except ModuleNotFoundError as e:
+        print("注：如果找不到 Django，请安装它: pip install django\n错误提示：", e)
+        exit()
 
 
 def doc():

@@ -28,6 +28,11 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.33
+^^^^^^^^^^
+* 20190121 添加 django.util.django_setup 设置 Django 运行环境
+
+
 0.1.32
 ^^^^^^^^^^
 * 20190118 添加 save_file 保存字符内容到文件

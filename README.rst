@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.35
+^^^^^^^^^^
+* 20190121 添加 ilds.django.user.add_superuser 用来添加 django 超级用户
+
 0.1.34
 ^^^^^^^^^^
 * 20190121 添加 django.util.random_key 生成 Django 使用的 SECRET_KEY

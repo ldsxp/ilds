@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.36
+^^^^^^^^^^
+* 20190124 下载 markdown 中的图片不验证 https
+
 0.1.35
 ^^^^^^^^^^
 * 20190121 添加 ilds.django.user.add_superuser 用来添加 django 超级用户

@@ -108,7 +108,7 @@ def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start
                     shutil.copy(file, save_img)
                 else:
                     try:
-                        res = requests.get(result)
+                        res = requests.get(result, verify=False)
                         with open(save_img, 'wb') as f:
                             f.write(res.content)
                         print('下载图片：', result, '保存路径：', save_img)

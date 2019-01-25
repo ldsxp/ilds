@@ -3,7 +3,7 @@
 # import os, sys
 
 
-version = '0.1.36'
+version = '0.1.37'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -128,8 +128,6 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
     # 需要安装的依赖包
@@ -138,7 +136,10 @@ setup(
         'colorama',
         'chardet',
         'pyperclip',
+        'requests',
+        'html2text',
         # 'setuptools>=16.0',
+        # '+++',
     ],
 
     # 此项需要，否则卸载时报windows error

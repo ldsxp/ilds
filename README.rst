@@ -28,6 +28,10 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.37
+^^^^^^^^^^
+* 20190125 添加依赖 requests html2text
+
 0.1.36
 ^^^^^^^^^^
 * 20190124 下载 markdown 中的图片不验证 https

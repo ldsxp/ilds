@@ -26,7 +26,7 @@
 
 import requests
 
-# 将markdown格式转换为rst格式
+# 将 markdown 格式转换为rst格式
 def md_to_rst(from_file, to_file):
     r = requests.post(url='http://c.docverter.com/convert',
                       data={'to':'rst','from':'markdown'},

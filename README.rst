@@ -28,6 +28,11 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.38
+^^^^^^^^^^
+* 20190128 添加 pandas 常用的函数集合
+* 添加 ilds.pd.get_columns_index 获取列名称在 DataFrame 中的索引
+
 0.1.37
 ^^^^^^^^^^
 * 20190125 添加依赖 requests html2text

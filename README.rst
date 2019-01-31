@@ -28,6 +28,13 @@ pip install -U ilds
 更新日志
 -------------
 
+0.1.41
+^^^^^^^^^^
+- 20190131 ilds.net 添加更多模块
+- get_mac_address 获取本机 MAC 地址
+- get_arp_list 获取局域网 ARP 表
+- send_magic_packet 唤醒局域网中的计算机
+
 0.1.38
 ^^^^^^^^^^
 * 20190128 添加 pandas 常用的函数集合

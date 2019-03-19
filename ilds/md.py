@@ -2,13 +2,14 @@
 #
 # ---------------------------------------
 #   程序：md.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
 #   日期：2019-01-02
 #   语言：Python 3.X
 #   说明：处理 markdown 的函数集合
 """
 20190102 html_to_md 添加按序号重命名图片文件
+20190319 添加 md_to_html，转换 markdown 为 html 文件
 """
 # ---------------------------------------
 
@@ -19,14 +20,36 @@ import shutil
 import chardet
 import requests
 import html2text
+import mistune
 
 # 匹配图像链接的正则表达式 # *([^\n]+?) *#* *(?:\n+|$)   ![图像](../images/00038.jpeg)
 IMG_LINK_COMPILE = re.compile(r'!\[.*?\]\((.*?)\)')
+
+TEMPLATES = '''
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+    </head>
+    <body>
+
+HTML_TEMPLATES
+
+    </body>
+</html>'''
 
 
 def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start_index=0):
     """
     转换 html 为 markdown
+
+    例子：
+    save_file = html_to_md(html_file)
+    print('转换html：%s 为 markdown：%s' % (html_file, save_file))
+
     :param html_file: 要转换的文件
     # :param save_to:
     # :param img_fun: 本来打算用来修复图片链接，但是有问题所以暂停使用
@@ -111,7 +134,7 @@ def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start
                         res = requests.get(result, verify=False)
                         with open(save_img, 'wb') as f:
                             f.write(res.content)
-                        print('下载图片：', result, '保存路径：', save_img)
+                        # print('下载图片：', result, '保存路径：', save_img)
                     except Exception as e:
                         print('文件', file, e)
 
@@ -127,7 +150,32 @@ def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start
                 output_file.write('\n\n\n')
                 output_file.write(file_name)
 
-    print('转换html：%s 为 markdown：%s' % (html_file, save_file))
+    # print('转换html：%s 为 markdown：%s' % (html_file, save_file))
+    # print(save_file)
+    return save_file
+
+
+def md_to_html(md_file, save_file=None):
+    """
+    转换 markdown 为 html 文件
+    """
+
+    with open(md_file, 'r', encoding='utf-8') as text:
+        renderer = mistune.Renderer(escape=True, hard_wrap=True)
+        # 使用渲染器
+        markdown = mistune.Markdown(renderer=renderer)
+        html = markdown(text.read())
+
+        html = TEMPLATES.replace('HTML_TEMPLATES', html)
+
+        # 如果没有指定保存文件名，那么让我们返回转换好的html内容
+        if save_file is None:
+            # save_file = md_file + ".html"
+            return html
+
+        with open(save_file, 'w', encoding='utf-8') as output_file:
+            output_file.write(html)
+
     # print(save_file)
     return save_file
 
@@ -140,6 +188,7 @@ def doc():
     """
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=html_to_md)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=md_to_html)
 
     print(doc_text)
 

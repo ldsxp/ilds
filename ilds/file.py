@@ -103,7 +103,7 @@ def replace_invalid_filename_char(filename, replaced_char='_'):
     return filename
 
 
-def get_file_md5(filename):
+def get_file_md5(filename, block_size=4096):
     """
     计算文件的 MD5
     :param filename:
@@ -116,7 +116,7 @@ def get_file_md5(filename):
     md5_ = hashlib.md5()
     with open(filename, 'rb') as f:
         while True:
-            data = f.read(4096)
+            data = f.read(block_size)
             if not data:
                 break
             md5_.update(data)

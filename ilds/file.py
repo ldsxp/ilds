@@ -255,42 +255,54 @@ def list_dir(file_dir):
         raise NotADirectoryError(file_dir)
 
 
-def from_dir_func(dir_path, func, endswith='', *args, **kwargs):
+def from_dir_func(dir_path, func, prefix='.', suffix='', *args, **kwargs):
     """
-    处理目录中的所有文件，跳过前缀是.的文件名
+
+    处理目录中的所有文件，默认跳过前缀是.的文件名，返回函数运行结果
 
     # 扩展阅读
     from functools import partial
     基于一个函数创建一个新的可调用对象，把原函数的某些参数固定。
     使用这个函数可以把接受一个或多个参数的函数改编成需要回调的 API，这样参数更少。
     new_func = partial(test, 22222)
+
+    :param dir_path:
+    :param func:
+    :param prefix: 默认跳过前缀是.的文件名
+    :param suffix: 只处理后缀匹配的文件
+    :param args:
+    :param kwargs:
+    :return: 返回函数运行结果的信息
     """
 
     fileok = 0
     fileno = 0
+    info = []
     if os.path.isdir(dir_path):
         print('\n处理路径：\n%s\n' % (dir_path))
         for dirpath, dirnames, filenames in os.walk(dir_path):
             for _filename in filenames:
-                if _filename.startswith('.'):
+                if prefix and _filename.startswith(prefix):
                     continue
 
                 _file = os.path.join(dirpath, _filename)
-                if endswith:
-                    if _file.endswith(endswith):
+                if suffix:
+                    if _file.endswith(suffix):
                         fileok += 1
                         # print(_file)
-                        func(_file, *args, **kwargs)
+                        info.append(func(_file, *args, **kwargs))
                     else:
                         fileno += 1
                         # print('忽略 --------------------', _file)
                 else:
                     fileok += 1
-                    func(_file)
+                    info.append(func(_file, *args, **kwargs))
 
-        print(' ----------- 处理 %s 个文件（处理条件：%s） ----------- 忽略 %s 个文件 ----------- ' % (fileok, endswith, fileno))
+        print(' ----------- 处理 %s 个文件（跳过名称前面是：“%s”，处理后缀：“%s”） ----------- 忽略 %s 个文件 ----------- ' % (
+            fileok, prefix, suffix, fileno))
     else:
-        print('请输入文件路径！')
+        raise FileExistsError('请输入文件路径！')
+    return info
 
 
 def get_walk_files(dir_path, endswith=''):

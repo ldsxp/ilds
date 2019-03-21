@@ -39,6 +39,8 @@ version = '0.1.43'
 pip install -U ilds
 pip --no-cache-dir install -U ilds
 
+# 打包需要安装 twine
+# 如果报错：error: invalid command 'bdist_wheel'，多半是 setuptools 版本不正确或者没有安装 wheel
 
 echo 使用 twine 上传到官方的pip服务器:
 echo 已经不需要 cd tools\ilds

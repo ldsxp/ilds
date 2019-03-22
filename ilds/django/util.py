@@ -14,7 +14,7 @@ import random
 
 # 最后修改时间：20181016
 CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
-    , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-"
+    , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-", "×"
 
 
 # https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell

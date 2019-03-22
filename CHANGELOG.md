@@ -12,7 +12,7 @@
 
 ### Changed
 - 在 README.rst 中去掉更改日志
-- 0.1.44 以前的更改日志放到 [CHANGELOG.rst](https://github.com/ldsxp/ilds/blob/master/CHANGELOG.rst) 中
+- 0.1.44 以前的更改日志放到 [CHANGELOG.rst](./CHANGELOG.rst) 中
 
 ### Fixed
 - 全部更改日志在说明里面影响美观

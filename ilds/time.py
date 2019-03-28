@@ -228,6 +228,14 @@ def srt_subtitles_timecode(seconds):
     return '%02d:%02d:%02d,%03d' % (seconds / 3600, (seconds % 3600) / 60, seconds % 60, (seconds % 1) * 1000)
 
 
+def millisecond_to_timecode(millisecond):
+    """
+    毫秒转换为时间码字符串 01:02:03,000
+    """
+    return '%02d:%02d:%02d,%03d' % (
+    millisecond / 3600000, (millisecond % 3600000) / 60000, (millisecond % 60000) / 1000, millisecond % 1000)
+
+
 def second_to_time_str(seconds):
     """
     秒转换为人类阅读的时间显示，用来显示已用时间
@@ -272,6 +280,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=hyphenate_date)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=DateRange)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=srt_subtitles_timecode)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=millisecond_to_timecode)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=second_to_time_str)
     print(doc_text)
 

@@ -5,6 +5,10 @@
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
 
+## [0.1.45] - 2019-03-29
+### Added
+- ilds.time 添加 millisecond_to_timecode 毫秒转换为时间码字符串
+
 
 ## [0.1.44] - 2019-03-22
 ### Added

@@ -25,8 +25,25 @@ import xlrd
     XL_CELL_BLANK,
 ) = range(7)
 
-GEQU_TITLE_LIST = ['歌曲名', '歌曲', '歌名', '歌曲名称', '制品名称']
-GESHOU_TITLE_LIST = ['歌手名', '歌手', '演唱', '表演者', '艺人名称', '演唱者', '表演者名称', '艺人']
+GEQU_TITLE_LIST = [
+    '歌曲名',
+    '歌曲',
+    '歌名',
+    '歌曲名称',
+    '制品名称',
+    '作品名称'
+]
+
+GESHOU_TITLE_LIST = [
+    '歌手名',
+    '歌手',
+    '演唱',
+    '表演者',
+    '艺人名称',
+    '演唱者',
+    '表演者名称',
+    '艺人'
+]
 
 
 class ReadXlsx(object):

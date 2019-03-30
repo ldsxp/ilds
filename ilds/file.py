@@ -21,6 +21,7 @@ import chardet
 # validateTitle
 import re
 from datetime import datetime
+from zlib import crc32
 
 
 def is_file(filename):
@@ -101,6 +102,16 @@ def replace_invalid_filename_char(filename, replaced_char='_'):
         filename = filename.replace(c, replaced_char)
 
     return filename
+
+
+def get_file_crc32(filename):
+    """
+    计算文件的 CRC32
+    :param filename:
+    :return:
+    """
+    with open(filename, 'rb') as f:
+        return crc32(f.read())
 
 
 def get_file_md5(filename, block_size=4096):
@@ -370,6 +381,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_encoding)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=validate_title)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=replace_invalid_filename_char)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_crc32)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_md5)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_text_md5)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir)

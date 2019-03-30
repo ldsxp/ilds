@@ -5,11 +5,11 @@
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
 
-## [0.1.45] - 2019-03-30
+## [0.1.46] - 2019-03-30
 ### Added
 - ilds.file 添加 get_file_crc32 计算文件的 CRC32
-(filename):
-    """计算文件 CRC32
+- ilds.file 添加 dir_compare 比较两个目录的文件差异
+
 
 ## [0.1.45] - 2019-03-29
 ### Added

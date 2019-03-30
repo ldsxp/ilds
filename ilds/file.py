@@ -22,6 +22,11 @@ import chardet
 import re
 from datetime import datetime
 from zlib import crc32
+import difflib
+
+AFILES = []  # EE
+BFILES = []  # SVN
+COMMON = []  # EE & SVN
 
 
 def is_file(filename):
@@ -360,6 +365,167 @@ def save_file(s, file, mode='w', encoding='utf-8'):
         fp.write(s)
 
 
+def dir_compare(apath, bpath, diff_ext=None):
+    """
+    比较两个目录的文件差异
+
+    例子：
+    diff_ext = ['.md']
+    dir_compare(FolderEE, FolderSVN, diff_ext)
+
+    :param apath:
+    :param bpath:
+    :param diff_ext:
+    :return:
+    """
+
+    if diff_ext is None:
+        diff_ext = []
+
+    afiles = []
+    bfiles = []
+    for root, dirs, files in os.walk(apath):
+        # print(apath, '所有文件数量：', len(files))
+        for f in files:
+            # 比较文件名不含格式后缀
+            # afiles.append(root + f[0:-4])
+            # 比较文件名含格式后缀
+            afiles.append(os.path.join(root, f))
+
+    for root, dirs, files in os.walk(bpath):
+        # print(bpath, '所有文件数量：', len(files))
+        for f in files:
+            # 比较文件名不含格式后缀
+            # bfiles.append(root + f[0:-4])
+
+            # 比较文件名含格式后缀
+            bfiles.append(os.path.join(root, f))
+            # sizeB = os.path.getsize(root + "/" + f) 此处定义的size无法在commonfiles进行比较. (A,B在各自的循环里面)
+
+    # print(afiles, bfiles)
+
+    # 去掉 afiles 中文件名的 apath (拿A,B相同的路径\文件名,做成集合,去找交集)
+    apathlen = len(apath)
+    aafiles = []
+    for f in afiles:
+        aafiles.append(f[apathlen:])
+
+    # 去掉 bfiles 中文件名的  bpath
+    bpathlen = len(bpath)
+    bbfiles = []
+    for f in bfiles:
+        bbfiles.append(f[bpathlen:])
+
+    afiles = aafiles
+    bfiles = bbfiles
+
+    setA = set(afiles)
+    setB = set(bfiles)
+    # print('%$%'+str(len(setA)))
+    # print('%%'+str(len(setB)))
+    commonfiles = setA & setB  # 处理共有文件
+    # print ("===============File with different size in '", apath, "' and '", bpath, "'===============")
+    # 将结果输出到本地
+    # with open(os.getcwd()+'diff.txt','w') as di:
+    # di.write("===============File with different size in '", apath, "' and '", bpath, "'===============")
+    # print(commonfiles)
+
+    diff_info = []
+    for f in sorted(commonfiles):
+        a_file = os.path.join(apath + f)
+        b_file = os.path.join(bpath + f)
+        # print(apath, f, a_file, b_file)
+
+        a_file_size = os.path.getsize(a_file)
+        b_file_size = os.path.getsize(b_file)
+
+        # return
+        if a_file_size == b_file_size:  # 共有文件的大小比较
+            # pass #print (f + "\t\t" + get_pretty_time(os.stat(a_file)) + "\t\t" + get_pretty_time(os.stat(b_file)))
+            # 以下代码是处理大小一致，但是内容可能不一致的情况，比较 md5 需要的时间比较长
+            a_file_md5 = get_file_md5(a_file)
+            b_file_md5 = get_file_md5(b_file)
+            if a_file_md5 == b_file_md5:
+                continue
+            else:
+                # Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容。HEAD为当前所在分支的内容，也就是说现在master中的内容
+                info = f'{"=" * 70}  文件MD5: {a_file_md5} != {b_file_md5}\n{f}\n\n'
+                # "文件名=%s    MD5不同，文件 A:%s   !=  文件 B:%s" % (f, a_file_md5, b_file_md5)
+            # print(os.getcwd())
+
+        else:
+            info = f'{"=" * 70}  文件大小: {a_file_size} != {b_file_size}\n{f}\n\n'
+
+        # 只处理指定后缀的内容差异
+        if os.path.splitext(a_file)[1].lower() in diff_ext:
+            with open(a_file, 'r', encoding='utf-8') as f_in:
+                AText = f_in.read()
+            with open(b_file, 'r', encoding='utf-8') as f_in:
+                BText = f_in.read()
+            differ = difflib.Differ(charjunk=difflib.IS_CHARACTER_JUNK)
+            diff = differ.compare(
+                AText.splitlines(keepends=True), BText.splitlines(keepends=True)  # keepends 包含换行符
+            )
+            diff = [d for d in diff if d.startswith('+') or d.startswith('-')]
+            # print(''.join(diff))
+            info += ''.join(diff)
+            # if len(list(diff)) < 100:
+            #     print(''.join(diff))
+            #     exit()
+
+        # 文件不同的时候处理
+        diff_info.append(info)
+        print(info)
+
+    diff_file = os.path.join(os.getcwd(), 'diff.txt')
+    if os.path.exists(diff_file):
+        os.remove(diff_file)
+    if diff_info:
+        with open(diff_file, 'a') as di:
+            di.write('\n'.join(diff_info))
+
+    # 处理仅出现在一个目录中的文件
+    onlyFiles = setA ^ setB
+    aonlyFiles = []
+    bonlyFiles = []
+    for of in onlyFiles:
+        if of in afiles:
+            aonlyFiles.append(of)
+        elif of in bfiles:
+            bonlyFiles.append(of)
+
+    # print ("###################### EE resource ONLY ###########################")
+    # print ("#only files in ", apath)
+    a_only_file = os.path.join(os.getcwd(), 'Aonly.txt')
+    b_only_file = os.path.join(os.getcwd(), 'Bonly.txt')
+    if os.path.exists(a_only_file):
+        os.remove(a_only_file)
+    if os.path.exists(b_only_file):
+        os.remove(b_only_file)
+
+    aonly_count = len(aonlyFiles)
+    bonly_count = len(bonlyFiles)
+
+    if aonly_count:
+        print(apath, 'only files numbers:', aonly_count)
+        with open(a_only_file, 'a') as a:
+            for of in sorted(aonlyFiles):
+                a.write(of + '\n')
+                # a.write(apath + of + '\n')
+
+        # print (of)
+    # print ("*"*20+"SVN ONLY+"+"*"*20)
+    # print ("#only files in ", bpath)
+
+    if bonly_count:
+        print(bpath, 'only files numbers:', bonly_count)
+        with open(b_only_file, 'a') as b:
+            for of in sorted(bonlyFiles):
+                b.write(of + '\n')
+                # b.write(bpath + of + '\n')
+            # print (of)
+
+
 def doc():
     """
     打印模块说明文档
@@ -394,6 +560,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=list_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_dir_func)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=save_file)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=dir_compare)
     print(doc_text)
 
 

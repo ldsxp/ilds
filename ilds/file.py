@@ -365,7 +365,7 @@ def save_file(s, file, mode='w', encoding='utf-8'):
         fp.write(s)
 
 
-def dir_compare(apath, bpath, diff_ext=None):
+def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     """
     比较两个目录的文件差异
 
@@ -381,6 +381,9 @@ def dir_compare(apath, bpath, diff_ext=None):
 
     if diff_ext is None:
         diff_ext = []
+
+    if out_dir is None:
+        out_dir = os.getcwd()
 
     afiles = []
     bfiles = []
@@ -477,7 +480,7 @@ def dir_compare(apath, bpath, diff_ext=None):
         diff_info.append(info)
         print(info)
 
-    diff_file = os.path.join(os.getcwd(), 'diff.txt')
+    diff_file = os.path.join(out_dir, 'diff.txt')
     if os.path.exists(diff_file):
         os.remove(diff_file)
     if diff_info:
@@ -496,8 +499,8 @@ def dir_compare(apath, bpath, diff_ext=None):
 
     # print ("###################### EE resource ONLY ###########################")
     # print ("#only files in ", apath)
-    a_only_file = os.path.join(os.getcwd(), 'Aonly.txt')
-    b_only_file = os.path.join(os.getcwd(), 'Bonly.txt')
+    a_only_file = os.path.join(out_dir, os.path.basename(apath) + ' only.txt')
+    b_only_file = os.path.join(out_dir, os.path.basename(bpath) + ' only.txt')
     if os.path.exists(a_only_file):
         os.remove(a_only_file)
     if os.path.exists(b_only_file):

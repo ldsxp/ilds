@@ -484,7 +484,7 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     if os.path.exists(diff_file):
         os.remove(diff_file)
     if diff_info:
-        with open(diff_file, 'a') as di:
+        with open(diff_file, 'a', encoding='utf-8') as di:
             di.write('\n'.join(diff_info))
 
     # 处理仅出现在一个目录中的文件

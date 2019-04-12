@@ -9,8 +9,11 @@
 #   说明：django 用户相关的函数集合
 # ---------------------------------------
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password  # , check_password
+
+User = get_user_model()
 
 
 def add_superuser(username, email, password):

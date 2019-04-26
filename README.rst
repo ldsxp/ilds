@@ -25,5 +25,5 @@ pip install -U ilds
 
 
 
-查看 `更改日志 <CHANGELOG.md>`__
+查看 `更改日志 <https://github.com/ldsxp/ilds/CHANGELOG.md>`__
 

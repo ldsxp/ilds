@@ -500,6 +500,9 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     if diff_info:
         with open(diff_file, 'a', encoding='utf-8') as di:
             di.write('\n'.join(diff_info))
+    else:
+        if diff_ext:
+            print(f'文件夹中的 {diff_ext} 后缀名文件没有差异')
 
     # 处理仅出现在一个目录中的文件
     onlyFiles = setA ^ setB
@@ -524,7 +527,6 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     bonly_count = len(bonlyFiles)
 
     if aonly_count:
-        print(apath, 'only files numbers:', aonly_count)
         with open(a_only_file, 'a') as a:
             for of in sorted(aonlyFiles):
                 a.write(of + '\n')
@@ -535,12 +537,14 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     # print ("#only files in ", bpath)
 
     if bonly_count:
-        print(bpath, 'only files numbers:', bonly_count)
         with open(b_only_file, 'a') as b:
             for of in sorted(bonlyFiles):
                 b.write(of + '\n')
                 # b.write(bpath + of + '\n')
             # print (of)
+
+    print(apath, 'only files numbers:', aonly_count)
+    print(bpath, 'only files numbers:', bonly_count)
 
 
 def doc():

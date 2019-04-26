@@ -148,6 +148,20 @@ def get_text_md5(text):
     return hashlib.md5(text.encode('utf-8')).hexdigest()
 
 
+def human_size(sz):
+    """
+    以人类可读的格式返回大小
+    """
+    if not sz:
+        return False
+    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    s, i = float(sz), 0
+    while s >= 1024 and i < len(units) - 1:
+        s /= 1024
+        i += 1
+    return "%0.2f %s" % (s, units[i])
+
+
 def from_this_dir(filename):
     """
     获取运行模块所在路径的全路径
@@ -553,6 +567,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_crc32)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_md5)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_text_md5)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=human_size)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_this_dir_2)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_file_line_info)

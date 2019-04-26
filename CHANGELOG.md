@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+
+
+## [0.1.49] - 2019-04-26
+### Added
+- ilds.file 添加 human_size 以人类可读的格式返回大小
+
 ## [0.1.48] - 2019-04-12
 ### Changed
 - 修正创建用户的时候，User 模型问题
@@ -13,11 +19,9 @@
 - ilds.file 添加 get_file_crc32 计算文件的 CRC32
 - ilds.file 添加 dir_compare 比较两个目录的文件差异
 
-
 ## [0.1.45] - 2019-03-29
 ### Added
 - ilds.time 添加 millisecond_to_timecode 毫秒转换为时间码字符串
-
 
 ## [0.1.44] - 2019-03-22
 ### Added

@@ -1,6 +1,5 @@
 ﻿from collections import OrderedDict
 
-
 # from django.apps import apps
 # from django.db.models.base import ModelBase
 from django.conf import settings
@@ -17,7 +16,6 @@ from django.db.models import Count
 from django.db.models import QuerySet
 # # from django.db.models import FileField
 from django.db.models import Sum
-
 
 import operator
 from functools import reduce
@@ -97,7 +95,7 @@ class ModelFields():
 
         if exclude is None:
             exclude = []
-        for f in model._meta.fields:
+        for f in model._meta.fields:  # model._meta._get_fields(reverse=False) 包括 ManyToMany 字段
             field_name = f.name
             verbose_name = f.verbose_name
             type_name = type(f).__name__

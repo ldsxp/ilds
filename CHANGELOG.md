@@ -4,7 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
-
+## [0.1.50] - 2019-05-05
+### Added
+- ilds.django.import_export 添加 ModelData 根据 django 模型转换导入数据
+- ilds.django.import_export 添加 dj_import_csv 导入csv文件到数据库
+- ilds.django.import_export 添加 LdsExportCsv 写入数据到 csv 文件，支持自定义写入的表头，和要导出的字段
+- ilds.django.import_export 添加 dj_export_csv 导出数据为csv文件
 
 ## [0.1.49] - 2019-04-26
 ### Added

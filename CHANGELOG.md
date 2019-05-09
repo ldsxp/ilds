@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.51] - 2019-05-09
+### Added
+- ilds.lib.configobj 添加 ConfigObj，因为PyPI几年没有更新。文档：https://configobj.readthedocs.io，Github：https://github.com/DiffSK/configobj
+
 ## [0.1.50] - 2019-05-05
 ### Added
 - ilds.django.import_export 添加 ModelData 根据 django 模型转换导入数据

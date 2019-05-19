@@ -2,12 +2,14 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2018-11-07
+#   日期：2019-05-19
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
+
+from ilds.lib.configobj import ConfigObj
 
 
 def print_doc(fun, is_all=True):
@@ -19,19 +21,19 @@ def print_doc(fun, is_all=True):
     doc = []
     for name in dir(fun):
         if name.startswith('__'):
-            if len(siyou)%6 == 0:
+            if len(siyou) % 6 == 0:
                 siyou.append('\n')
             siyou.append(name)
 
         elif name.startswith('_'):
-            if len(siyou2)%6 == 0:
+            if len(siyou2) % 6 == 0:
                 siyou2.append('\n')
             siyou2.append(name)
         else:
             if is_all:
-                doc.append("%s " % name + "-"*78)
+                doc.append("%s " % name + "-" * 78)
                 doc.append(str(eval("fun.%s.__doc__" % name)))
-                doc.append("="*78 + " %s\n" % name)
+                doc.append("=" * 78 + " %s\n" % name)
             else:
                 doc.append(name)
 
@@ -53,10 +55,10 @@ def dict_val_to_key(mydict):
     """
     字典键值互换
     """
-    return dict([val,key] for key,val in mydict.items())
+    return dict([val, key] for key, val in mydict.items())
 
 
-def list_to_dict(list1,list2):
+def list_to_dict(list1, list2):
     """
     把两个列表转换成相对应的字典
     """
@@ -99,11 +101,11 @@ def get_kuohao_feijie(value):
                 kuohao2 = str_kuohao[pos1 + 1: pos2].strip()
                 return kuohao1, kuohao2
             else:
-                print("歌曲括号后面有内容",value)
+                print("歌曲括号后面有内容", value)
                 return value
                 #
         else:
-            print("歌曲括号不匹配",value)
+            print("歌曲括号不匹配", value)
             return value
 
 
@@ -144,6 +146,46 @@ def xl_col_to_name(col_num, col_abs=False):
     return col_abs + col_str
 
 
+def get_config(infile="./config.ini", key='file', ret_obj=False):
+    """
+    获取ini中的内容
+    :param infile: ini 文件
+    :param key: 要读取的键
+    :param ret_obj: 如果为真，返回元组（config 对象，值）
+    :return: 根据 ret_obj 参数返回值或（config 对象，值）
+
+    例子：
+    config, value = get_config(infile="./config.ini", key='file', ret_obj=True)
+    print(config, value)
+
+    # 添加新项
+    config['files'] = []
+    config['files'].append("我们是中文的")
+
+    # 读配置文件
+    print(config['files'])
+
+    # 保存配置文件
+    config.write()
+
+    # 删除项
+    # del config['files']
+
+    # 将配置写入到不同的文件
+    # config.filename = "./test1.ini"
+    # config.write()
+    """
+
+    config = ConfigObj(infile, encoding='utf-8')
+
+    _value = config.get(key, ConfigObj)
+
+    if ret_obj:
+        return config, _value
+    else:
+        return _value
+
+
 def doc():
     """
     打印模块说明文档
@@ -157,6 +199,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=sort_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_kuohao_feijie)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=xl_col_to_name)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_config)
     print(doc_text)
 
 

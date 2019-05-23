@@ -42,6 +42,10 @@ pip --no-cache-dir install -U ilds
 # 打包需要安装 twine
 # 如果报错：error: invalid command 'bdist_wheel'，多半是 setuptools 版本不正确或者没有安装 wheel
 
+# 处理pip升级失败
+# python -m pip install --upgrade pip 更新失败 卸载 python -m pip uninstall pip 安装 easy_install.exe pip 不能解决！
+# 用这个命令升级：easy_install -U pip
+
 # 检查错误
 # twine check dist/*
 

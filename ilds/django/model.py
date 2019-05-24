@@ -6,11 +6,12 @@ from django.conf import settings
 
 from django.forms.models import model_to_dict  # 获取模型实例的字典
 # from django.db.models.base import ModelBase
+from django.db.models.base import Model
 from django.conf import settings
 # # from django.db.models import FileField
 from django.db.models import Sum
 
-# from django.apps import apps
+from django.apps import apps
 # group_by 这个分组 我喜欢
 from django.db.models import Count
 from django.db.models import QuerySet
@@ -36,6 +37,48 @@ kwargs = 需要添加的字段字典
 loadList.append(需要添加的库模型(**kwargs))
 print('成功导入 %s 行' % len(models_ku.objects.bulk_create(loadList)))
 """
+
+
+def get_model(ku, ku_dict=None) -> Model:
+    """
+    通过库的名字 获取库模型
+
+    20170815 重构 把精准匹配模式改成是否包含库名字的字符串
+    20170821 增加 如果参数是模型 直接返回
+
+
+    例子：
+        try:
+            ku = get_ku_model('版权库')
+        except Exception as e:
+            print(e)
+
+    :param ku:
+    :param ku_dict:
+    :return: Model
+    """
+
+    if ku_dict is None:
+        ku_dict = {}
+
+    if isinstance(ku, Model):
+        return ku
+    else:
+        for ku_name in ku_dict.keys():
+            # print(ku_name)
+            if ku_name in ku:
+                return ku_dict[ku_name]
+
+        # 如果在库列表里面没有找到库，那么尝试看有没有用'__'设置库
+        if '__' in ku:
+            my_ku = ku.split('__')[0]
+            for app in apps.get_models():
+                if not 'django.contrib.' in str(app) and '.models.' in str(app):
+                    print(app)
+                    if my_ku == app.__name__:
+                        return app
+
+        raise RuntimeError('没有 %s 数据库！' % ku)
 
 
 def get_search_results(queryset, search_fields, search_term):

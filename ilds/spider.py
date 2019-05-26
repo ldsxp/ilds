@@ -10,7 +10,6 @@
 # ---------------------------------------
 
 
-
 import os
 # import datetime
 from time import time, sleep
@@ -120,10 +119,10 @@ def download_file(url, file_name=None):
         print('文件大小获取失败，%s 不是合法文件......' % file_name)
         return None
 
-    print("开始下载：%s \n文件大小：%s" % (file_name,file_size))
+    print("开始下载：%s \n文件大小：%s" % (file_name, file_size))
 
     with open(file_name, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024*1024):
+        for chunk in r.iter_content(chunk_size=1024 * 1024):
             if chunk:
                 f.write(chunk)
     print("%s 下载完成!\n" % file_name)
@@ -135,7 +134,7 @@ def url_to_dict(url):
     params = {}
     url = parse.unquote(url)
     for param in url.split('&'):
-        #print(param)
+        # print(param)
         k, v = param.split('=')
         params[k] = v
         # print("'{}': '{}',".format(k, v),)

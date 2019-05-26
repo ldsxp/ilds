@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.53] - 2019-05-26
+### Added
+- ilds.time 添加 Timer，计时器，可以当装饰器或者用 with 来对代码计时
+
 ## [0.1.52] - 2019-05-19
 ### Added
 - ilds.util 添加 get_config，获取ini中的内容

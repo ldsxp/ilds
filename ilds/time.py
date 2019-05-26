@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：time.py
-#   版本：0.5
+#   版本：0.6
 #   作者：lds
-#   日期：2018-11-28
+#   日期：2019-05-26
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
@@ -233,7 +233,7 @@ def millisecond_to_timecode(millisecond):
     毫秒转换为时间码字符串 01:02:03,000
     """
     return '%02d:%02d:%02d,%03d' % (
-    millisecond / 3600000, (millisecond % 3600000) / 60000, (millisecond % 60000) / 1000, millisecond % 1000)
+        millisecond / 3600000, (millisecond % 3600000) / 60000, (millisecond % 60000) / 1000, millisecond % 1000)
 
 
 def second_to_time_str(seconds):
@@ -255,6 +255,53 @@ def second_to_time_str(seconds):
     time_str += '%01d.%03d秒' % (seconds % 60, (seconds % 1) * 1000)
 
     return time_str
+
+
+class Timer:
+    """
+    计时器，可以当装饰器或者用 with 来对代码计时
+
+    # 例子：
+        >>> import time
+        >>> def papapa(t):
+        >>>     time.sleep(t)
+        >>> with Timer() as timer:
+        >>>     papapa(1)
+        运行时间 1.000 秒
+        >>> @Timer.time_it
+        >>> def papapa(t):
+        >>>     time.sleep(t)
+        >>> papapa(1)
+        papapa 运行时间 1.001 秒
+    """
+
+    def __init__(self, name=None):
+        self.start = time.time()
+
+        # 我们添加一个自定义的计时名称
+        if isinstance(name, str):
+            self.name = name + ' '
+        else:
+            self.name = ''
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop = time.time()
+        self.cost = self.stop - self.start
+        print(f'{self.name}运行时间 {self.cost:.3f} 秒', )
+        return exc_type is None
+
+    @staticmethod
+    def time_it(func):
+        def wrapper(*args, **kwargs):
+            start = time.time()
+            result = func(*args, **kwargs)
+            print(f'{func.__name__} 运行时间 {time.time() - start:.3f} 秒', )
+            return result
+
+        return wrapper
 
 
 def doc():

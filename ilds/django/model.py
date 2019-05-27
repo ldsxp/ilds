@@ -1,12 +1,7 @@
 ﻿from collections import OrderedDict
 
-# from django.apps import apps
-# from django.db.models.base import ModelBase
-from django.conf import settings
-
 from django.forms.models import model_to_dict  # 获取模型实例的字典
-# from django.db.models.base import ModelBase
-from django.db.models.base import Model
+from django.db.models.base import ModelBase, Model
 from django.conf import settings
 # # from django.db.models import FileField
 from django.db.models import Sum
@@ -39,46 +34,42 @@ print('成功导入 %s 行' % len(models_ku.objects.bulk_create(loadList)))
 """
 
 
-def get_model(ku, ku_dict=None) -> Model:
+def get_model(value, model_dict=None, is_exact=True) -> Model:
     """
-    通过库的名字 获取库模型
-
-    20170815 重构 把精准匹配模式改成是否包含库名字的字符串
-    20170821 增加 如果参数是模型 直接返回
-
+    通过库的名字或模型的名字获取模型
 
     例子：
-        try:
-            ku = get_ku_model('版权库')
-        except Exception as e:
-            print(e)
+        ku_model = get_model('酷狗', model_dict=None, is_exact=True)
+        if not ku_model:
+            raise RuntimeError('没有找到模型！')
 
-    :param ku:
-    :param ku_dict:
+    :param value: 要获取的模型，如果本身就是模型，直接返回
+    :param ku_dict: 从模型字典（模型名字：模型）中获取模型
+    :param is_exact: 精确模式，控制是否匹配文件名中包含模型名的情况
     :return: Model
     """
 
-    if ku_dict is None:
-        ku_dict = {}
+    if isinstance(value, ModelBase):
+        return value
 
-    if isinstance(ku, Model):
-        return ku
-    else:
-        for ku_name in ku_dict.keys():
-            # print(ku_name)
-            if ku_name in ku:
-                return ku_dict[ku_name]
+    _model_dict = {app.__name__: app for app in apps.get_models() if
+                   'django.contrib.' not in str(app) and '.models.' in str(app)}
+    # print(_model_dict)
 
-        # 如果在库列表里面没有找到库，那么尝试看有没有用'__'设置库
-        if '__' in ku:
-            my_ku = ku.split('__')[0]
-            for app in apps.get_models():
-                if not 'django.contrib.' in str(app) and '.models.' in str(app):
-                    print(app)
-                    if my_ku == app.__name__:
-                        return app
-
-        raise RuntimeError('没有 %s 数据库！' % ku)
+    # 检查模型的名称
+    if value in _model_dict:
+        return _model_dict[value]
+    elif model_dict is not None:
+        if is_exact:
+            # 如果是精确模式，匹配以后就可以返回
+            if value in model_dict:
+                return model_dict[value]
+        else:
+            # 不是精确模式，主要是处理文件名中包含模型名字的情况
+            for ku_name in model_dict.keys():
+                # print(ku_name)
+                if ku_name in value:
+                    return model_dict[ku_name]
 
 
 def get_search_results(queryset, search_fields, search_term):
@@ -377,6 +368,7 @@ def doc():
     """
     doc_text = """"""
     doc_text += '\n'
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_model)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ModelFields)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_model_verbose_name_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_model_name_dict)

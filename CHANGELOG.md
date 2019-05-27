@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.54] - 2019-05-27
+### Added
+- ilds.model 添加 get_model，通过库的名字或模型的名字获取模型
+
 ## [0.1.53] - 2019-05-26
 ### Added
 - ilds.time 添加 Timer，计时器，可以当装饰器或者用 with 来对代码计时

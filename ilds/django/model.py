@@ -337,13 +337,13 @@ def group_by(query_set, group_by):
     return groups
 
 
-def get_queryset_date_range(queryset, date_field='shujuriqi_date'):
+def get_queryset_date_range(queryset, date_field='shujuriqi_date', format_string="%Y-%m-%d"):
     """
     获取 QuerySet 的日期间隔 参数 queryset，日期的字段
     """
 
-    fromdate = queryset.order_by(date_field)[:1].values_list(date_field)[0][0].strftime("%Y-%m-%d")
-    todate = queryset.order_by('-' + date_field)[:1].values_list(date_field)[0][0].strftime("%Y-%m-%d")
+    fromdate = queryset.order_by(date_field)[:1].values_list(date_field)[0][0].strftime(format_string)
+    todate = queryset.order_by('-' + date_field)[:1].values_list(date_field)[0][0].strftime(format_string)
     return fromdate, todate
 
 

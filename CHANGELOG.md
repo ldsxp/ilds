@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.56] - 2019-05-30
+### Added
+- ilds.django.admin 添加 ExportCsvMixin，导出 CSV 格式文件的动作
+
 ## [0.1.54] - 2019-05-27
 ### Added
 - ilds.django.model 添加 get_model，通过库的名字或模型的名字获取模型

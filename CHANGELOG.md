@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.57] - 2019-06-12
+### Added
+- ilds.django.model 添加 TableData，转换 Eccel 数据为 Django 模型数据
+
 ## [0.1.56] - 2019-05-30
 ### Added
 - ilds.django.admin 添加 ExportCsvMixin，导出 CSV 格式文件的动作

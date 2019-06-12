@@ -193,6 +193,62 @@ class ModelFields():
         return ([iter_dict[arg][i] for arg in args] for i in range(self.count))
 
 
+class TableData(ModelFields):
+    """
+    转换 Eccel 数据为 Django 模型数据
+
+    我们继承自 ModelFields ，所以可以使用它所有的功能
+
+    # 例子
+    table = TableData(models)
+    xiuzheng = {'替换内容1':'替换为1', '替换内容2':'替换为2'}
+    r = table.set_title(self.headers_title, **xiuzheng)
+    if r:
+        raise ValueError(f'字段没有导入：{r}')
+    # print(r, table._fields, table._rows)
+    """
+
+    def set_title(self, title, exclude=None, **kwargs):
+        """
+        设置标题行内容
+
+        我们通过标题行对应的列索引获取数据
+        """
+        if not isinstance(title, list):
+            raise ValueError('title 参数需要是列表类型！')
+        if exclude is None:
+            exclude = []
+
+        rows = []
+        fields = []
+        ret = []
+        for i, name in enumerate(title):
+            field = self.verbose_to_field(name)
+            if field:
+                # print(field)
+                rows.append(i)
+                fields.append(field)
+            elif name in exclude:
+                continue
+            elif name in kwargs and self.verbose_to_field(kwargs[name]):
+                # print(self.verbose_to_field(kwargs[name]))
+                rows.append(i)
+                fields.append(self.verbose_to_field(kwargs[name]))
+            else:
+                ret.append(name)
+
+        self.title = title
+        self._rows = rows
+        self._fields = fields
+        self.count = len(fields)
+
+        return ret
+
+    def get_model_data(self, lines):
+        """获取 Django 模型使用的字典数据"""
+        return {field: lines[i] for i, field in enumerate(self._fields)}
+
+
 # 从上面改成输入 模型 和 排除
 def get_model_verbose_name_dict(modelobj, exclude=None):
     """

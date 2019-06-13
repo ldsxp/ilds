@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.58] - 2019-06-13
+### Added
+- ilds.django.model 添加 calc_sum，计算 QuerySet 中指定字段的和
+
 ## [0.1.57] - 2019-06-12
 ### Added
 - ilds.django.model 添加 TableData，转换 Eccel 数据为 Django 模型数据

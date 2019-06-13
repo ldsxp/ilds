@@ -3,8 +3,6 @@
 from django.forms.models import model_to_dict  # 获取模型实例的字典
 from django.db.models.base import ModelBase, Model
 from django.conf import settings
-# # from django.db.models import FileField
-from django.db.models import Sum
 
 from django.apps import apps
 # group_by 这个分组 我喜欢
@@ -369,6 +367,20 @@ def get_queryset_sum(queryset, field_list, *args):
     except:
         pass
     return None
+
+
+def calc_sum(query_set, field_list):
+    """
+    计算 QuerySet 中指定字段的和
+
+    这个和 get_queryset_sum 不同，get_queryset_sum 是按分组求和，calc_sum 是聚合求和
+
+    :param queryset: 数据集
+    :param field_list: 需要求和的字段
+    :return: 求和字段的字典
+    """
+    assert isinstance(query_set, QuerySet)
+    return query_set.aggregate(**{field: Sum(field) for field in field_list})
 
 
 def group_by(query_set, group_by):

@@ -146,7 +146,7 @@ def xl_col_to_name(col_num, col_abs=False):
     return col_abs + col_str
 
 
-def get_config(infile="./config.ini", key='file', ret_obj=False):
+def get_config(infile="./config.ini", key='file', ret_obj=False, default=''):
     """
     获取ini中的内容
     :param infile: ini 文件
@@ -179,6 +179,11 @@ def get_config(infile="./config.ini", key='file', ret_obj=False):
     config = ConfigObj(infile, encoding='utf-8')
 
     _value = config.get(key, ConfigObj)
+
+    # 如果没有找到内容我们设置一个默认值
+    if _value == ConfigObj:
+        _value = config[key] = default
+        config.write()
 
     if ret_obj:
         return config, _value

@@ -2,7 +2,7 @@
 #
 # ---------------------------------------
 #   程序：md.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
 #   日期：2019-01-02
 #   语言：Python 3.X
@@ -67,7 +67,15 @@ def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start
         # 先能识别文件的编码方式，然后根据此编码方式进行对文件编码，获取文件内容。 """
         html_data = fp.read()
         result = chardet.detect(html_data)
-        file_content = html_data.decode(encoding=result['encoding'])
+        encoding = result['encoding']
+        if encoding is None:
+            encoding = 'utf-8'
+        elif encoding == 'Windows-1254':
+            encoding = 'utf-8'
+        try:
+            file_content = html_data.decode(encoding=encoding)
+        except Exception as e:
+            print(html_file, '转换 html 为 markdown 发生错误', result['encoding'], e)
 
         text_maker = html2text.HTML2Text()
         text_maker.body_width = 0

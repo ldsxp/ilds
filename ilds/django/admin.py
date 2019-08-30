@@ -9,7 +9,7 @@ class ExportCsvMixin:
     """
 
     def export_as_csv(self, request, queryset):
-        if getattr(self, 'using'):
+        if getattr(self, 'using', None):
             queryset = queryset.using(self.using)
 
         meta = self.model._meta

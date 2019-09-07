@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.62] - 2019-09-07
+### Added
+- ilds.spider 添加 requests_retry_session，长链接会话，支持重试
+
 ## [0.1.60] - 2019-04-12
 ### Fixed
 - 转换为 md 文件的编码错误

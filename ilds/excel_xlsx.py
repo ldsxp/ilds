@@ -74,10 +74,19 @@ class ReadXlsx(object):
             print('next_sheet ---------------------------------')
             xlsx.next_sheet()
 
+        # 需要处理所有内容是时候可以使用
+        print('---------------------------------')
+        while 1:
+            print(xlsx.title)
+            if xlsx.next_sheet() is None:
+                break
+        print('---------------------------------')
+
         # print(xlsx.datasets())
         # for i in xlsx.datasets():
         #     print(i)
 
+        # 建议使用这种方法，返回的是迭代器
         # for i in xlsx.values():
         #     print(i)
 

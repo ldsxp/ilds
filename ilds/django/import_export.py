@@ -251,12 +251,12 @@ class LdsExportCsv():
                         self.tongji_info[i_field_list] += int(value)
                     # print(self.tongji_info)
                 # 处理日期
-                elif i_field_list == 'shujuriqi_date':
+                if i_field_list == 'shujuriqi_date':
                     value = model_dict[i_field_list].strftime("%Y-%m")
-                elif '_date' in i_field_list:
+                elif i_field_list.endswith('_date'):
                     value = model_dict[i_field_list].strftime("%Y-%m-%d")
                 # 处理文件
-                elif '_file' in i_field_list:
+                elif i_field_list.endswith('_file'):
                     value = get_model_fieldfile_path(model_dict[i_field_list])
                 else:
                     value = model_dict[i_field_list]

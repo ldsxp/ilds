@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.66] - 2019-10-11
+### Added
+- ilds.mycsv 添加 csv_to_xls、csv_to_xlsx，转换 csv 文件为 Excel 文件
+
 ## [0.1.62] - 2019-09-07
 ### Added
 - ilds.spider 添加 requests_retry_session，长链接会话，支持重试

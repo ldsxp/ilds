@@ -73,12 +73,12 @@ def now_to_date(format_string="%Y-%m-%d %H:%M:%S"):
     return str_date
 
 
-def get_now():
+def get_now(fmt="%Y-%m-%d %H:%M:%S"):
     """
     获取当前日期和时间
     :return: 格式 2018-11-28 15:03:08
     """
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.now().strftime(fmt)
 
 
 def get_now_date():

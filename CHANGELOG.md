@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.67] - 2019-10-24
+### Fixed
+- 修复获取 Django 模型使用的字典数据问题
+
 ## [0.1.66] - 2019-10-11
 ### Added
 - ilds.mycsv 添加 csv_to_xls、csv_to_xlsx，转换 csv 文件为 Excel 文件

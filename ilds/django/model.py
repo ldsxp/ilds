@@ -244,7 +244,7 @@ class TableData(ModelFields):
 
     def get_model_data(self, lines):
         """获取 Django 模型使用的字典数据"""
-        return {field: lines[i] for i, field in enumerate(self._fields)}
+        return {field: lines[self._rows[i]] for i, field in enumerate(self._fields)}
 
 
 # 从上面改成输入 模型 和 排除

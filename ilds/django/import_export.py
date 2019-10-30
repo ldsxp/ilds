@@ -55,6 +55,7 @@ class ModelData():
         if exclude is None:
             exclude = []
 
+        self.model = model
         self.import_fields = []
         self.import_index = []
         self.zhuanhuan = {}

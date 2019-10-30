@@ -120,6 +120,7 @@ class ModelFields():
         """
         初始化
         """
+        self.model = model
         self.field_list = []
         self.verbose_list = []
         self.type_list = []

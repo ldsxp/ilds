@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.69] - 2019-10-30
+### Added
+- ilds.django.admin.ExportCsvMixin 支持设置导出文件的编码、自定义导出 ForeignKey 字段内容和排除导出字段
+
 ## [0.1.67] - 2019-10-24
 ### Fixed
 - 修复获取 Django 模型使用的字典数据问题

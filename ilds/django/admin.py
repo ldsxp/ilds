@@ -6,6 +6,10 @@ from django.http import HttpResponse
 class ExportCsvMixin:
     """
     导出 CSV 格式文件的动作
+
+    支持自定义的内容：
+    # 设置导出 Csv 文件的编码
+    csv_charset = 'gb2312'
     """
 
     def export_as_csv(self, request, queryset):
@@ -17,7 +21,7 @@ class ExportCsvMixin:
         # 写入标题
         field_verbose_name = [field.verbose_name for field in meta.fields]
 
-        response = HttpResponse(content_type='text/csv')
+        response = HttpResponse(content_type='text/csv', charset=getattr(self, 'csv_charset', 'utf-8'))
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
         writer = csv.writer(response)
 

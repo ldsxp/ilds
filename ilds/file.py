@@ -102,7 +102,7 @@ def replace_invalid_filename_char(filename, replaced_char='_'):
     :param replaced_char:  替换的字符
     :return:
     """
-    invalid_characaters = '\\/:*?"<>|'
+    invalid_characaters = '\\/:*?"<>|\r\n'
     for c in invalid_characaters:
         filename = filename.replace(c, replaced_char)
 

@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.4
+#   版本：0.5
 #   作者：lds
-#   日期：2019-01-18
+#   日期：2019-11-04
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -94,7 +94,7 @@ def validate_title(title):
     return new_title
 
 
-def replace_invalid_filename_char(filename, replaced_char='_'):
+def replace_invalid_filename_char(filename, replaced_char='_', max=100):
     """
     替换文件名中无效的字符。 默认用'_'替换。
 
@@ -102,9 +102,16 @@ def replace_invalid_filename_char(filename, replaced_char='_'):
     :param replaced_char:  替换的字符
     :return:
     """
-    invalid_characaters = '\\/:*?"<>|\r\n'
+    invalid_characaters = '\\/:*?"<>|\r\n\t'
     for c in invalid_characaters:
         filename = filename.replace(c, replaced_char)
+
+    # 清理空白符号
+    filename = filename.strip()
+
+    # 截断超过最大长度的字符
+    if len(filename) > max:
+        filename = f'{filename[:max - 3]}...'
 
     return filename
 

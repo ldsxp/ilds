@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.70] - 2019-11-04
+### Changed
+- 修改 Windows 文件名时，删除更多非法字符，支持限制文件名最大长度
+
 ## [0.1.69] - 2019-10-30
 ### Added
 - ilds.django.admin.ExportCsvMixin 支持设置导出文件的编码、自定义导出 ForeignKey 字段内容和排除导出字段

@@ -72,6 +72,8 @@ def html_to_md(html_file, save_file=None, end=False, rename_img=False, img_start
             encoding = 'utf-8'
         elif encoding == 'Windows-1254':
             encoding = 'utf-8'
+        elif encoding == 'GB2312':
+            encoding = 'GB18030'
         try:
             file_content = html_data.decode(encoding=encoding)
         except Exception as e:

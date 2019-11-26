@@ -2,8 +2,7 @@
 import sys
 from setuptools import setup, find_packages
 
-
-version = '0.1.70'
+version = '0.1.71'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -69,7 +68,6 @@ pip install -U "/Users/lds/Library/Mobile Documents/iCloud~com~omz-software~Pyth
 
 """
 
-
 # twine upload dist/* 使用 twine 上传
 # 添加上传到 PyPI 的命令
 if sys.argv[-1] == 'up':
@@ -78,6 +76,7 @@ if sys.argv[-1] == 'up':
     os.system('python setup.py sdist bdist_wheel')
     os.system('twine upload dist/*')
     sys.exit()
+
 
 # error: invalid command 'bdist_wheel' 需要安装wheel ： pip install -U wheel
 # 读取 README.md 文件内容
@@ -155,6 +154,7 @@ setup(
         'requests',
         'html2text',
         'mistune',
+        'openpyxl',
         # 'setuptools>=16.0',
         # '+++',
     ],

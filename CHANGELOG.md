@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+
+## [0.1.72] - 2019-11-04
+### Changed
+- 修改 django.model.confirm_db，在没有安装 wxpython 的时候，我们在命令行确认
+
 ## [0.1.70] - 2019-11-04
 ### Changed
 - 修改 Windows 文件名时，删除更多非法字符，支持限制文件名最大长度

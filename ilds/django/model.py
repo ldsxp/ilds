@@ -421,14 +421,22 @@ def confirm_db():
     确认是否修改线上数据库
     本地操作，因为如果没有修改会直接退出，防止误操作
     """
-    import wx
-    app = wx.App()
-    if not settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
+        return
+    try:
+        import wx
+        app = wx.App()
         dlg = wx.MessageDialog(None, "正在修改服务器数据库，是否继续？", "警告：不是连接的本地数据库", wx.YES_NO | wx.ICON_QUESTION)
         if dlg.ShowModal() == wx.ID_YES:
-            print("修改服务器数据库......")
-        else:
-            exit()
+            print("修改服务器线上数据库......")
+            return
+    except ModuleNotFoundError:
+        from ..cmd import confirm_yes_no
+        if confirm_yes_no(title='警告：不是连接的本地数据库', text='正在修改服务器数据库，是否继续？\n输入 y 确认，其他任意字符表示取消'):
+            print("修改服务器线上数据库......")
+            return
+    print("退出程序，不修改线上数据库！")
+    exit()
 
 
 def doc():

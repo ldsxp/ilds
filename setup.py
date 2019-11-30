@@ -49,7 +49,7 @@ pip --no-cache-dir install -U ilds
 # twine check dist/*
 
 echo 使用 twine 上传到官方的pip服务器:
-echo 已经不需要 cd tools\ilds
+echo 在系统添加 TWINE_USERNAME 和 TWINE_PASSWORD 变量，不用输入用户名和密码
 rmdir /S/Q build
 rmdir /S/Q dist
 python setup.py sdist bdist_wheel
@@ -71,8 +71,10 @@ pip install -U "/Users/lds/Library/Mobile Documents/iCloud~com~omz-software~Pyth
 # twine upload dist/* 使用 twine 上传
 # 添加上传到 PyPI 的命令
 if sys.argv[-1] == 'up':
-    os.system('rm -rf dist')
-    os.system('rm -rf build')
+    # os.system('rm -rf dist')
+    # os.system('rm -rf build')
+    os.system('rmdir /S/Q build')
+    os.system('rmdir /S/Q dist')
     os.system('python setup.py sdist bdist_wheel')
     os.system('twine upload dist/*')
     sys.exit()

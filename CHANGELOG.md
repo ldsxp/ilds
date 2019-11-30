@@ -4,6 +4,9 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.73] - 2019-11-30
+### Added
+- ilds.util.admin.attrdict 可以用属性访问的字典
 
 ## [0.1.72] - 2019-11-04
 ### Changed

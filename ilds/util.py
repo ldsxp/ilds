@@ -191,6 +191,16 @@ def get_config(infile="./config.ini", key='file', ret_obj=False, default=''):
         return _value
 
 
+class attrdict(dict):
+    """
+    可以用属性访问的字典
+    """
+
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        self.__dict__ = self
+
+
 def doc():
     """
     打印模块说明文档

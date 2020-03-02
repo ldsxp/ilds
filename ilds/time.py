@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：time.py
-#   版本：0.6
+#   版本：0.7
 #   作者：lds
-#   日期：2019-05-26
+#   日期：2020-03-02
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
@@ -255,6 +255,30 @@ def second_to_time_str(seconds):
     time_str += '%01d.%03d秒' % (seconds % 60, (seconds % 1) * 1000)
 
     return time_str
+
+
+def time_str_to_second(time_str):
+    """
+    把人类阅读的时间转换为秒，用来和 second_to_time_str 函数互相转换
+    例如：time_str_to_second('1小时1分1.099秒') 返回 3661.099
+    """
+
+    if '秒' not in time_str:
+        return None
+
+    seconds = 0.0
+
+    if '小时' in time_str:
+        hour, time_str = time_str.split('小时')
+        seconds += int(hour.strip()) * 3600
+
+    if '分' in time_str:
+        minute, time_str = time_str.split('分')
+        seconds += int(minute.strip()) * 60
+
+    seconds += float(time_str.strip().replace('秒', ''))
+
+    return seconds
 
 
 class Timer:

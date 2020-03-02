@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.74] - 2020-03-02
+### Added
+- ilds.util.time.time_str_to_second 把人类阅读的时间转换为秒，用来和 second_to_time_str 函数互相转换
+
 ## [0.1.73] - 2019-11-30
 ### Added
 - ilds.util.admin.attrdict 可以用属性访问的字典

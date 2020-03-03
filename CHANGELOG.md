@@ -4,6 +4,13 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.75] - 2020-03-03
+### Added
+- ilds.file.check_filename_available 检查文件是否存在，如果已经存在，添加编号重命名
+### Changed
+- ilds.file.exist_or_makedir 添加弃用警告
+- ilds.file.exists_file 添加弃用警告
+
 ## [0.1.74] - 2020-03-02
 ### Added
 - ilds.util.time.time_str_to_second 把人类阅读的时间转换为秒，用来和 second_to_time_str 函数互相转换

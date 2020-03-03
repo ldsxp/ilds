@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.5
+#   版本：0.6
 #   作者：lds
-#   日期：2019-11-04
+#   日期：2020-03-03
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -23,6 +23,7 @@ import re
 from datetime import datetime
 from zlib import crc32
 import difflib
+import warnings
 
 AFILES = []  # EE
 BFILES = []  # SVN
@@ -62,6 +63,8 @@ def exist_or_makedir(in_dir):
     :param in_dir:
     :return: None
     """
+    warnings.warn('exist_or_makedir 已经弃用，建议用 os.makedirs(name, exist_ok=True) 替代',
+                  DeprecationWarning)
     output_dir = os.path.dirname(in_dir)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -227,6 +230,10 @@ def exists_file(_file):
     :param _file:
     :return:
     """
+
+    warnings.warn('exists_file 已经弃用，因为它对人类不友好，也没有检查新名字是否已经存在\n建议用 check_filename_available 替代',
+                  DeprecationWarning)
+
     if os.path.exists(_file):
         while True:
             f_name, f_ext = os.path.splitext(_file)
@@ -236,6 +243,24 @@ def exists_file(_file):
         return _file2
     else:
         return _file
+
+
+def check_filename_available(file_name):
+    """
+    检查文件是否存在，如果已经存在，添加编号重命名
+    例如: 文件.txt > 文件 (1).txt
+    """
+    import os
+    if not os.path.exists(file_name):
+        return file_name
+
+    num = 1
+    f_name, f_ext = os.path.splitext(file_name)
+    while True:
+        new_file_name = f"{f_name} ({num}){f_ext}"
+        if not os.path.exists(new_file_name):
+            return new_file_name
+        num += 1
 
 
 def exists_file_to_bak(_file):

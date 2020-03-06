@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：excel_xlsx.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2019-01-14
+#   日期：2020-03-06
 #   语言：Python 3.X
 #   说明：读取excel文件内容
 # ---------------------------------------
@@ -59,42 +59,26 @@ class ReadXlsx(object):
 
         # 例子
         xlsx_file = r"E:\my - 数据\其他\20180731 阿玲 参考\申请单G1.5(1)(1).xlsx"
-        # data_only=True 的时候不读取公式 , index=10
-        # 读取大文件的时候添加 read_only=True
-        # xlsx = ReadExcel(xlsx_file, data_only=True)
 
-        xlsx = ReadXlsx(xlsx_file)
-        # time_fmt = "%Y-%m"
+        # 读取大文件的时候添加 read_only=True, data_only=True 的时候不读取公式
+        xlsx = ReadXlsx(xlsx_file, read_only=True, data_only=True)
+
         xlsx.debug = True
         # print(xlsx.sheet_names)
 
-        for i in range(len(xlsx.sheet_names)):
-            xlsx.max_row
-            xlsx.max_column
-            print('next_sheet ---------------------------------')
-            xlsx.next_sheet()
-
-        # 需要处理所有内容是时候可以使用
+        # 处理所有列表内容
         print('---------------------------------')
         while 1:
             print(xlsx.title)
+            # values 返回的是迭代器
+            for i in xlsx.values():
+                print(xlsx.line, i)
             if xlsx.next_sheet() is None:
                 break
         print('---------------------------------')
 
-        # print(xlsx.datasets())
-        # for i in xlsx.datasets():
-        #     print(i)
-
-        # 建议使用这种方法，返回的是迭代器
-        # for i in xlsx.values():
-        #     print(i)
-
-        print(xlsx.set_sheet(10)) # 这个要判断下是否成功
+        print(xlsx.set_sheet(10))  # 这个要判断下是否成功
         print(xlsx.next_sheet(), xlsx.index)
-
-        print(xlsx.title)
-
         """
         # print('args', args,'kwargs',kwargs)
 
@@ -104,14 +88,17 @@ class ReadXlsx(object):
         except:
             self.index = 0
 
+        self.line = 0
+        self.sheet = None
+
         # 数字转字符串
 
         # 日期格式
-        self.time_fmt = "%Y-%m-%d" # YYYY-MM-DD
-            # self.time_fmt = "%Y-%m"
+        self.time_fmt = "%Y-%m-%d"  # YYYY-MM-DD
+        # self.time_fmt = "%Y-%m"
 
         # self.excel = 'xlsx'
-        self.wb = load_workbook(*args,**kwargs)
+        self.wb = load_workbook(*args, **kwargs)
         self.sheet_names = self.wb.sheetnames
         self.set_sheet(self.index)
         # print(self.excel)
@@ -132,7 +119,7 @@ class ReadXlsx(object):
     @property
     def max_column(self):
         """  列 """
-        if self.debug:print(f"title {self.title} index {self.index} 列 {self.sheet.max_column}")
+        if self.debug: print(f"title {self.title} index {self.index} 列 {self.sheet.max_column}")
         return self.sheet.max_column
 
     # @property
@@ -153,6 +140,7 @@ class ReadXlsx(object):
         xls 的表达式不能显示
         # 返回可迭代结果
         """
+        self.line = 0
         # rows 是可迭代的生成器
         for row in self.sheet.rows:
             row_vals = []
@@ -167,7 +155,7 @@ class ReadXlsx(object):
                 # bg_color = fill.end_color.rgb  # end_color bgColor
                 # print(bg_color)
                 # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
-                if c.data_type == "n" :
+                if c.data_type == "n":
                     if c.number_format != "General" and is_date_format(c.number_format):
                         # print('number_format 日期',c.number_format,c.value)
                         if c.value is not None:
@@ -180,13 +168,14 @@ class ReadXlsx(object):
                             cell_value = str(c.value)  # 数字转换为字符串
                         else:
                             cell_value = ''
-                elif c.data_type == "d" :
+                elif c.data_type == "d":
                     cell_value = c.value.strftime(self.time_fmt)
                 else:
                     cell_value = c.value
                 row_vals.append(cell_value)
             # print(row_vals)
             yield row_vals
+            self.line += 1
 
     def next_sheet(self):
         """ 下一个表 """
@@ -223,6 +212,7 @@ def doc():
 
     print(doc_text)
 
+
 if __name__ == "__main__":
     t1 = time()
 
@@ -250,11 +240,9 @@ if __name__ == "__main__":
     # for i in xlsx.values():
     #     print(i)
 
-    print(xlsx.set_sheet(10)) # 这个要判断下是否成功
+    print(xlsx.set_sheet(10))  # 这个要判断下是否成功
     print(xlsx.next_sheet(), xlsx.index)
 
     print(xlsx.title)
 
     print('用时 %.2f 秒' % (time() - t1))
-
-

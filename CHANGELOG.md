@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.76] - 2020-03-06
+### Changed
+- ReadXlsx 读取文件的时候添加行数显示
+
 ## [0.1.75] - 2020-03-03
 ### Added
 - ilds.file.check_filename_available 检查文件是否存在，如果已经存在，添加编号重命名

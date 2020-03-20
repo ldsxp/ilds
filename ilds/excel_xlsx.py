@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：excel_xlsx.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2020-03-06
+#   日期：2020-03-20
 #   语言：Python 3.X
 #   说明：读取excel文件内容
 # ---------------------------------------
@@ -155,19 +155,15 @@ class ReadXlsx(object):
                 # bg_color = fill.end_color.rgb  # end_color bgColor
                 # print(bg_color)
                 # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
-                if c.data_type == "n":
+                if c.value is None:
+                    cell_value = c.value
+                elif c.data_type == "n":
                     if c.number_format != "General" and is_date_format(c.number_format):
                         # print('number_format 日期',c.number_format,c.value)
-                        if c.value is not None:
-                            cell_value = c.value.strftime(self.time_fmt)
-                            # print(cell_value)
-                        else:
-                            cell_value = ''
+                        cell_value = c.value.strftime(self.time_fmt)
                     else:
-                        if c.value is not None:
-                            cell_value = str(c.value)  # 数字转换为字符串
-                        else:
-                            cell_value = ''
+                        # cell_value = str(c.value)  # 数字转换为字符串
+                        cell_value = c.value
                 elif c.data_type == "d":
                     cell_value = c.value.strftime(self.time_fmt)
                 else:

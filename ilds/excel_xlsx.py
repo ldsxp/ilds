@@ -91,6 +91,11 @@ class ReadXlsx(object):
         self.line = 0
         self.sheet = None
 
+        # 转换表格格式
+        self.conversion_format = True
+        # 如果没有内容(None)的时候转换为空字符（需要设置 self.conversion_format = True）
+        self.none_to_null_characters = True
+
         # 数字转字符串
 
         # 日期格式
@@ -143,32 +148,35 @@ class ReadXlsx(object):
         self.line = 0
         # rows 是可迭代的生成器
         for row in self.sheet.rows:
-            row_vals = []
-            # row_vals = [c.value for c in row]
-            # print(row)
-            for c in row:
-                # fill = c.fill
-                # fg_color = fill.start_color.rgb  # start_color fgColor
-                # if 'Values must be of type' in str(fg_color):
-                #     fg_color = '00000000'
-                # print(fg_color)
-                # bg_color = fill.end_color.rgb  # end_color bgColor
-                # print(bg_color)
-                # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
-                if c.value is None:
-                    cell_value = c.value
-                elif c.data_type == "n":
-                    if c.number_format != "General" and is_date_format(c.number_format):
-                        # print('number_format 日期',c.number_format,c.value)
+            if self.conversion_format:
+                row_vals = []
+                # row_vals = [c.value for c in row]
+                # print(row)
+                for c in row:
+                    # fill = c.fill
+                    # fg_color = fill.start_color.rgb  # start_color fgColor
+                    # if 'Values must be of type' in str(fg_color):
+                    #     fg_color = '00000000'
+                    # print(fg_color)
+                    # bg_color = fill.end_color.rgb  # end_color bgColor
+                    # print(bg_color)
+                    # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
+                    if c.value is None and self.none_to_null_characters:
+                        cell_value = ''
+                    elif c.data_type == "n":
+                        if c.number_format != "General" and is_date_format(c.number_format):
+                            # print('number_format 日期',c.number_format,c.value)
+                            cell_value = c.value.strftime(self.time_fmt)
+                        else:
+                            # cell_value = str(c.value)  # 数字转换为字符串
+                            cell_value = c.value
+                    elif c.data_type == "d":
                         cell_value = c.value.strftime(self.time_fmt)
                     else:
-                        # cell_value = str(c.value)  # 数字转换为字符串
                         cell_value = c.value
-                elif c.data_type == "d":
-                    cell_value = c.value.strftime(self.time_fmt)
-                else:
-                    cell_value = c.value
-                row_vals.append(cell_value)
+                    row_vals.append(cell_value)
+            else:
+                row_vals = [c.value for c in row]
             # print(row_vals)
             yield row_vals
             self.line += 1

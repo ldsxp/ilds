@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.77] - 2020-04-15
+### Added
+- ilds.file.get_compound_file_binary 获取复合文件二进制格式文件中的数据
+
 ## [0.1.76] - 2020-03-06
 ### Changed
 - ReadXlsx 读取文件的时候添加行数显示

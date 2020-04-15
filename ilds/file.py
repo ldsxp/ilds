@@ -2,7 +2,7 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.6
+#   版本：0.7
 #   作者：lds
 #   日期：2020-03-03
 #   语言：Python 3.X
@@ -24,6 +24,8 @@ from datetime import datetime
 from zlib import crc32
 import difflib
 import warnings
+
+from colorama import Fore, Back, Style
 
 AFILES = []  # EE
 BFILES = []  # SVN
@@ -579,6 +581,28 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     print(bpath, 'only files numbers:', bonly_count)
 
 
+def get_compound_file_binary(compound_file):
+    """
+    获取复合文件二进制格式文件中的数据
+    
+    Compound File Binary Format Files
+    https://stackoverflow.com/questions/12705527/reading-excel-files-with-xlrd
+    """
+    try:
+        import olefile
+        with open(compound_file, 'rb') as f:
+            ole = olefile.OleFileIO(f)
+            # print(ole.listdir())
+            if ole.exists('Workbook'):
+                d = ole.openstream('Workbook')
+                return d
+            else:
+                return f
+    except ImportError as e:
+        print(Fore.RED + "注：找不到 olefile，请安装它: pip install olefile", Style.RESET_ALL)
+        pass
+
+
 def doc():
     """
     打印模块说明文档
@@ -623,7 +647,7 @@ if __name__ == '__main__':
     from time import time, sleep
 
     start_time = t1 = time()
-
+    get_compound_file_binary('compound_file')
     doc()
 
     # 性能测试

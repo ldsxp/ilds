@@ -2,12 +2,23 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2019-01-28
+#   日期：2019-04-16
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
+import os
+
+from colorama import Fore, Back, Style
+
+from ilds.file import get_dir_files
+
+try:
+    import pandas as pd
+except ImportError as e:
+    print(Fore.RED + "注：导入 pandas 失败，请安装它: pip install pandas", Style.RESET_ALL)
+    pass
 
 
 def get_columns_index(df, columns):
@@ -19,6 +30,64 @@ def get_columns_index(df, columns):
         columns_index.append(df.columns.get_loc(col))
     # print('columns_index', columns_index)
     return columns_index
+
+
+def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_filename_column=True, is_print=True):
+    """
+    合并多个 Excel 文件内容
+
+    :param file_dir: 合并文件的路径
+    :param ext: 要合并的文件后缀名，默认是文件夹中的全部文件
+    :param concat_columns: 指定要合并的列名列表
+    :param add_filename_column: 是否添加文件名的列
+    :param is_print: 打印信息
+    :return:
+    """
+    all_len = 0
+    frames = []
+    for file in get_dir_files(file_dir, ext):
+        if is_print:
+            print(file)
+        with pd.ExcelFile(file) as excel:
+            sheet_names = excel.sheet_names
+            if is_print:
+                print('表薄名称列表：', sheet_names)
+            # 通过表薄名字读取表单
+            # data['总表'] = pd.read_excel(excel, sheet_name='总表')
+            # 读取全部表
+            for sheet_name in sheet_names:
+                _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
+                # _df = pd.read_excel(excel, sheet_name=0, header=0)
+                if is_print:
+                    print('表薄名称：', sheet_name, '\t', '行数：', len(_df), '\t', '文件：', file)
+                # if 'Metadatas' != sheet_name:
+                #     print('跳过内容', sheet_name)
+                #     continue
+                all_len += len(_df)
+                if add_filename_column:
+                    _df['资料来源'] = f"{os.path.split(file)[1]} - {sheet_name}"
+                # 是否指定要合并的列
+                if concat_columns is not None:
+                    _df = _df[concat_columns]
+                frames.append(_df)
+
+    _df = pd.concat(frames)  # result
+    if is_print:
+        print('合并数据行数：', len(_df), '导入数据行数统计：', all_len)
+    return _df
+
+
+def writer_excel(obj, path, index=False):
+    """
+    保存 Excel 文件
+    """
+    if isinstance(obj, dict):
+        with pd.ExcelWriter(path) as writer:
+            for sheet_name, df_data in obj.items():
+                df_data.to_excel(writer, sheet_name=sheet_name, index=index)
+    else:
+        with pd.ExcelWriter(path) as writer:
+            obj.to_excel(writer, sheet_name='Sheet1', index=index)
 
 
 def doc():

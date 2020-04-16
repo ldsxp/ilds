@@ -32,14 +32,14 @@ def get_columns_index(df, columns):
     return columns_index
 
 
-def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_filename_column=True, is_print=True):
+def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True):
     """
     合并多个 Excel 文件内容
 
     :param file_dir: 合并文件的路径
     :param ext: 要合并的文件后缀名，默认是文件夹中的全部文件
     :param concat_columns: 指定要合并的列名列表
-    :param add_filename_column: 是否添加文件名的列
+    :param add_source_column: 是否添加原始来源
     :param is_print: 打印信息
     :return:
     """
@@ -64,8 +64,8 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_filename_
                 #     print('跳过内容', sheet_name)
                 #     continue
                 all_len += len(_df)
-                if add_filename_column:
-                    _df['资料来源'] = f"{os.path.split(file)[1]} - {sheet_name}"
+                if add_source_column:
+                    _df['本行来自'] = f"{os.path.split(file)[1]} - {sheet_name}"
                 # 是否指定要合并的列
                 if concat_columns is not None:
                     _df = _df[concat_columns]

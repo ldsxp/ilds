@@ -73,7 +73,7 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_filename_
 
     _df = pd.concat(frames)  # result
     if is_print:
-        print('合并数据行数：', len(_df), '导入数据行数统计：', all_len)
+        print('合并数据行数：', len(_df), '原始数据行数：', all_len)
     return _df
 
 

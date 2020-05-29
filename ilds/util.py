@@ -146,16 +146,16 @@ def xl_col_to_name(col_num, col_abs=False):
     return col_abs + col_str
 
 
-def get_config(infile="./config.ini", key='file', ret_obj=False, default=''):
+def get_config(file="./config.ini", key='file', ret_obj=False, default=''):
     """
     获取ini中的内容
-    :param infile: ini 文件
+    :param file: ini 文件
     :param key: 要读取的键
     :param ret_obj: 如果为真，返回元组（config 对象，值）
     :return: 根据 ret_obj 参数返回值或（config 对象，值）
 
     例子：
-    config, value = get_config(infile="./config.ini", key='file', ret_obj=True)
+    config, value = get_config(file="./config.ini", key='file', ret_obj=True)
     print(config, value)
 
     # 添加新项
@@ -176,7 +176,7 @@ def get_config(infile="./config.ini", key='file', ret_obj=False, default=''):
     # config.write()
     """
 
-    config = ConfigObj(infile, encoding='utf-8')
+    config = ConfigObj(file, encoding='utf-8')
 
     _value = config.get(key, ConfigObj)
 

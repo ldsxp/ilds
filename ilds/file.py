@@ -32,23 +32,23 @@ BFILES = []  # SVN
 COMMON = []  # EE & SVN
 
 
-def is_file(filename):
+def is_file(file):
     """
     判断是否为文件
-    :param filename:文件
+    :param file:文件
     :return:文件不存在，不是文件，大小为0，返回 None
     """
-    if not os.path.exists(filename):
-        print(filename, ' 没有找到')
+    if not os.path.exists(file):
+        print(file, ' 没有找到')
         return None
-    if not os.path.isfile(filename):
-        print(filename, ' 不是文件')
+    if not os.path.isfile(file):
+        print(file, ' 不是文件')
         return None
-    if os.path.getsize(filename) == 0:
-        print(filename, ' 大小为 0')
+    if os.path.getsize(file) == 0:
+        print(file, ' 大小为 0')
         return None
 
-    return filename
+    return file
 
 
 def make_dir(_path):
@@ -121,28 +121,29 @@ def replace_invalid_filename_char(filename, replaced_char='_', max=100):
     return filename
 
 
-def get_file_crc32(filename):
+def get_file_crc32(file):
     """
     计算文件的 CRC32
-    :param filename:
+    :param file:
     :return:
     """
-    with open(filename, 'rb') as f:
+    with open(file, 'rb') as f:
         return crc32(f.read())
 
 
-def get_file_md5(filename, block_size=4096):
+def get_file_md5(file, block_size=4096):
     """
     计算文件的 MD5
-    :param filename:
+    :param file:
+    :param block_size:
     :return:
     """
 
-    if not is_file(filename):
+    if not is_file(file):
         return None
 
     md5_ = hashlib.md5()
-    with open(filename, 'rb') as f:
+    with open(file, 'rb') as f:
         while True:
             data = f.read(block_size)
             if not data:
@@ -174,18 +175,18 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 
-def from_this_dir(filename):
+def from_this_dir(file):
     """
     获取运行模块所在路径的全路径
     """
-    return os.path.join(os.path.dirname(os.path.dirname(__file__)), filename)
+    return os.path.join(os.path.dirname(os.path.dirname(__file__)), file)
 
 
-def from_this_dir_2(filename):
+def from_this_dir_2(file):
     """
     获取本模块所在路径的全路径
     """
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
 
 def get_file_line_info():
@@ -247,17 +248,17 @@ def exists_file(_file):
         return _file
 
 
-def check_filename_available(file_name):
+def check_filename_available(file):
     """
     检查文件是否存在，如果已经存在，添加编号重命名
     例如: 文件.txt > 文件 (1).txt
     """
     import os
-    if not os.path.exists(file_name):
-        return file_name
+    if not os.path.exists(file):
+        return file
 
     num = 1
-    f_name, f_ext = os.path.splitext(file_name)
+    f_name, f_ext = os.path.splitext(file)
     while True:
         new_file_name = f"{f_name} ({num}){f_ext}"
         if not os.path.exists(new_file_name):
@@ -265,29 +266,29 @@ def check_filename_available(file_name):
         num += 1
 
 
-def exists_file_to_bak(_file):
+def exists_file_to_bak(file):
     """
     如果文件已经存在，拷贝到 bak 文件夹
     """
-    if os.path.exists(_file):
+    if os.path.exists(file):
         while True:
-            file_path, file_name = os.path.split(_file)
+            file_path, file_name = os.path.split(file)
             f_name, f_ext = os.path.splitext(file_name)
             _file2 = os.path.join(file_path, 'bak', f_name + '-' + datetime.now().strftime('%Y%m%d%H%M%S') + f_ext)
-            if _file != _file2:
+            if file != _file2:
                 break
         make_dir(os.path.dirname(_file2))
-        shutil.move(_file, _file2)
+        shutil.move(file, _file2)
         # print(shutil.move(_file, _file2))
         # print((_file, _file2))
 
 
-def get_name(path):
+def get_name(file):
     """
     获取路径中最后的文件名 不包括后缀名
     """
     # os.path.split 分离路径的目录名和文件名(dirname(), basename()) 元组，后一部分总是最后级别的目录或文件名
-    _, name = os.path.basename(path)
+    _, name = os.path.basename(file)
     # 分离文件名和扩展名， 返回(filename,extension)元组，没有扩展名，扩展名返回空
     ret_name, _ = os.path.splitext(name)
     return ret_name
@@ -581,7 +582,7 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
     print(bpath, 'only files numbers:', bonly_count)
 
 
-def get_compound_file_binary(compound_file):
+def get_compound_file_binary(file):
     """
     获取复合文件二进制格式文件中的数据
     
@@ -590,7 +591,7 @@ def get_compound_file_binary(compound_file):
     """
     try:
         import olefile
-        with open(compound_file, 'rb') as f:
+        with open(file, 'rb') as f:
             ole = olefile.OleFileIO(f)
             # print(ole.listdir())
             if ole.exists('Workbook'):

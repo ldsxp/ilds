@@ -131,11 +131,11 @@ def get_file_crc32(file):
         return crc32(f.read())
 
 
-def get_file_md5(file, block_size=4096):
+def get_file_md5(file, block_size=65536):
     """
     计算文件的 MD5
-    :param file:
-    :param block_size:
+    :param file: 文件路径
+    :param block_size: 读取缓存大小
     :return:
     """
 
@@ -145,10 +145,10 @@ def get_file_md5(file, block_size=4096):
     md5_ = hashlib.md5()
     with open(file, 'rb') as f:
         while True:
-            data = f.read(block_size)
-            if not data:
+            buf = f.read(block_size)
+            if not buf:
                 break
-            md5_.update(data)
+            md5_.update(buf)
     return md5_.hexdigest()
 
 

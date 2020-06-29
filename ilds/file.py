@@ -32,6 +32,9 @@ BFILES = []  # SVN
 COMMON = []  # EE & SVN
 
 
+# import _winapi #  可以创建文件夹的软链接
+# _winapi.CreateJunction(r"源文件", r"链接文件")
+
 def is_file(file):
     """
     判断是否为文件

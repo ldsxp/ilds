@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.7
+#   版本：0.8
 #   作者：lds
-#   日期：2020-03-03
+#   日期：2020-08-29
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -251,19 +251,31 @@ def exists_file(_file):
         return _file
 
 
-def check_filename_available(file):
+def check_filename_available(file, make_dirs=False, dirs_name='重复'):
     """
-    检查文件是否存在，如果已经存在，添加编号重命名
+    检查文件是否存在，如果已经存在，添加编号重命名或者创建重复内容的文件夹
     例如: 文件.txt > 文件 (1).txt
+          文件.txt > 重复(1)/文件.txt
+
+    :param file: 要检查的文件
+    :param make_dirs: 是否创建文件夹
+    :param dirs_name: 文件夹的名字
+    :return: 不重复的文件路径
     """
     import os
     if not os.path.exists(file):
         return file
 
     num = 1
-    f_name, f_ext = os.path.splitext(file)
+    if make_dirs:
+        f_path, f_file = os.path.split(file)
+    else:
+        f_name, f_ext = os.path.splitext(file)
     while True:
-        new_file_name = f"{f_name} ({num}){f_ext}"
+        if make_dirs:
+            new_file_name = os.path.join(f_path, f"{dirs_name}({num})", f_file)
+        else:
+            new_file_name = f"{f_name} ({num}){f_ext}"
         if not os.path.exists(new_file_name):
             return new_file_name
         num += 1

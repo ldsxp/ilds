@@ -4,9 +4,13 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.80] - 2020-08-29
+### Changed
+- ilds.file.check_filename_available 支持创建重复文件夹
+
 ## [0.1.79] - 2020-05-29
 ### Changed
-- ilds.file 修改参数名为 file，支持 Pycharm 自动跳转到文件
+- ilds.file.get_config 修改参数名为 file，支持 Pycharm 自动跳转到文件
 
 ## [0.1.78] - 2020-04-16
 ### Added

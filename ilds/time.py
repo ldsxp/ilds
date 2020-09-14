@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：time.py
-#   版本：0.7
+#   版本：0.8
 #   作者：lds
-#   日期：2020-03-02
+#   日期：2020-09-14
 #   语言：Python 3.X
 #   说明：处理时间截的函数集合
 # ---------------------------------------
@@ -314,7 +314,7 @@ class Timer:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop = time.time()
         self.cost = self.stop - self.start
-        print(f'{self.name}运行时间 {self.cost:.3f} 秒', )
+        print(f'{self.name}运行时间 {second_to_time_str(self.cost)}', )
         return exc_type is None
 
     @staticmethod
@@ -322,7 +322,7 @@ class Timer:
         def wrapper(*args, **kwargs):
             start = time.time()
             result = func(*args, **kwargs)
-            print(f'{func.__name__} 运行时间 {time.time() - start:.3f} 秒', )
+            print(f'{func.__name__} 运行时间 {second_to_time_str(time.time() - start)}', )
             return result
 
         return wrapper

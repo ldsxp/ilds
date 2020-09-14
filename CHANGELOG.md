@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.81] - 2020-09-14
+### Changed
+- ilds.time.Timer 时间显示改为人类可读
+
 ## [0.1.80] - 2020-08-29
 ### Changed
 - ilds.file.check_filename_available 支持创建重复文件夹

@@ -2,7 +2,7 @@
 #
 # ---------------------------------------
 #   程序：time.py
-#   版本：0.8
+#   版本：0.8.1
 #   作者：lds
 #   日期：2020-09-14
 #   语言：Python 3.X
@@ -312,9 +312,7 @@ class Timer:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.stop = time.time()
-        self.cost = self.stop - self.start
-        print(f'{self.name}运行时间 {second_to_time_str(self.cost)}', )
+        self.running_time()
         return exc_type is None
 
     @staticmethod
@@ -326,6 +324,11 @@ class Timer:
             return result
 
         return wrapper
+
+    def running_time(self):
+        stop = time.time()
+        cost = stop - self.start
+        print(f'{self.name}运行时间 {second_to_time_str(cost)}', )
 
 
 def doc():

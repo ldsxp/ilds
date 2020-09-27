@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.83] - 2020-09-27
+### Fixed
+- ilds.file.get_compound_file_binary 处理非 olefile 文件发生错误
+
 ## [0.1.81] - 2020-09-14
 ### Changed
 - ilds.time.Timer 时间显示改为人类可读

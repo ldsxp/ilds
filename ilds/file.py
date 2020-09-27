@@ -600,20 +600,20 @@ def dir_compare(apath, bpath, diff_ext=None, out_dir=None):
 def get_compound_file_binary(file):
     """
     获取复合文件二进制格式文件中的数据
-    
+
     Compound File Binary Format Files
     https://stackoverflow.com/questions/12705527/reading-excel-files-with-xlrd
     """
     try:
         import olefile
         with open(file, 'rb') as f:
-            ole = olefile.OleFileIO(f)
-            # print(ole.listdir())
-            if ole.exists('Workbook'):
-                d = ole.openstream('Workbook')
-                return d
-            else:
-                return f
+            if str(file).endswith('.xls'):
+                ole = olefile.OleFileIO(f)
+                # print(ole.listdir())
+                if ole.exists('Workbook'):
+                    d = ole.openstream('Workbook')
+                    return d.read()
+            return f.read()
     except ImportError as e:
         print(Fore.RED + "注：找不到 olefile，请安装它: pip install olefile", Style.RESET_ALL)
         pass

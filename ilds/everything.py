@@ -14,8 +14,7 @@ import datetime
 from time import time, sleep
 import shutil
 
-from ilds.excel_xlrd import ReadXlsx, get_gequ_geshou_line
-from ilds.file import human_size
+from ctypes import windll, create_unicode_buffer, c_wchar_p, byref
 
 # everything 文件列表
 # https://www.voidtools.com/zh-cn/support/everything/file_lists/
@@ -113,12 +112,116 @@ def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     writer_efu(efu_file, get_efu_data(file_dir), encoding=encoding)
 
 
+SORT_TYPE = {
+    'EVERYTHING_SORT_NAME_ASCENDING': 1,
+    'EVERYTHING_SORT_NAME_DESCENDING': 2,
+    'EVERYTHING_SORT_PATH_ASCENDING': 3,
+    'EVERYTHING_SORT_PATH_DESCENDING': 4,
+    'EVERYTHING_SORT_SIZE_ASCENDING': 5,
+    'EVERYTHING_SORT_SIZE_DESCENDING': 6,
+    'EVERYTHING_SORT_EXTENSION_ASCENDING': 7,
+    'EVERYTHING_SORT_EXTENSION_DESCENDING': 8,
+    'EVERYTHING_SORT_TYPE_NAME_ASCENDING': 9,
+    'EVERYTHING_SORT_TYPE_NAME_DESCENDING': 10,
+    'EVERYTHING_SORT_DATE_CREATED_ASCENDING': 11,
+    'EVERYTHING_SORT_DATE_CREATED_DESCENDING': 12,
+    'EVERYTHING_SORT_DATE_MODIFIED_ASCENDING': 13,
+    'EVERYTHING_SORT_DATE_MODIFIED_DESCENDING': 14,
+    'EVERYTHING_SORT_ATTRIBUTES_ASCENDING': 15,
+    'EVERYTHING_SORT_ATTRIBUTES_DESCENDING': 16,
+    'EVERYTHING_SORT_FILE_LIST_FILENAME_ASCENDING': 17,
+    'EVERYTHING_SORT_FILE_LIST_FILENAME_DESCENDING': 18,
+    'EVERYTHING_SORT_RUN_COUNT_ASCENDING': 19,
+    'EVERYTHING_SORT_RUN_COUNT_DESCENDING': 20,
+    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_ASCENDING': 21,
+    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_DESCENDING': 22,
+    'EVERYTHING_SORT_DATE_ACCESSED_ASCENDING': 23,
+    'EVERYTHING_SORT_DATE_ACCESSED_DESCENDING': 24,
+    'EVERYTHING_SORT_DATE_RUN_ASCENDING': 25,
+    'EVERYTHING_SORT_DATE_RUN_DESCENDING': 26,
+}
+
+EVERYTHING_ERROR = {
+    0: '操作成功完成',
+    1: '无法为搜索查询分配内存',
+    2: 'IPC 不可用',
+    3: '无法注册搜索查询窗口类',
+    4: '无法创建搜索查询窗口',
+    5: '无法创建搜索查询线程',
+    6: '索引无效，索引必须大于或等于0且小于可见结果的数量',
+    7: '呼叫无效',
+}
+
+
+class SearchError(Exception):
+    """ 搜索错误"""
+    pass
+
+
+class Everything:
+    """
+    Everything SDK
+    http://www.voidtools.com/support/everything/sdk/
+    """
+
+    def __init__(self, everything_dll):
+        self.dll = windll.LoadLibrary(everything_dll)
+        self.buffer = create_unicode_buffer(256)
+
+    def search(self, text, sort=None, max_count=None):
+        """
+        搜索文件
+
+        代码参考：
+        http://www.oschina.net/question/17793_38696?sort=time
+        """
+
+        self.dll.Everything_SetSearchW(c_wchar_p(text))
+        # 设置搜索结果排序
+        if sort is not None and sort in SORT_TYPE:
+            self.dll.Everything_SetSort(SORT_TYPE[sort])
+        # 获取结果的最大数量
+        if isinstance(max_count, int):
+            self.dll.Everything_SetMax(max_count)
+
+        self.dll.Everything_QueryW(True)
+
+        last_error = self.dll.Everything_GetLastError()
+        if last_error == 0:
+            count = self.dll.Everything_GetNumResults()
+            if count == 0:
+                print("没有找到文件！", text)
+
+            for index in range(count):
+                self.dll.Everything_GetResultFullPathNameW(index, byref(self.buffer), len(self.buffer))
+                # print(self.buffer.value.encode("gbk"))
+                yield self.buffer.value
+        else:
+            raise SearchError(f'搜索失败：错误代码 {last_error}, 错误信息：{EVERYTHING_ERROR.get(last_error, None)}')
+
+    def close(self):
+        del self.dll
+        del self.buffer
+
+
 if __name__ == "__main__":
-    from .time import Timer
+    from ilds.time import Timer
 
     t1 = Timer()
 
     # print(reader_efu(r"file.efu", encoding='utf-8'))
     # create_efu(r'file_dir', efu_file=None, encoding='utf-8')
+
+    e = Everything(r"D:\my\测试用户\lib\everything\Everything32.dll")
+    if len(sys.argv) > 1:
+        search_text = sys.argv[1]
+    else:
+        # print("参数错误！")
+        search_text = r'"c:\program files\"'
+
+    print("开始搜索：%s\n---------------------------------" % search_text)
+    print(list(e.search(search_text)))
+    print(list(e.search('测试用户')))
+    e.close()
 
     t1.running_time()

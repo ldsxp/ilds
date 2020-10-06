@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+
+## [0.1.84] - 2020-10-06
+### Fixed
+- ilds.everything 添加了 Everything 创建和读取文件列表的函数，搜索文件的 SDK 例子
+
+
 ## [0.1.83] - 2020-09-27
 ### Fixed
 - ilds.file.get_compound_file_binary 处理非 olefile 文件发生错误

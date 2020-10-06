@@ -22,7 +22,7 @@ pip install -U ilds
 ```python
 import ilds
 
-from lds.file import is_file
+from ilds.file import is_file
 ```
 
 

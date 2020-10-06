@@ -108,7 +108,7 @@ def get_efu_data(file_dir, str_time='%Y-%m-%d %H:%M:%S'):
 
 def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     if efu_file is None:
-        efu_file = '{os.path.basename(file_dir)}.efu'
+        efu_file = f'{os.path.basename(file_dir)}.efu'
     writer_efu(efu_file, get_efu_data(file_dir), encoding=encoding)
 
 

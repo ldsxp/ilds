@@ -1,6 +1,6 @@
 ﻿# ---------------------------------------
 #   程序：everything.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
 #   日期：2020-10-06
 #   语言：Python 3.X
@@ -8,12 +8,8 @@
 
 import os
 import sys
-import re
 import csv
 import datetime
-from time import time, sleep
-import shutil
-
 from ctypes import windll, create_unicode_buffer, c_wchar_p, byref
 
 # everything 文件列表
@@ -29,6 +25,51 @@ EFU 文件是包含文件名、大小、日期以及属性列表的逗号分隔�
 属性可以为 0 或多个 Windows 文件属性。
 EFU 文件是 UTF-8 编码。
 """
+
+SORT_TYPE = {
+    'EVERYTHING_SORT_NAME_ASCENDING': 1,
+    'EVERYTHING_SORT_NAME_DESCENDING': 2,
+    'EVERYTHING_SORT_PATH_ASCENDING': 3,
+    'EVERYTHING_SORT_PATH_DESCENDING': 4,
+    'EVERYTHING_SORT_SIZE_ASCENDING': 5,
+    'EVERYTHING_SORT_SIZE_DESCENDING': 6,
+    'EVERYTHING_SORT_EXTENSION_ASCENDING': 7,
+    'EVERYTHING_SORT_EXTENSION_DESCENDING': 8,
+    'EVERYTHING_SORT_TYPE_NAME_ASCENDING': 9,
+    'EVERYTHING_SORT_TYPE_NAME_DESCENDING': 10,
+    'EVERYTHING_SORT_DATE_CREATED_ASCENDING': 11,
+    'EVERYTHING_SORT_DATE_CREATED_DESCENDING': 12,
+    'EVERYTHING_SORT_DATE_MODIFIED_ASCENDING': 13,
+    'EVERYTHING_SORT_DATE_MODIFIED_DESCENDING': 14,
+    'EVERYTHING_SORT_ATTRIBUTES_ASCENDING': 15,
+    'EVERYTHING_SORT_ATTRIBUTES_DESCENDING': 16,
+    'EVERYTHING_SORT_FILE_LIST_FILENAME_ASCENDING': 17,
+    'EVERYTHING_SORT_FILE_LIST_FILENAME_DESCENDING': 18,
+    'EVERYTHING_SORT_RUN_COUNT_ASCENDING': 19,
+    'EVERYTHING_SORT_RUN_COUNT_DESCENDING': 20,
+    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_ASCENDING': 21,
+    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_DESCENDING': 22,
+    'EVERYTHING_SORT_DATE_ACCESSED_ASCENDING': 23,
+    'EVERYTHING_SORT_DATE_ACCESSED_DESCENDING': 24,
+    'EVERYTHING_SORT_DATE_RUN_ASCENDING': 25,
+    'EVERYTHING_SORT_DATE_RUN_DESCENDING': 26,
+}
+
+EVERYTHING_ERROR = {
+    0: '操作成功完成',
+    1: '无法为搜索查询分配内存',
+    2: 'IPC 不可用',
+    3: '无法注册搜索查询窗口类',
+    4: '无法创建搜索查询窗口',
+    5: '无法创建搜索查询线程',
+    6: '索引无效，索引必须大于或等于0且小于可见结果的数量',
+    7: '呼叫无效',
+}
+
+
+class SearchError(Exception):
+    """ 搜索错误"""
+    pass
 
 
 def reader_efu(efu_file, encoding='utf-8'):
@@ -111,52 +152,6 @@ def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     if efu_file is None:
         efu_file = f'{os.path.basename(file_dir)}.efu'
     writer_efu(efu_file, get_efu_data(file_dir), encoding=encoding)
-
-
-SORT_TYPE = {
-    'EVERYTHING_SORT_NAME_ASCENDING': 1,
-    'EVERYTHING_SORT_NAME_DESCENDING': 2,
-    'EVERYTHING_SORT_PATH_ASCENDING': 3,
-    'EVERYTHING_SORT_PATH_DESCENDING': 4,
-    'EVERYTHING_SORT_SIZE_ASCENDING': 5,
-    'EVERYTHING_SORT_SIZE_DESCENDING': 6,
-    'EVERYTHING_SORT_EXTENSION_ASCENDING': 7,
-    'EVERYTHING_SORT_EXTENSION_DESCENDING': 8,
-    'EVERYTHING_SORT_TYPE_NAME_ASCENDING': 9,
-    'EVERYTHING_SORT_TYPE_NAME_DESCENDING': 10,
-    'EVERYTHING_SORT_DATE_CREATED_ASCENDING': 11,
-    'EVERYTHING_SORT_DATE_CREATED_DESCENDING': 12,
-    'EVERYTHING_SORT_DATE_MODIFIED_ASCENDING': 13,
-    'EVERYTHING_SORT_DATE_MODIFIED_DESCENDING': 14,
-    'EVERYTHING_SORT_ATTRIBUTES_ASCENDING': 15,
-    'EVERYTHING_SORT_ATTRIBUTES_DESCENDING': 16,
-    'EVERYTHING_SORT_FILE_LIST_FILENAME_ASCENDING': 17,
-    'EVERYTHING_SORT_FILE_LIST_FILENAME_DESCENDING': 18,
-    'EVERYTHING_SORT_RUN_COUNT_ASCENDING': 19,
-    'EVERYTHING_SORT_RUN_COUNT_DESCENDING': 20,
-    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_ASCENDING': 21,
-    'EVERYTHING_SORT_DATE_RECENTLY_CHANGED_DESCENDING': 22,
-    'EVERYTHING_SORT_DATE_ACCESSED_ASCENDING': 23,
-    'EVERYTHING_SORT_DATE_ACCESSED_DESCENDING': 24,
-    'EVERYTHING_SORT_DATE_RUN_ASCENDING': 25,
-    'EVERYTHING_SORT_DATE_RUN_DESCENDING': 26,
-}
-
-EVERYTHING_ERROR = {
-    0: '操作成功完成',
-    1: '无法为搜索查询分配内存',
-    2: 'IPC 不可用',
-    3: '无法注册搜索查询窗口类',
-    4: '无法创建搜索查询窗口',
-    5: '无法创建搜索查询线程',
-    6: '索引无效，索引必须大于或等于0且小于可见结果的数量',
-    7: '呼叫无效',
-}
-
-
-class SearchError(Exception):
-    """ 搜索错误"""
-    pass
 
 
 class Everything:

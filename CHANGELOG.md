@@ -4,9 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.85] - 2020-10-06
+### Fixed
+- ilds.everything 修复已知错误
 
 ## [0.1.84] - 2020-10-06
-### Fixed
+### Added
 - ilds.everything 添加了 Everything 创建和读取文件列表的函数，搜索文件的 SDK 例子
 
 

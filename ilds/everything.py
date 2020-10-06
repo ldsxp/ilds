@@ -77,9 +77,10 @@ def writer_efu(efu_file, rows, encoding='utf-8'):
 
 
 def get_efu_data(file_dir, str_time='%Y-%m-%d %H:%M:%S'):
-    data = []
+    """
+    获取 efu 文件列表信息
+    """
     yield ['Filename', 'Size', 'Date Modified', 'Date Created', 'Attributes']
-    from ilds.file import get_walk_files
     if os.path.isdir(file_dir):
         print('\n处理路径：\n%s\n' % file_dir)
         for root, dirs, files in os.walk(file_dir):

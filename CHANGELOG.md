@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.86] - 2020-10-12
+### Changed
+- ilds.everything 重命名 get_efu_data 为 get_data_from_dir
+- ilds.everything reader_efu 返回生成器对象
+
 ## [0.1.85] - 2020-10-06
 ### Fixed
 - ilds.everything 修复已知错误
@@ -11,7 +16,6 @@
 ## [0.1.84] - 2020-10-06
 ### Added
 - ilds.everything 添加了 Everything 创建和读取文件列表的函数，搜索文件的 SDK 例子
-
 
 ## [0.1.83] - 2020-09-27
 ### Fixed

@@ -80,7 +80,6 @@ def reader_efu(efu_file, encoding='utf-8'):
 
     header ['Filename', 'Size', 'Date Modified', 'Date Created', 'Attributes']
     """
-    rows = []
     # 读取csv文件
     with open(efu_file, newline='', encoding=encoding) as f:
         reader = csv.reader(f)  # delimiter=':', quoting=csv.QUOTE_NONE
@@ -88,18 +87,17 @@ def reader_efu(efu_file, encoding='utf-8'):
         iter_reader = iter(reader)
         header = next(iter_reader)  # fieldnames
         # print(header)
-        rows.append(header)
+        yield header
 
         try:
             for row in iter_reader:
                 # print(row)
-                rows.append(row)
+                yield row
         except csv.Error as e:
             print(f'csv.Error file {efu_file}, line {reader.line_num}: {e}')
             return
         # else:
         #     print('读取完成')
-    return rows
 
 
 def writer_efu(efu_file, rows, encoding='utf-8'):
@@ -119,7 +117,7 @@ def writer_efu(efu_file, rows, encoding='utf-8'):
 
 def get_data_from_dir(file_dir):
     """
-    获取 efu 文件列表信息
+    从文件目录获取 efu 文件列表信息
     """
     yield ['Filename', 'Size', 'Date Modified', 'Date Created', 'Attributes']
     if os.path.isdir(file_dir):

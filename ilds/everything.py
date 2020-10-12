@@ -117,13 +117,13 @@ def writer_efu(efu_file, rows, encoding='utf-8'):
         writer.writerows(rows)
 
 
-def get_efu_data(file_dir, str_time='%Y-%m-%d %H:%M:%S'):
+def get_data_from_dir(file_dir):
     """
     获取 efu 文件列表信息
     """
     yield ['Filename', 'Size', 'Date Modified', 'Date Created', 'Attributes']
     if os.path.isdir(file_dir):
-        print('\n处理路径：\n%s\n' % file_dir)
+        # print('\n处理路径：\n%s\n' % file_dir)
         for root, dirs, files in os.walk(file_dir):
             file_info = os.stat(root)
             # https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat
@@ -151,7 +151,7 @@ def get_efu_data(file_dir, str_time='%Y-%m-%d %H:%M:%S'):
 def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     if efu_file is None:
         efu_file = f'{os.path.basename(file_dir)}.efu'
-    writer_efu(efu_file, get_efu_data(file_dir), encoding=encoding)
+    writer_efu(efu_file, get_data_from_dir(file_dir), encoding=encoding)
 
 
 class Everything:

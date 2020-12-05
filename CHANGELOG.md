@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.87] - 2020-12-05
+### Added
+- ilds.file 添加 get_hash_sums 和 get_file_hash 计算文件哈希
+
 ## [0.1.86] - 2020-10-12
 ### Changed
 - ilds.everything 重命名 get_efu_data 为 get_data_from_dir

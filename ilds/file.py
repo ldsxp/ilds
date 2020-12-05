@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.8
+#   版本：0.9
 #   作者：lds
-#   日期：2020-08-29
+#   日期：2020-12-05
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -153,6 +153,58 @@ def get_file_md5(file, block_size=65536):
                 break
             md5_.update(buf)
     return md5_.hexdigest()
+
+
+def get_hash_sums(file, block_size=65536):
+    """
+    获取文件的哈希信息
+
+    :param file: 文件路径
+    :param block_size: 读取缓存大小
+    :return:
+    """
+    hash_sums = {
+        'md5': hashlib.md5(),
+        'sha1': hashlib.sha1(),
+        'sha224': hashlib.sha224(),
+        'sha256': hashlib.sha256(),
+        'sha384': hashlib.sha384(),
+        'sha512': hashlib.sha512()}
+
+    with open(file, 'rb') as fd:
+        data_chunk = fd.read(block_size)
+        while data_chunk:
+            for hash_sum in hash_sums.keys():
+                hash_sums[hash_sum].update(data_chunk)
+            data_chunk = fd.read(block_size)
+
+    results = {}
+    for key, value in hash_sums.items():
+        results[key] = value.hexdigest()
+    return results
+
+
+def get_file_hash(file, block_size=65536, hash_calc=hashlib.sha1()):
+    """
+    计算文件的哈希
+
+    :param file: 文件路径
+    :param block_size: 读取缓存大小
+    :param hash_calc: 哈希算法（md5、sha1、sha224、sha256、sha384、sha512等）
+    :return: 文件哈希
+
+    """
+
+    if not is_file(file):
+        return None
+
+    with open(file, 'rb') as f:
+        while True:
+            buf = f.read(block_size)
+            if not buf:
+                break
+            hash_calc.update(buf)
+    return hash_calc.hexdigest()
 
 
 def get_text_md5(text):

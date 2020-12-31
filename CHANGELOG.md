@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.88] - 2020-12-31
+### Added
+- ilds.file.get_hash_sums 添加参数 names，要获取的哈希名字列表
+
 ## [0.1.87] - 2020-12-05
 ### Added
 - ilds.file 添加 get_hash_sums 和 get_file_hash 计算文件哈希

@@ -155,21 +155,29 @@ def get_file_md5(file, block_size=65536):
     return md5_.hexdigest()
 
 
-def get_hash_sums(file, block_size=65536):
+def get_hash_sums(file, names=None, block_size=65536):
     """
     获取文件的哈希信息
 
     :param file: 文件路径
+    :param names: 要获取的哈希名字列表
     :param block_size: 读取缓存大小
     :return:
     """
-    hash_sums = {
+    _hash_sums = {
         'md5': hashlib.md5(),
         'sha1': hashlib.sha1(),
         'sha224': hashlib.sha224(),
         'sha256': hashlib.sha256(),
         'sha384': hashlib.sha384(),
-        'sha512': hashlib.sha512()}
+        'sha512': hashlib.sha512()
+    }
+    if names is None:
+        hash_sums = _hash_sums
+    else:
+        hash_sums = {k: v for k, v in _hash_sums.items() if k in names}
+        if not hash_sums:
+            return
 
     with open(file, 'rb') as fd:
         data_chunk = fd.read(block_size)

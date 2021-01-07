@@ -150,6 +150,7 @@ def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     if efu_file is None:
         efu_file = f'{os.path.basename(file_dir)}.efu'
     writer_efu(efu_file, get_data_from_dir(file_dir), encoding=encoding)
+    return efu_file
 
 
 class Everything:

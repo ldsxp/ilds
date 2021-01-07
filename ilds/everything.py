@@ -125,15 +125,41 @@ def get_data_from_dir(file_dir):
         for root, dirs, files in os.walk(file_dir):
             file_info = os.stat(root)
             # https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat
+
+            try:
+                st_mtime = datetime.datetime.fromtimestamp(file_info.st_mtime).isoformat(sep='T', timespec='auto')
+            except Exception as e:
+                st_mtime = ''
+                print('st_mtime 错误：', root, e)
+
+            try:
+                st_ctime = datetime.datetime.fromtimestamp(file_info.st_ctime).isoformat(sep='T', timespec='auto')
+            except Exception as e:
+                st_ctime = ''
+                print('st_ctime 错误：', root, e)
+
             rows = [root, '',
-                    datetime.datetime.fromtimestamp(file_info.st_mtime).isoformat(sep='T', timespec='auto'),
-                    datetime.datetime.fromtimestamp(file_info.st_ctime).isoformat(sep='T', timespec='auto'), 16]
+                    st_mtime,
+                    st_ctime, 16]
             yield rows
             for _filename in files:
                 if _filename.startswith('.'):
                     continue
                 _file = os.path.join(root, _filename)
                 file_info = os.stat(_file)
+
+                try:
+                    st_mtime = datetime.datetime.fromtimestamp(file_info.st_mtime).isoformat(sep='T', timespec='auto')
+                except Exception as e:
+                    st_mtime = ''
+                    print('st_mtime 错误：', root, e)
+
+                try:
+                    st_ctime = datetime.datetime.fromtimestamp(file_info.st_ctime).isoformat(sep='T', timespec='auto')
+                except Exception as e:
+                    st_ctime = ''
+                    print('st_ctime 错误：', root, e)
+
                 # print('st_mtime', file_info.st_mtime, os.path.getatime(_file),
                 #       datetime.datetime.fromtimestamp(file_info.st_mtime).strftime(str_time),
                 #       datetime.datetime.fromtimestamp(file_info.st_mtime).isoformat(sep='T', timespec='auto'))
@@ -141,8 +167,8 @@ def get_data_from_dir(file_dir):
                 #       datetime.datetime.fromtimestamp(file_info.st_ctime).strftime(str_time),
                 #       datetime.datetime.fromtimestamp(file_info.st_ctime).isoformat(sep='T', timespec='auto'))
                 rows = [_file, file_info.st_size,
-                        datetime.datetime.fromtimestamp(file_info.st_mtime).isoformat(sep='T', timespec='auto'),
-                        datetime.datetime.fromtimestamp(file_info.st_ctime).isoformat(sep='T', timespec='auto'), 0]
+                        st_mtime,
+                        st_ctime, 0]
                 yield rows
 
 

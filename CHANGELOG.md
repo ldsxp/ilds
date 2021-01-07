@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.89] - 2021-01-07
+### Fixed
+- ilds.everything.get_data_from_dir 获取时间错误的时候只打印错误信息
+
 ## [0.1.88] - 2020-12-31
 ### Added
 - ilds.file.get_hash_sums 添加参数 names，要获取的哈希名字列表

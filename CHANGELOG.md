@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.90] - 2021-01-21
+### Fixed
+- ilds.pd.merging_excel_sheet 合并 Excel 表薄内容
+
 ## [0.1.89] - 2021-01-07
 ### Fixed
 - ilds.everything.get_data_from_dir 获取时间错误的时候只打印错误信息

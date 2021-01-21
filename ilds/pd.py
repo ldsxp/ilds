@@ -32,6 +32,49 @@ def get_columns_index(df, columns):
     return columns_index
 
 
+def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True):
+    df_list = []
+    with pd.ExcelFile(file) as excel:
+        sheet_names = excel.sheet_names
+        if is_print:
+            print('表薄名称列表：', sheet_names)
+        # 通过表薄名字读取表单
+        # data['总表'] = pd.read_excel(excel, sheet_name='总表')
+        # 读取全部表
+        for sheet_name in sheet_names:
+            _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
+            # _df = pd.read_excel(excel, sheet_name=0, header=0)
+            if is_print:
+                print('表薄名称：', sheet_name, '\t', '行数：', len(_df), '\t', '文件：', file)
+            # if 'Metadatas' != sheet_name:
+            #     print('跳过内容', sheet_name)
+            #     continue
+            if add_source_column:
+                _df['本行来自'] = f"{os.path.split(file)[1]} - {sheet_name}"
+            # 是否指定要合并的列
+            if concat_columns is not None:
+                _df = _df[concat_columns]
+            df_list.append(_df)
+    return df_list
+
+
+def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_print=True):
+    """
+    合并 Excel 表薄内容
+
+    :param file: 要合并文件的路径
+    :param concat_columns: 指定要合并的列名列表
+    :param add_source_column: 是否添加原始来源
+    :return:
+    """
+
+    df_list = get_df_list(file, concat_columns, add_source_column, is_print)
+    count = sum([len(df) for df in df_list])
+    df = pd.concat(df_list)  # result
+    print('合并数据行数：', len(df), '导入数据行数统计：', count)
+    return df
+
+
 def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True):
     """
     合并多个 Excel 文件内容
@@ -48,28 +91,9 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_co
     for file in get_dir_files(file_dir, ext):
         if is_print:
             print(file)
-        with pd.ExcelFile(file) as excel:
-            sheet_names = excel.sheet_names
-            if is_print:
-                print('表薄名称列表：', sheet_names)
-            # 通过表薄名字读取表单
-            # data['总表'] = pd.read_excel(excel, sheet_name='总表')
-            # 读取全部表
-            for sheet_name in sheet_names:
-                _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
-                # _df = pd.read_excel(excel, sheet_name=0, header=0)
-                if is_print:
-                    print('表薄名称：', sheet_name, '\t', '行数：', len(_df), '\t', '文件：', file)
-                # if 'Metadatas' != sheet_name:
-                #     print('跳过内容', sheet_name)
-                #     continue
-                all_len += len(_df)
-                if add_source_column:
-                    _df['本行来自'] = f"{os.path.split(file)[1]} - {sheet_name}"
-                # 是否指定要合并的列
-                if concat_columns is not None:
-                    _df = _df[concat_columns]
-                frames.append(_df)
+        df_list = get_df_list(file, concat_columns, add_source_column, is_print)
+        all_len += sum([len(df) for df in df_list])
+        frames.extend(df_list)
 
     _df = pd.concat(frames)  # result
     if is_print:

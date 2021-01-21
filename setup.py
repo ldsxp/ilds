@@ -2,7 +2,7 @@
 import sys
 from setuptools import setup, find_packages
 
-version = '0.1.90'
+version = '0.1.91'
 
 # find_packages()
 # 对于简单工程来说，手动增加packages参数很容易，这个函数默认在和setup.py同一目录下搜索各个含有 __init__.py的包。
@@ -147,6 +147,7 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',  # 我们为了在老版系统安装，添加了这个，但是大部分功能都不支持 3.4
         'Programming Language :: Python :: 3.6',
     ],
     # 需要安装的依赖包

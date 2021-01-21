@@ -147,7 +147,7 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.4',  # 我们为了在老版系统安装，添加了这个，但是大部分功能都不支持 3.4
+        # 'Programming Language :: Python :: 3.4',  # 我们为了在老版系统安装，添加了这个，但是大部分功能都不支持 3.4
         'Programming Language :: Python :: 3.6',
     ],
     # 需要安装的依赖包

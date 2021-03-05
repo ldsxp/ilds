@@ -308,6 +308,8 @@ class Timer:
         else:
             self.name = ''
 
+        print(f'{get_now()} 开始运行 {self.name}', )
+
     def __enter__(self):
         return self
 
@@ -319,8 +321,9 @@ class Timer:
     def time_it(func):
         def wrapper(*args, **kwargs):
             start = time.time()
+            print(f'{get_now()} 开始运行 {func.__name__}', )
             result = func(*args, **kwargs)
-            print(f'{func.__name__} 运行时间 {second_to_time_str(time.time() - start)}', )
+            print(f'{get_now()} 结束运行 {func.__name__}，运行时间 {second_to_time_str(time.time() - start)}', )
             return result
 
         return wrapper
@@ -328,7 +331,7 @@ class Timer:
     def running_time(self):
         stop = time.time()
         cost = stop - self.start
-        print(f'{self.name}运行时间 {second_to_time_str(cost)}', )
+        print(f'{get_now()} 结束运行 {self.name}，运行时间 {second_to_time_str(cost)}', )
 
 
 def doc():

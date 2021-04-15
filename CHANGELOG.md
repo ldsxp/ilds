@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.93] - 2021-04-15
+### Fixed
+- ilds.everything.Everything Linux 下不能使用 Everything，但可以使用其他函数
+
 ## [0.1.92] - 2021-03-05
 ### Changed
 - ilds.time.Timer 添加开始时间显示

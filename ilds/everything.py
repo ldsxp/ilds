@@ -10,7 +10,12 @@ import os
 import sys
 import csv
 import datetime
-from ctypes import windll, create_unicode_buffer, c_wchar_p, byref
+import warnings
+
+try:
+    from ctypes import windll, create_unicode_buffer, c_wchar_p, byref
+except ImportError as e:
+    warnings.warn(f'{e}, Linux 不能使用 ctypes，所以 Everything 不能运行！')
 
 # everything 文件列表
 # https://www.voidtools.com/zh-cn/support/everything/file_lists/

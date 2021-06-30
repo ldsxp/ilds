@@ -215,6 +215,36 @@ def get_file_hash(file, block_size=65536, hash_calc=hashlib.sha1()):
     return hash_calc.hexdigest()
 
 
+def get_hash(file_path, block_size=65536):
+    """
+    获取文件哈希信息
+
+    :param file_path: 文件路径
+    :param block_size: 读取缓存大小
+    :return: {'md5', '', 'sha1', '', 'hash', '', }
+    """
+
+    calc_md5 = hashlib.md5()
+    calc_sha1 = hashlib.sha1()
+    calc_hash = hashlib.sha256()
+
+    with open(file_path, 'rb') as fd:
+        data_chunk = fd.read(block_size)
+        while data_chunk:
+            calc_md5.update(data_chunk)
+            calc_sha1.update(data_chunk)
+            calc_hash.update(data_chunk)
+            data_chunk = fd.read(block_size)
+
+    results = {
+        'md5': calc_md5.hexdigest(),
+        'sha1': calc_sha1.hexdigest(),
+        'hash': f'sha256:{calc_hash.hexdigest()}',  # sha256[哈希算法名字，统一用小写]:[分隔符]128[哈希]，最多字符数 136
+    }
+
+    return results
+
+
 def get_text_md5(text):
     """
     计算文件的 MD5

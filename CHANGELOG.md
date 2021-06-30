@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.94] - 2021-06-30
+### Added
+- ilds.file.get_hash 获取文件哈希信息
+
 ## [0.1.93] - 2021-04-15
 ### Fixed
 - ilds.everything.Everything Linux 下不能使用 Everything，但可以使用其他函数

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.95] - 2021-07-22
+### Changed
+- ilds.pd.merging_excel_sheet 和 ilds.pd.merging_excel_file_data 支持 concat_kwargs 参数
+
 ## [0.1.94] - 2021-06-30
 ### Added
 - ilds.file.get_hash 获取文件哈希信息

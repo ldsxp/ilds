@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2019-04-16
+#   日期：2021-07-22
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
@@ -58,7 +58,7 @@ def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True
     return df_list
 
 
-def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_print=True):
+def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_print=True, **concat_kwargs):
     """
     合并 Excel 表薄内容
 
@@ -70,12 +70,13 @@ def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_pr
 
     df_list = get_df_list(file, concat_columns, add_source_column, is_print)
     count = sum([len(df) for df in df_list])
-    df = pd.concat(df_list)  # result
+    df = pd.concat(df_list, **concat_kwargs)  # result
     print('合并数据行数：', len(df), '导入数据行数统计：', count)
     return df
 
 
-def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True):
+def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True,
+                            **concat_kwargs):
     """
     合并多个 Excel 文件内容
 
@@ -95,7 +96,7 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_co
         all_len += sum([len(df) for df in df_list])
         frames.extend(df_list)
 
-    _df = pd.concat(frames)  # result
+    _df = pd.concat(frames, **concat_kwargs)  # result
     if is_print:
         print('合并数据行数：', len(_df), '原始数据行数：', all_len)
     return _df

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.96] - 2021-09-26
+### Changed
+- ilds.cmd 优化命令行选择
+
 ## [0.1.95] - 2021-07-22
 ### Changed
 - ilds.pd.merging_excel_sheet 和 ilds.pd.merging_excel_file_data 支持 concat_kwargs 参数

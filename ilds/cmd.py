@@ -1,30 +1,30 @@
 from colorama import Fore, Back, Style
 
 
-def prompt_list(in_list,title='选择内容：',text='输入序号：'):
+def prompt_list(in_list, title='选择内容：', text='输入序号：'):
     """
     命令行选择列表内容的交互提示
     选择列表内容，输入 e 返回 None
     """
     print(Fore.BLUE + title)
-    for i,v in enumerate(in_list):
-        print(Fore.RED+f'({i}):', Fore.GREEN+str(v))
-    ret = None
+    for i, v in enumerate(in_list):
+        print(Fore.RED + f'({i}):', Fore.GREEN + str(v))
+    _ret = None
     while True:
-        input_str = input(Fore.YELLOW+text)
+        input_str = input(Fore.YELLOW + text)
         # print(input_str, type(input_str), int(input_str))
         if input_str == 'e':
             break
         try:
-            ret = in_list[int(input_str)]
+            _ret = in_list[int(input_str)]
             break
         except:
             continue
     print(Style.RESET_ALL)
-    return ret
+    return _ret
 
 
-def confirm_yes_no(title='是否确认继续...',text='输入 y 确认，其他任意字符表示取消'):
+def confirm_yes_no(title='是否确认继续...', text='输入 y 确认，其他任意字符表示取消'):
     """
     命令行选择列表内容的交互提示
     输入 y 返回 True，其他任意字符 返回 False
@@ -51,12 +51,12 @@ def doc():
 
     print(doc_text)
 
+
 if __name__ == '__main__':
 
-
-    l = [1111,3333]
-    ret = prompt_list(l)
-    if ret == None:
+    my_list = [1111, 3333]
+    ret = prompt_list(my_list)
+    if ret is None:
         print('没有选择内容直接退出了')
     else:
         print('选择了', ret)

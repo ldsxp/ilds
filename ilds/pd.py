@@ -58,6 +58,59 @@ def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True
     return df_list
 
 
+def get_excel_data(file, columns=None, add_source_column=True, only_read_first_table=False, is_print=True):
+    """
+    读取 Excel 数据
+
+    :param file: Excel 文件
+    :param columns: 指定要读取的列，我们会只读取这些数据，方便用来合并
+    :param add_source_column: 添加内容来源
+    :param only_read_first_table: 只读取第一个表格
+    :param is_print: 打印读取信息
+    :return:
+    """
+    data = {}
+
+    with pd.ExcelFile(file) as excel:
+        sheet_names = excel.sheet_names
+        if is_print:
+            print('表薄名称列表：', sheet_names)
+        # 通过表薄名字读取表单
+        # data['总表'] = pd.read_excel(excel, sheet_name='总表')
+        # 读取全部表
+        for index, sheet_name in enumerate(sheet_names):
+            _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
+            file_name = os.path.basename(file)
+            count = len(_df)
+
+            if is_print:
+                print('表薄名称：', sheet_name, '\t', '行数：', count, '\t', '文件：', file)
+
+            if add_source_column:
+                _df['本行来自'] = f"{file_name} - {sheet_name}"
+
+            # 是否指定要合并的列
+            if columns is not None:
+                _df = _df[columns]
+
+            df_data = {
+                'file_name': file_name,
+                'index': index,
+                'sheet_name': sheet_name,
+                'count': count,
+                'df': _df,
+            }
+
+            if only_read_first_table:
+                df_data['sheet_names'] = sheet_names
+                data = df_data
+                break
+
+            data[sheet_name] = df_data
+
+    return data
+
+
 def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_print=True, **concat_kwargs):
     """
     合并 Excel 表薄内容

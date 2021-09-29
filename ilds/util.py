@@ -11,6 +11,10 @@
 
 from ilds.lib.configobj import ConfigObj
 
+# 最后修改时间：20190929
+CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
+    , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-", "×", "."
+
 
 def print_doc(fun, is_all=True):
     """
@@ -189,6 +193,42 @@ def get_config(file="./config.ini", key='file', ret_obj=False, default=''):
         return config, _value
     else:
         return _value
+
+
+def cleaning_str(text, replace_list=None, reorder_string=False):
+    """
+    清理字符中的多余符号
+
+    :param text: 要处理的文本
+    :param replace_list: 替换指定的字符
+    :param reorder_string:重新排序字符串
+    :return:
+    """
+
+    temp = text.strip().lower()
+
+    # 替换内容
+    if replace_list is not None:
+        for ch in replace_list:
+            # print(ch)
+            temp = temp.replace(*ch)
+
+    # 重新排序
+    if reorder_string:
+        temp = ''.join(sorted(temp))
+
+    # 清除符号
+    for ch in CLEAN_STR:
+        temp = temp.replace(ch, '')
+
+    return temp
+
+
+def cleaning_digital(_str):
+    """
+    清理数字中的标点符号后面的数字
+    """
+    return str(int(str(_str).split('.')[0])).strip()
 
 
 class attrdict(dict):

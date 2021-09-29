@@ -12,9 +12,7 @@ import os
 import sys
 import random
 
-# 最后修改时间：20190929
-CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
-    , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-", "×", "."
+from ilds.util import CLEAN_STR
 
 
 # https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell

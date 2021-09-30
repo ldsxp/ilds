@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2019-05-19
+#   日期：2021-09-30
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
@@ -14,6 +14,9 @@ from ilds.lib.configobj import ConfigObj
 # 最后修改时间：20190929
 CLEAN_STR = "	", " ", "(", ")", "（", "）", " ", "|", "/", "+", "&", "•", "；", " ", "＆", "　", "<", ">" \
     , "、", "\n", "\"", "?", "？", "*", ",", "《", "》", "-", "×", "."
+
+# 替换的字符串
+REPLACE_LIST = [("remix", "dj"), ("dj版", "dj")]
 
 
 def print_doc(fun, is_all=True):
@@ -208,10 +211,11 @@ def cleaning_str(text, replace_list=None, reorder_string=False):
     temp = text.strip().lower()
 
     # 替换内容
-    if replace_list is not None:
-        for ch in replace_list:
-            # print(ch)
-            temp = temp.replace(*ch)
+    if replace_list is None:
+        replace_list = REPLACE_LIST
+    # print('替换内容', replace_list)
+    for ch in replace_list:
+        temp = temp.replace(*ch)
 
     # 重新排序
     if reorder_string:

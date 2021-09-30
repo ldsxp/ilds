@@ -2,13 +2,14 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2021-07-22
+#   日期：2021-09-30
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
 import os
+from collections import OrderedDict
 
 from colorama import Fore, Back, Style
 
@@ -62,14 +63,16 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     """
     读取 Excel 数据
 
+    返回数据：'file_name', 'index', 'sheet_name', 'sheet_names', 'count', 'columns', 'df'
+
     :param file: Excel 文件
     :param columns: 指定要读取的列，我们会只读取这些数据，方便用来合并
     :param add_source_column: 添加内容来源
     :param only_read_first_table: 只读取第一个表格
     :param is_print: 打印读取信息
-    :return:
+    :return: {'file_name', 'index', 'sheet_name', 'sheet_names', 'count', 'columns', 'df'}
     """
-    data = {}
+    data = OrderedDict()
 
     with pd.ExcelFile(file) as excel:
         sheet_names = excel.sheet_names
@@ -97,12 +100,13 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
                 'file_name': file_name,
                 'index': index,
                 'sheet_name': sheet_name,
+                'sheet_names': sheet_names,
                 'count': count,
+                'columns': list(_df.columns),
                 'df': _df,
             }
 
             if only_read_first_table:
-                df_data['sheet_names'] = sheet_names
                 data = df_data
                 break
 

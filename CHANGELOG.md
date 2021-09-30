@@ -4,6 +4,21 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.97] - 2021-09-30
+### Added
+- ilds.match_data.get_exists_dup 获取用来检查重复的内容
+- ilds.match_data.get_digital_dup 获取用来检查的数字内容
+- ilds.match_data.cleaning_data 清理检查添加中的空白内容和多余符号
+- ilds.match_data.match_data 匹配数据并填充匹配到的数据
+- ilds.match_data.add_duplicate_tags 匹配数据并添加重复标记
+- ilds.match_data.fill_in_the_matched_data 填充匹配到的数据
+- ilds.match_data.mark_duplicate 标记重复
+- ilds.match_data.check_duplicate_content 标记单个文件中的重复行
+- ilds.match_data.generated_file_path 生成文件名字
+### Changed
+- ilds.util.py.cleaning_str 因为在 pandas 不能传递参数，所以使用默认的 REPLACE_LIST
+- ilds.util.py.get_excel_data 返回 columns 信息
+
 ## [0.1.96] - 2021-09-26
 ### Changed
 - ilds.cmd 优化命令行选择

@@ -117,7 +117,7 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
 
 def match_data(df1, df2, check_columns, replace_columns, is_digital):
     """
-    匹配歌曲 并替换匹配到的数据
+    匹配数据并填充匹配到的数据
     """
 
     infos = []
@@ -202,7 +202,9 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
 
 
 def add_duplicate_tags(df1, df2, check_columns, tags_title="重复", tags_list=None, is_digital=False):
-    """匹配歌曲 添加重复标记"""
+    """
+    匹配数据并添加重复标记
+    """
 
     infos = []
 

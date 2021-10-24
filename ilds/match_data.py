@@ -4,7 +4,7 @@
 #   程序：match_data.py
 #   版本：0.1
 #   作者：lds
-#   日期：2021-09-30
+#   日期：2021-10-24
 #   语言：Python 3.X
 #   说明：使用 pandas 匹配的函数集合
 # ---------------------------------------
@@ -295,7 +295,7 @@ def fill_in_the_matched_data(df, data, check_columns, replace_columns, is_digita
         df_data = r['data']
         info = r['infos']
         print(info)
-        infos.append(info)
+        infos.extend(info)
 
         # # 清理没有歌曲名和作者的行
         # df_data = df_data.dropna(how='all', subset = ['歌曲名称','表演者'])

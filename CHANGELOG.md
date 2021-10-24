@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.98] - 2021-10-24
+### Fixed
+- ilds.match_data.fill_in_the_matched_data 修复信息列表问题
+
 ## [0.1.97] - 2021-09-30
 ### Added
 - ilds.match_data.get_exists_dup 获取用来检查重复的内容

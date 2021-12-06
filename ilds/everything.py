@@ -1,8 +1,8 @@
 ﻿# ---------------------------------------
 #   程序：everything.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2020-10-06
+#   日期：2021-12-06
 #   语言：Python 3.X
 #   说明：Everything 搜索相关的函数集合
 
@@ -179,7 +179,8 @@ def get_data_from_dir(file_dir):
 
 def create_efu(file_dir, efu_file=None, encoding='utf-8'):
     if efu_file is None:
-        efu_file = f'{os.path.basename(file_dir)}.efu'
+        efu_file = os.path.join(file_dir, f'{datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")} '
+                                          f'{os.path.basename(file_dir)}.efu')
     writer_efu(efu_file, get_data_from_dir(file_dir), encoding=encoding)
     return efu_file
 

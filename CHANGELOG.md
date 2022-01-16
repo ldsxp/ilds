@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.100] - 2022-01-16
+### Added
+- ilds.util.check_out 检查标记退出的文件是否存在，存在的时候删除文件，并返回 True
+
 ## [0.1.99] - 2021-12-06
 ### Changed
 - ilds.everything.create_efu 自动生成的文件名包含时间

@@ -2,12 +2,13 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.4
+#   版本：0.5
 #   作者：lds
-#   日期：2021-09-30
+#   日期：2022-01-16
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
+import os.path
 
 from ilds.lib.configobj import ConfigObj
 
@@ -243,6 +244,17 @@ class attrdict(dict):
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
         self.__dict__ = self
+
+
+def check_out(exit_file='lds.exit'):
+    """
+    检查标记退出的文件是否存在，存在的时候删除文件，并返回 True
+    :param exit_file:
+    :return:
+    """
+    if os.path.exists(exit_file):
+        os.remove(exit_file)
+        return True
 
 
 def doc():

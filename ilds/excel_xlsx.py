@@ -69,10 +69,14 @@ class ReadXlsx(object):
         # 处理所有列表内容
         print('---------------------------------')
         while 1:
-            print(xlsx.title)
+            values = xlsx.values()
+            titles = next(values)
+            print(xlsx.title, titles)
+
             # values 返回的是迭代器
-            for i in xlsx.values():
-                print(xlsx.line, i)
+            for line in values:
+                data = {titles[i]: v for i, v in enumerate(line)}
+                print(xlsx.line, line, data)
             if xlsx.next_sheet() is None:
                 break
         print('---------------------------------')

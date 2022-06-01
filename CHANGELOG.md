@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2022.6.1] - 2022-06-01
+### Fixed
+- ilds.file.get_encoding 改为增量模式获取文件编码，让我们更有信心
+
 ## [0.1.100] - 2022-01-16
 ### Added
 - ilds.util.check_out 检查标记退出的文件是否存在，存在的时候删除文件，并返回 True

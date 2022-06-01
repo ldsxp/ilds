@@ -18,6 +18,7 @@ import shutil
 import hashlib
 # get_encoding
 import chardet
+from chardet.universaldetector import UniversalDetector
 # validateTitle
 import re
 from datetime import datetime
@@ -82,12 +83,13 @@ def get_encoding(fromfile):
     :param fromfile: 
     :return: 编码格式
     """
-    with open(fromfile, 'rb') as tt:
-        ff = tt.readline()
-        # 这里试着换成read(5)也可以，但是换成readlines()后报错
-        enc = chardet.detect(ff)
-        # print(enc['encoding'])
-        return (enc['encoding'])
+    with open(fromfile, 'rb') as f:
+        detector = UniversalDetector()
+        for line in f:
+            detector.feed(line)
+            if detector.done: break
+        detector.close()
+        return detector.result['encoding']
 
 
 def validate_title(title):

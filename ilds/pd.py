@@ -185,17 +185,27 @@ def split_excel_sheet(file, dst_dir=None):
             df.to_excel(writer, sheet_name=d['sheet_name'])
 
 
-def writer_excel(obj, path, index=False):
+def writer_excel(obj, path, index=False, use_zip64=False):
     """
     保存 Excel 文件
+
+    :param obj:
+    :param path:
+    :param index: 是否添加索引
+    :param use_zip64:
+    :return:
     """
     if isinstance(obj, dict):
         with pd.ExcelWriter(path) as writer:
             for sheet_name, df_data in obj.items():
                 df_data.to_excel(writer, sheet_name=sheet_name, index=index)
+            if use_zip64:
+                writer.book.use_zip64()
     else:
         with pd.ExcelWriter(path) as writer:
             obj.to_excel(writer, sheet_name='Sheet1', index=index)
+            if use_zip64:
+                writer.book.use_zip64()
 
 
 def doc():

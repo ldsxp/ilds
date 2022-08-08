@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2022.8.8] - 2022-08-08 未推送
+### Changed
+- ilds.pd.writer_excel 支持 use_zip64 参数
+
 ## [2022.8.8] - 2022-08-08
 ### Added
 - ilds.pd.split_excel_sheet 拆分 Excel 表薄内容

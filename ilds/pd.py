@@ -9,6 +9,7 @@
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
 import os
+from pathlib import Path
 from collections import OrderedDict
 
 from colorama import Fore, Back, Style
@@ -157,6 +158,31 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_co
     if is_print:
         print('合并数据行数：', len(_df), '原始数据行数：', all_len)
     return _df
+
+
+def split_excel_sheet(file, dst_dir=None):
+    """
+    拆分 Excel 表薄内容
+
+    :param file: 要拆分的文件
+    :param dst_dir: 拆分文件的保存目录
+    :return:
+    """
+    file = Path(file)
+
+    if dst_dir is None:
+        dst_dir = file.parent
+
+    excel_data = get_excel_data(file, columns=None, add_source_column=False, only_read_first_table=False,
+                                is_print=False)
+    print('sheet_names', list(excel_data.keys()))
+
+    for sheet_name, d in excel_data.items():
+        df = d['df']
+        to_file = dst_dir / f"{file.stem}-{d['sheet_name']}{file.suffix}"
+        print(f"保存表薄: {d['sheet_name']}, 行数: {d['count']}", to_file)
+        with pd.ExcelWriter(to_file) as writer:
+            df.to_excel(writer, sheet_name=d['sheet_name'])
 
 
 def writer_excel(obj, path, index=False):

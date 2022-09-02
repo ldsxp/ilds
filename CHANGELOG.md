@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2022.9.2] - 2022-09-02
+### Added
+- md5summer.create_md5 创建 md5summer md5 验证
+- md5summer.checking_md5 检验文件的 md5 信息
+- md5summer.save_tar 验证失败的文件保存到压缩包
+
 ## [2022.8.8] - 2022-08-08 未推送
 ### Changed
 - ilds.pd.writer_excel 支持 use_zip64 参数

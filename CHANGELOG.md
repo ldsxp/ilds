@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2022.9.7] - 2022-09-07
+### Added
+- 添加一个要清理的符号
+
 ## [2022.9.2] - 2022-09-02
 ### Added
 - md5summer.create_md5 创建 md5summer md5 验证

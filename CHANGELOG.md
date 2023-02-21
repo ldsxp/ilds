@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.2.21] - 2023-02-21
+### Added
+- ilds.file.synchr_git_files 同步git文件的修改
+### Fixed
+- ilds.file.get_file_hash 修复计算同一个文件，哈希不同的错误
+
 ## [2022.9.29] - 2022-09-29
 ### Added
 - 添加一些要清理的符号

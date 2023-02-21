@@ -194,7 +194,7 @@ def get_hash_sums(file, names=None, block_size=65536):
     return results
 
 
-def get_file_hash(file, block_size=65536, hash_calc=hashlib.sha1()):
+def get_file_hash(file, block_size=65536, hash_calc=None):
     """
     计算文件的哈希
 
@@ -207,6 +207,9 @@ def get_file_hash(file, block_size=65536, hash_calc=hashlib.sha1()):
 
     if not is_file(file):
         return None
+
+    if hash_calc is None:
+        hash_calc = hashlib.sha1()
 
     with open(file, 'rb') as f:
         while True:
@@ -709,6 +712,79 @@ def get_compound_file_binary(file):
     except ImportError as e:
         print(Fore.RED + "注：找不到 olefile，请安装它: pip install olefile", Style.RESET_ALL)
         pass
+
+
+def synchr_git_files(src, dst, remove_src=False):
+    """
+    同步git文件的修改
+
+    :param src:
+    :param dst:
+    :param remove_src:
+    :return:
+    """
+    count = 0
+    remove_count = 0
+
+    # 先把修改同步到dst文件夹
+    for dir_path, dir_names, file_names in os.walk(src):
+        dir_name_list = dir_path.split(os.path.sep)
+        if '.git' in dir_name_list or '-' in dir_name_list:
+            continue
+        # print(dir_name_list)
+
+        for _file_name in file_names:
+            # if _file_name.startswith('.'):
+            #     continue
+
+            is_copy = False
+            info = ''
+            src_file = os.path.join(dir_path, _file_name)
+            dst_file = src_file.replace(src, dst)
+            if os.path.exists(dst_file):
+                src_hash = get_file_hash(src_file)
+                dst_hash = get_file_hash(dst_file)
+                if src_hash != dst_hash:
+                    is_copy = True
+                    info = f'文件哈希不同  {src_hash} {dst_hash} {src_file} {dst_file}'
+            else:
+                is_copy = True
+                info = f'没有找到文件 {dst_file}'
+            if is_copy:
+                count += 1
+                print(is_copy, info, )
+                shutil.copy(src_file, dst_file)
+
+    # 删除目标文件夹多余的文件
+    for dir_path, dir_names, file_names in os.walk(dst):
+        dir_name_list = dir_path.split(os.path.sep)
+        if '.git' in dir_name_list or '-' in dir_name_list:
+            continue
+        # print(dir_name_list)
+
+        for _file_name in file_names:
+            # if _file_name.startswith('.'):
+            #     continue
+
+            is_remove = False
+            info = ''
+            dst_file = os.path.join(dir_path, _file_name)
+            src_file = dst_file.replace(dst, src)
+
+            if not os.path.exists(src_file):
+                is_remove = True
+                info = f'目的文件夹多的文件 {src_file}'
+
+            if is_remove:
+                print(is_remove, info, )
+                if remove_src:
+                    os.remove(src_file)
+                remove_count += 1
+
+    if remove_src:
+        print(f'修改 {count} 删除 {remove_count}')
+    else:
+        print(f'修改 {count} 需要删除的文件 {remove_count}')
 
 
 def doc():

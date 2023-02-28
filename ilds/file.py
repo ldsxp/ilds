@@ -714,15 +714,7 @@ def get_compound_file_binary(file):
         pass
 
 
-def synchr_git_files(src, dst, remove_src=False):
-    """
-    同步git文件的修改
-
-    :param src:
-    :param dst:
-    :param remove_src:
-    :return:
-    """
+def synch_git_files(src, dst, remove_src=False):
     count = 0
     remove_count = 0
 
@@ -753,6 +745,10 @@ def synchr_git_files(src, dst, remove_src=False):
             if is_copy:
                 count += 1
                 print(is_copy, info, )
+
+                dst_dir = os.path.dirname(dst_file)
+                if not os.path.exists(dst_dir):
+                    os.makedirs(dst_dir)
                 shutil.copy(src_file, dst_file)
 
     # 删除目标文件夹多余的文件

@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.4
+#   版本：0.5
 #   作者：lds
-#   日期：2021-09-30
+#   日期：2023-04-03
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
@@ -134,7 +134,7 @@ def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_pr
 
 
 def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True,
-                            **concat_kwargs):
+                            get_files_function=None, **concat_kwargs):
     """
     合并多个 Excel 文件内容
 
@@ -143,11 +143,16 @@ def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_co
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :param is_print: 打印信息
+    :param get_files_function: 支持自定义获取文件的函数
     :return:
     """
+
+    if get_files_function is None:
+        get_files_function = get_dir_files
+
     all_len = 0
     frames = []
-    for file in get_dir_files(file_dir, ext):
+    for file in get_files_function(file_dir, ext):
         if is_print:
             print(file)
         df_list = get_df_list(file, concat_columns, add_source_column, is_print)

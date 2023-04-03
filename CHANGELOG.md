@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.4.3] - 2023-04-03
+### Changed
+- ilds.pd.merging_excel_file_data 添加 get_files_function 参数，支持自定义获取文件的函数 
+
 ## [2023.2.21] - 2023-02-21
 ### Added
 - ilds.file.synchr_git_files 同步git文件的修改

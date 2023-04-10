@@ -15,6 +15,7 @@ from collections import OrderedDict
 from colorama import Fore, Back, Style
 
 from ilds.file import get_dir_files
+from openpyxl import load_workbook
 
 try:
     import pandas as pd
@@ -75,6 +76,15 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     """
     data = OrderedDict()
 
+    try:
+        wb = load_workbook(file)
+        sheet_state_data = {name: wb[name].sheet_state for name in wb.sheetnames}
+        # print(sheet_state_data)
+        wb.close()
+    except Exception as e:
+        print('get_excel_data 错误', e)
+        sheet_state_data = {}
+
     with pd.ExcelFile(file) as excel:
         sheet_names = excel.sheet_names
         if is_print:
@@ -83,6 +93,7 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
         # data['总表'] = pd.read_excel(excel, sheet_name='总表')
         # 读取全部表
         for index, sheet_name in enumerate(sheet_names):
+            sheet_state = sheet_state_data.get(sheet_name, None)
             _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
             file_name = os.path.basename(file)
             count = len(_df)
@@ -102,6 +113,7 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
                 'index': index,
                 'sheet_name': sheet_name,
                 'sheet_names': sheet_names,
+                'sheet_state': sheet_state,
                 'count': count,
                 'columns': list(_df.columns),
                 'df': _df,

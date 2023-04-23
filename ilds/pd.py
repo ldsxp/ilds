@@ -145,28 +145,29 @@ def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_pr
     return df
 
 
-def merging_excel_file_data(file_dir, ext='', concat_columns=None, add_source_column=True, is_print=True,
-                            get_files_function=None, **concat_kwargs):
+def merging_excel_file_data(file_dir_or_file_list, ext='', concat_columns=None, add_source_column=True, is_print=True,
+                            **concat_kwargs):
     """
     合并多个 Excel 文件内容
 
-    :param file_dir: 合并文件的路径
+    :param file_dir_or_file_list: 合并文件的路径或者文件列表
     :param ext: 要合并的文件后缀名，默认是文件夹中的全部文件
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :param is_print: 打印信息
-    :param get_files_function: 支持自定义获取文件的函数
     :return:
     """
-
-    if get_files_function is None:
-        get_files_function = get_dir_files
-
     all_len = 0
     frames = []
-    for file in get_files_function(file_dir, ext):
+
+    if isinstance(file_dir_or_file_list, list):
+        file_list = file_dir_or_file_list
+    else:
+        file_list = get_dir_files(file_dir_or_file_list, ext)
+
+    for file in file_list:
         if is_print:
-            print(file)
+            print('处理文件:', file)
         df_list = get_df_list(file, concat_columns, add_source_column, is_print)
         all_len += sum([len(df) for df in df_list])
         frames.extend(df_list)

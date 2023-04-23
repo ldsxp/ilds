@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.4.23] - 2023-04-23
+### Changed
+- ilds.pd.merging_excel_file_data 支持直接传入文件列表
+
 ## [2023.4.10] - 2023-04-10
 ### Changed
 - ilds.pd.get_excel_data 返回表格的状态信息，这样我们可以选择是否处理隐藏表

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.4.27] - 2023-04-27
+### Added
+- ilds.pd.df_search 在 DataFrame 中搜索
+
 ## [2023.4.23] - 2023-04-23
 ### Changed
 - ilds.pd.merging_excel_file_data 支持直接传入文件列表

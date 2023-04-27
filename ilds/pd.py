@@ -35,6 +35,44 @@ def get_columns_index(df, columns):
     return columns_index
 
 
+def df_search(_df, column, keyword, case=True, flags=0, na=None, regex=True):
+    """
+    在 DataFrame 中搜索
+
+    实现依靠 re.search，也可以是用 re.match
+
+    @param _df: 要搜索的 pandas.DataFrame
+    @param column: 要搜索的列名
+    @param keyword: str 要搜索的字符或正则表达式
+    @param case: 默认为 True，如果为 True 则区分大小写
+    @param flags: 默认0（无标志），标志将传递到RE模块，例如 re.IGNORECASE
+    @param na: 缺失值的可选填充值
+    @param regex: 默认为 True，如果为 True，则使用正则表达式。 如果是 False 则将视为字面字符串
+    @return: 搜索到的 pandas.DataFrame
+
+    # 可以看看
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.contains.html?highlight=contains
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.match.html#pandas.Series.str.match
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.startswith.html#pandas.Series.str.startswith
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.endswith.html#pandas.Series.str.endswith
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.fullmatch.html#pandas.Series.str.fullmatch
+
+    ## 例子
+    # 创建一个 DataFrame
+    data = {
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
+        'age': [25, 30, 35, 40, 45],
+        'gender': ['F', 'M', 'M', 'M', 'F']
+    }
+    df = pd.DataFrame(data)
+
+    # 进行搜索
+    result = df_search(df, 'name', 'a', case=True, flags=0, na=None, regex=True)
+    print(result)
+    """
+    return _df[_df[column].str.contains(keyword, case=case, flags=flags, na=na, regex=regex)]
+
+
 def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True):
     df_list = []
     with pd.ExcelFile(file) as excel:

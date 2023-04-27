@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：match_data.py
-#   版本：0.1
+#   版本：0.2
 #   作者：lds
-#   日期：2021-10-24
+#   日期：2023-04-27
 #   语言：Python 3.X
 #   说明：使用 pandas 匹配的函数集合
 # ---------------------------------------
@@ -113,6 +113,56 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
     # print(infos)
 
     return {'infos': infos, 'data': df}
+
+
+def df_search(_df, column, keyword, case=True, flags=0, na=None, regex=True):
+    """
+    在 DataFrame 中搜索
+
+    实现依靠 re.search，也可以是用 re.match
+
+    @param _df: 要搜索的 pandas.DataFrame
+    @param column: 要搜索的列名
+    @param keyword: str 要搜索的字符或正则表达式
+    @param case: 默认为 True，如果为 True 则区分大小写
+    @param flags: 默认0（无标志），标志将传递到RE模块，例如 re.IGNORECASE
+    @param na: 缺失值的可选填充值
+    @param regex: 默认为 True，如果为 True，则使用正则表达式。 如果是 False 则将视为字面字符串
+    @return: 搜索到的 pandas.DataFrame
+
+    # 可以看看
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.contains.html?highlight=contains
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.match.html#pandas.Series.str.match
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.startswith.html#pandas.Series.str.startswith
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.endswith.html#pandas.Series.str.endswith
+    https://pandas.pydata.org/docs/reference/api/pandas.Series.str.fullmatch.html#pandas.Series.str.fullmatch
+    https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.isin.html
+
+    ## 例子
+    # 创建一个 DataFrame
+    data = {
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
+        'age': [25, 30, 35, 40, 45],
+        'gender': ['F', 'M', 'M', 'M', 'F']
+    }
+    df = pd.DataFrame(data)
+
+    # 进行搜索
+    result = df_search(df, 'name', 'a', case=True, flags=0, na=None, regex=True)
+    print(result)
+
+    # 显示 DataFrame 的索引号和内容
+    for index, row in result.iterrows():
+        print(f'索引({type(index)}): {index}, 数据({type(row)}): {row}')
+    for index, row in zip(result.index, result.values):
+        print(f'索引({type(index)}): {index}, 数据({type(row)}): {row}')
+
+    # 在 pandas 中，可以使用比较运算符（如 >, <, ==, != 等）或 isin() 方法搜索指定的数字。
+    print(df[df['age'] == 25])
+    # 如果要搜索多个数字，可以使用 isin() 方法。例如，以下代码搜索 age 列中值为 25 或 30 的所有行：
+    print(df[df['age'].isin([25, 30])])
+    """
+    return _df[_df[column].str.contains(keyword, case=case, flags=flags, na=na, regex=regex)]
 
 
 def match_data(df1, df2, check_columns, replace_columns, is_digital):

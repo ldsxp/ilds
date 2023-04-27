@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.4.27-2] - 2023-04-27
+### Changed
+- 把 ilds.pd.df_search 移动到 ilds.match_data.df_search
+
 ## [2023.4.27] - 2023-04-27
 ### Added
 - ilds.pd.df_search 在 DataFrame 中搜索

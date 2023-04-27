@@ -69,6 +69,12 @@ def df_search(_df, column, keyword, case=True, flags=0, na=None, regex=True):
     # 进行搜索
     result = df_search(df, 'name', 'a', case=True, flags=0, na=None, regex=True)
     print(result)
+    
+    # 显示 DataFrame 的索引号和内容
+    for index, row in result.iterrows():
+        print(f'索引({type(index)}): {index}, 数据({type(row)}): {row}')
+    for index, row in zip(result.index, result.values):
+        print(f'索引({type(index)}): {index}, 数据({type(row)}): {row}')
     """
     return _df[_df[column].str.contains(keyword, case=case, flags=flags, na=na, regex=regex)]
 

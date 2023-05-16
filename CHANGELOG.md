@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.5.16] - 2023-05-16
+### Added
+- ilds.file.get_excel_info 读取 Excel 信息
+### Changed
+- 把 json 中的 json_read 和 json_save 移动到 file
+
 ## [2023.4.27-2] - 2023-04-27
 ### Changed
 - 把 ilds.pd.df_search 移动到 ilds.match_data.df_search

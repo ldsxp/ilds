@@ -2,13 +2,14 @@
 #
 # ---------------------------------------
 #   程序：excel_xlsx.py
-#   版本：0.4
+#   版本：0.5
 #   作者：lds
-#   日期：2020-03-20
+#   日期：2023-05-16
 #   语言：Python 3.X
 #   说明：读取excel文件内容
 # ---------------------------------------
 
+import os
 from time import time
 from warnings import warn
 
@@ -52,6 +53,52 @@ def get_title_style(workbook, style_colour='#daeef3', is_bold=False):
     # 调整行的高度以适应文本
     head_style.set_text_wrap()
     return head_style
+
+
+def get_excel_info(file, only_read_first_table=False):
+    """
+    读取 Excel 信息
+
+    :param file: Excel 文件
+    :param only_read_first_table: 只读取第一个表格
+    :return: {sheet_name: {'file_name', 'index', 'sheet_name', 'sheet_names', 'max_row', 'max_column', 'columns'}, }
+    """
+    data = {}
+
+    file_name = os.path.basename(file)
+
+    wb = load_workbook(file, read_only=True)
+    sheet_names = wb.sheetnames
+
+    for index, sheet_name in enumerate(sheet_names):
+        ws = wb[sheet_name]
+
+        # 获取第一行数据
+        columns = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+
+        df_data = {
+            'file_name': file_name,
+            'index': index,
+            'sheet_name': sheet_name,
+            'sheet_names': sheet_names,
+            'sheet_state': ws.sheet_state,
+            'max_row': ws.max_row,
+            'max_column': ws.max_column,
+            'columns': list(columns),
+
+        }
+
+        # 我们添加 count 为了和以前获取信息相同，以后会去掉，用 max_row 替代
+        # df_data['count'] = df_data['max_row']
+
+        if only_read_first_table:
+            return df_data
+
+        data[sheet_name] = df_data
+
+    wb.close()
+
+    return data
 
 
 class ReadXlsx(object):
@@ -220,6 +267,7 @@ def doc():
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ReadXlsx)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_title_style)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_excel_info)
 
     print(doc_text)
 

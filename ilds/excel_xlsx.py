@@ -27,6 +27,9 @@ from openpyxl.styles import numbers, is_date_format
 ) = range(7)
 
 
+# warn('我们把 excel_xlsx 重命名为 excel，以后会删除 excel_xlsx', DeprecationWarning, stacklevel=2)
+
+
 def get_title_style(workbook, style_colour='#daeef3', is_bold=False):
     """
     获取自定义颜色的标题风格

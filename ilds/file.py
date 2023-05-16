@@ -12,6 +12,7 @@
 
 import os
 import sys
+import json
 import random
 import shutil
 # get_file_md5
@@ -332,8 +333,9 @@ def exists_file(_file):
     :return:
     """
 
-    warnings.warn('exists_file 已经弃用，因为它对人类不友好，也没有检查新名字是否已经存在\n建议用 check_filename_available 替代',
-                  DeprecationWarning)
+    warnings.warn(
+        'exists_file 已经弃用，因为它对人类不友好，也没有检查新名字是否已经存在\n建议用 check_filename_available 替代',
+        DeprecationWarning)
 
     if os.path.exists(_file):
         while True:
@@ -473,8 +475,9 @@ def from_dir_func(dir_path, func, prefix='.', suffix='', *args, **kwargs):
                     fileok += 1
                     info.append(func(_file, *args, **kwargs))
 
-        print(' ----------- 处理 %s 个文件（跳过名称前面是：“%s”，处理后缀：“%s”） ----------- 忽略 %s 个文件 ----------- ' % (
-            fileok, prefix, suffix, fileno))
+        print(
+            ' ----------- 处理 %s 个文件（跳过名称前面是：“%s”，处理后缀：“%s”） ----------- 忽略 %s 个文件 ----------- ' % (
+                fileok, prefix, suffix, fileno))
     else:
         raise FileExistsError('请输入文件路径！')
     return info
@@ -783,6 +786,38 @@ def synch_git_files(src, dst, remove_src=False):
         print(f'修改 {count} 需要删除的文件 {remove_count}')
 
 
+def json_read(path):
+    """
+    读取 json 文件
+    """
+    try:
+        if not os.path.exists(path):
+            return False
+        with open(path, 'r', encoding='utf-8') as f:
+            obj = json.load(f)
+        return obj
+    except Exception as e:
+        print('json_read', e)
+        return False
+
+
+def json_save(obj, path):
+    """
+    保存 json 文件
+    """
+
+    if obj is None:
+        return False
+    else:
+        try:
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(obj, f, ensure_ascii=False, indent=2)
+            return True
+        except Exception as e:
+            print('json_save', e)
+            return False
+
+
 def doc():
     """
     打印模块说明文档
@@ -819,6 +854,8 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=from_dir_func)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=save_file)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=dir_compare)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=json_read)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=json_save)
     print(doc_text)
 
 

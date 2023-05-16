@@ -77,7 +77,7 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     data = OrderedDict()
 
     try:
-        wb = load_workbook(file)
+        wb = load_workbook(file, read_only=True)
         sheet_state_data = {name: wb[name].sheet_state for name in wb.sheetnames}
         # print(sheet_state_data)
         wb.close()

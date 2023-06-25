@@ -159,7 +159,7 @@ setup(
         'requests',
         'html2text',
         'mistune',
-        'openpyxl',
+        'openpyxl>=3.1.2',
         # 'setuptools>=16.0',
         # '+++',
     ],

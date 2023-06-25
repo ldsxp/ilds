@@ -61,7 +61,8 @@ def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True
     return df_list
 
 
-def get_excel_data(file, columns=None, add_source_column=True, only_read_first_table=False, is_print=True):
+def get_excel_data(file, columns=None, add_source_column=True, only_read_first_table=False, read_sheet_state=False,
+                   is_print=True):
     """
     读取 Excel 数据
 
@@ -71,18 +72,22 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     :param columns: 指定要读取的列，我们会只读取这些数据，方便用来合并
     :param add_source_column: 添加内容来源
     :param only_read_first_table: 只读取第一个表格
+    :param read_sheet_state: 读取表格的状态，这样就可以处理隐藏表格
     :param is_print: 打印读取信息
     :return: {'file_name', 'index', 'sheet_name', 'sheet_names', 'count', 'columns', 'df'}
     """
     data = OrderedDict()
 
-    try:
-        wb = load_workbook(file, read_only=True)
-        sheet_state_data = {name: wb[name].sheet_state for name in wb.sheetnames}
-        # print(sheet_state_data)
-        wb.close()
-    except Exception as e:
-        print('get_excel_data 错误', e)
+    if read_sheet_state:
+        try:
+            wb = load_workbook(file, read_only=False)
+            sheet_state_data = {name: wb[name].sheet_state for name in wb.sheetnames}
+            # print(sheet_state_data)
+            wb.close()
+        except Exception as e:
+            print('get_excel_data 读取表格状态失败', e)
+            sheet_state_data = {}
+    else:
         sheet_state_data = {}
 
     with pd.ExcelFile(file) as excel:

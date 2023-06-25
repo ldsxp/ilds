@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.6.25-2] - 2023-06-25
+### Changed
+- ilds.pd.get_excel_data 支持读取表格状态参数 read_sheet_state
+
 ## [2023.6.25] - 2023-06-25
 ### Changed
 - ilds.match_data.cleaning_data 打印处理信息

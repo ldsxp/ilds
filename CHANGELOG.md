@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.6.25] - 2023-06-25
+### Changed
+- ilds.match_data.cleaning_data 打印处理信息
+
 ## [2023.5.16] - 2023-05-16
 ### Added
 - ilds.file.get_excel_info 读取 Excel 信息

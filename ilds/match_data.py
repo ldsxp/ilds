@@ -67,7 +67,9 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
     if dropna_subset is not None:
         old_count = len(df)
         df = df.dropna(how='all', subset=dropna_subset)
-        infos.append(f'{dropna_subset} 删除空白内容：{old_count - len(df)} 行')
+        info = f'cleaning_data {dropna_subset} 删除空白内容：{old_count - len(df)} 行'
+        print(info)
+        infos.append(info)
 
     # print('填充数据表中空值')
     df = df.fillna(value='')

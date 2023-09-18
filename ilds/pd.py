@@ -194,18 +194,23 @@ def split_excel_sheet(file, dst_dir=None):
     file = Path(file)
 
     if dst_dir is None:
-        dst_dir = file.parent
+        dst_dir = file.parent / f'{file.stem} - 拆分'
 
-    excel_data = get_excel_data(file, columns=None, add_source_column=False, only_read_first_table=False,
-                                is_print=False)
-    print('sheet_names', list(excel_data.keys()))
+    if not dst_dir.exists():
+        dst_dir.mkdir()
 
-    for sheet_name, d in excel_data.items():
-        df = d['df']
-        to_file = dst_dir / f"{file.stem}-{d['sheet_name']}{file.suffix}"
-        print(f"保存表薄: {d['sheet_name']}, 行数: {d['count']}", to_file)
-        with pd.ExcelWriter(to_file) as writer:
-            df.to_excel(writer, sheet_name=d['sheet_name'])
+    xlsx = pd.ExcelFile(file)
+    sheet_names = xlsx.sheet_names
+    print('sheet_names', sheet_names)
+
+    for sheet_name, d in sheet_names:
+        df = xlsx.parse(sheet_name)
+        to_file = dst_dir / f"{sheet_name}{file.suffix}"
+        print(f"保存表薄: {sheet_name}, 文件: {to_file}")
+        with pd.ExcelWriter(to_file, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+    print(f"拆分完成，拆分文件保存在 '{dst_dir}' 文件夹中。")
 
 
 def writer_excel(obj, path, index=False, use_zip64=False):

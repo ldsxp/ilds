@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.1] - 2023-09-18
+### Changed
+- ilds.pd.split_excel_sheet 优化Excel拆分
+- 版本命名规则改为 x.x.x
+
 ## [2023.6.25-2] - 2023-06-25
 ### Changed
 - ilds.pd.get_excel_data 支持读取表格状态参数 read_sheet_state

@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.9.18-2] - 2023-09-18
+### Fixed
+- ilds.pd.split_excel_sheet 修复字典改成列表造成的错误
+- 版本命名规则改为日期，因为 x.x.x 在 pypi 会造成困扰
+
 ## [2023.9.18] - 2023-09-18
 ### Changed
 - ilds.pd.split_excel_sheet 优化Excel拆分

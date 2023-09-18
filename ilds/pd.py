@@ -203,7 +203,7 @@ def split_excel_sheet(file, dst_dir=None):
     sheet_names = xlsx.sheet_names
     print('sheet_names', sheet_names)
 
-    for sheet_name, d in sheet_names:
+    for sheet_name in sheet_names:
         df = xlsx.parse(sheet_name)
         to_file = dst_dir / f"{sheet_name}{file.suffix}"
         print(f"保存表薄: {sheet_name}, 文件: {to_file}")

@@ -4,7 +4,7 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [1.0.1] - 2023-09-18
+## [2023.9.18] - 2023-09-18
 ### Changed
 - ilds.pd.split_excel_sheet 优化Excel拆分
 - 版本命名规则改为 x.x.x

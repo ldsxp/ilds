@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.10.23] - 2023-10-23
+### Fixed
+- ilds.match_data.match_data 修复匹配填充的时候，发现重复的匹配字段错误
+
 ## [2023.9.18-2] - 2023-09-18
 ### Fixed
 - ilds.pd.split_excel_sheet 修复字典改成列表造成的错误

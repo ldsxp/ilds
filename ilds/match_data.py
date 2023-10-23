@@ -221,14 +221,15 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
                 # print(df_neirong[replace_columns_index[columns_i]])
                 # 把找到的歌曲放在字典里面
                 neirong = df_neirong[replace_columns_index[columns_i]]
+                replace_column = replace_columns[columns_i]
                 # if neirong:
-                if neirong in replace_dict and neirong != replace_dict[replace_columns[columns_i]]:
+                if replace_column in replace_dict and neirong != replace_dict[replace_column]:
                     info = f'重复: {neirong}'
                     print(info)
                     infos.append(info)
                 else:
-                    replace_dict[replace_columns[columns_i]] = neirong
-                    # print(f'匹配：{ch} ------------- 找到 {replace_columns[columns_i]}: {neirong}')
+                    replace_dict[replace_column] = neirong
+                    # print(f'匹配：{ch} ------------- 找到 {replace_column}: {neirong}')
         # 处理找到的结果
         # print(df_line)
         # if replace_dict:

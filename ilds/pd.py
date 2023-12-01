@@ -35,10 +35,17 @@ def get_columns_index(df, columns):
     return columns_index
 
 
-def get_df_list(file, concat_columns=None, add_source_column=True, is_print=True):
+def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=True, is_print=True):
     df_list = []
+
     with pd.ExcelFile(file) as excel:
-        sheet_names = excel.sheet_names
+        if sheet_names is None:
+            sheet_names = excel.sheet_names
+        else:
+            # 确保Excel文件中提供的 sheet_names 存在
+            invalid_sheets = set(sheet_names) - set(excel.sheet_names)
+            if invalid_sheets:
+                raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
         if is_print:
             print('表薄名称列表：', sheet_names)
         # 通过表薄名字读取表单

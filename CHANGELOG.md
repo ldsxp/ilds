@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.12.1] - 2023-12-01
+### Changed
+- ilds.pd.get_df_list 支持自定义要读取的表
+
 ## [2023.10.23] - 2023-10-23
 ### Fixed
 - ilds.match_data.match_data 修复匹配填充的时候，发现重复的匹配字段错误

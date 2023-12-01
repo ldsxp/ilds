@@ -140,30 +140,32 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     return data
 
 
-def merging_excel_sheet(file, concat_columns=None, add_source_column=True, is_print=True, **concat_kwargs):
+def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, is_print=True, **concat_kwargs):
     """
     合并 Excel 表薄内容
 
     :param file: 要合并文件的路径
+    :param sheet_names: 要合并的表
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :return:
     """
 
-    df_list = get_df_list(file, concat_columns, add_source_column, is_print)
+    df_list = get_df_list(file, sheet_names, concat_columns, add_source_column, is_print)
     count = sum([len(df) for df in df_list])
     df = pd.concat(df_list, **concat_kwargs)  # result
     print('合并数据行数：', len(df), '导入数据行数统计：', count)
     return df
 
 
-def merging_excel_file_data(file_dir_or_file_list, ext='', concat_columns=None, add_source_column=True, is_print=True,
+def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, concat_columns=None, add_source_column=True, is_print=True,
                             **concat_kwargs):
     """
     合并多个 Excel 文件内容
 
     :param file_dir_or_file_list: 合并文件的路径或者文件列表
     :param ext: 要合并的文件后缀名，默认是文件夹中的全部文件
+    :param sheet_names: 要合并的表
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :param is_print: 打印信息
@@ -180,7 +182,7 @@ def merging_excel_file_data(file_dir_or_file_list, ext='', concat_columns=None, 
     for file in file_list:
         if is_print:
             print('处理文件:', file)
-        df_list = get_df_list(file, concat_columns, add_source_column, is_print)
+        df_list = get_df_list(file, sheet_names, concat_columns, add_source_column, is_print)
         all_len += sum([len(df) for df in df_list])
         frames.extend(df_list)
 

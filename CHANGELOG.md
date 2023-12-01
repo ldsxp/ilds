@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2023.12.1-2] - 2023-12-01
+### Changed
+- pandas合并表数据的时候支持用 sheet_names 定义要合并的表
+
 ## [2023.12.1] - 2023-12-01
 ### Changed
 - ilds.pd.get_df_list 支持自定义要读取的表

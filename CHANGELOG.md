@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.1.16] - 2024-01-16
+### Fixed
+- 修复 replace_invalid_filename_char 截断字符不能正确重命名的问题
+
 ## [2023.12.1-2] - 2023-12-01
 ### Changed
 - pandas合并表数据的时候支持用 sheet_names 定义要合并的表

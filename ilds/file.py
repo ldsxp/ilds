@@ -122,7 +122,7 @@ def replace_invalid_filename_char(filename, replaced_char='_', max=100):
 
     # 截断超过最大长度的字符
     if len(filename) > max:
-        filename = f'{filename[:max - 3]}...'
+        filename = f'{filename[:max - 3]}……'
 
     return filename
 

@@ -50,6 +50,7 @@ pip --no-cache-dir install -U ilds
 
 echo 使用 twine 上传到官方的pip服务器:
 echo 在系统添加 TWINE_USERNAME 和 TWINE_PASSWORD 变量，不用输入用户名和密码
+echo 例如 TWINE_USERNAME=__token__ TWINE_PASSWORD=pypi-AgEIcHlwaS5vcmcCJD...
 rmdir /S/Q build
 rmdir /S/Q dist
 python setup.py sdist bdist_wheel

@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：spider.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2018-11-26
+#   日期：2024-01-18
 #   语言：Python 3.X
 #   说明：爬虫用到的函数集合
 # ---------------------------------------
@@ -207,6 +207,35 @@ def get_cookie_dict(cookie):
     return params
 
 
+def get_jwt_token(login_url, username, password, ):
+    """
+    登录以获取 JWT 令牌
+
+    例子
+    def access_protected_api(api_url, jwt_token, data):
+        # 使用 JWT 令牌访问受保护的 API
+        headers = {'Authorization': f'Bearer {jwt_token}'}
+        response = requests.post(api_url, headers=headers, data=data)
+        response.raise_for_status()  # 确保请求成功
+        return response.json()
+
+    # 使用示例
+    login_url = 'http://example.com/api/token/'  # JWT 登录端点
+    api_url = 'http://example.com/api/some_api/'  # 受保护的 API 端点
+    username = 'your_username'
+    password = 'your_password'
+
+    jwt_token = get_jwt_token(login_url, username, password, login_url)
+    response_data = access_protected_api(api_url, jwt_token, {'some_key': 'some_value'})
+
+    print(response_data)
+    """
+    response = requests.post(login_url, data={'username': username, 'password': password})
+    response.raise_for_status()  # 确保请求成功
+    # print(response.json())
+    return response.json()['data']['access']
+
+
 def doc():
     """
     打印模块说明文档
@@ -226,6 +255,7 @@ def doc():
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=download_file)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=url_to_dict)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_cookie_dict)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_jwt_token)
 
     print(doc_text)
 

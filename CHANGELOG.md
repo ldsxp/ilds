@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.1.18] - 2024-01-18
+### Added
+- ilds.spider 添加 get_jwt_token 登录以获取 JWT 令牌
+
 ## [2024.1.16] - 2024-01-16
 ### Fixed
 - 修复 replace_invalid_filename_char 截断字符不能正确重命名的问题

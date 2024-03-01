@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.3.1] - 2024-03-01
+### Added
+- ilds.match_data 匹配检查重复的时候，提示重复的字段名
+
 ## [2024.1.18] - 2024-01-18
 ### Added
 - ilds.spider 添加 get_jwt_token 登录以获取 JWT 令牌

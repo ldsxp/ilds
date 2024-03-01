@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：match_data.py
-#   版本：0.2
+#   版本：0.3
 #   作者：lds
-#   日期：2023-04-27
+#   日期：2024-03-01
 #   语言：Python 3.X
 #   说明：使用 pandas 匹配的函数集合
 # ---------------------------------------
@@ -224,7 +224,7 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
                 replace_column = replace_columns[columns_i]
                 # if neirong:
                 if replace_column in replace_dict and neirong != replace_dict[replace_column]:
-                    info = f'重复: {neirong}'
+                    info = f'重复（{replace_column}）: {neirong}'
                     print(info)
                     infos.append(info)
                 else:

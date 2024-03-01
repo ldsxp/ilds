@@ -225,7 +225,7 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
                 # if neirong:
                 if replace_column in replace_dict and neirong != replace_dict[replace_column]:
                     info = f'重复（{replace_column}）: {neirong}'
-                    print(info)
+                    # print(info)
                     infos.append(info)
                 else:
                     replace_dict[replace_column] = neirong

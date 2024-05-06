@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.5.6] - 2024-05-06
+### Fixed
+- ilds.pd.split_excel_sheet 修复保存目录为字符串路径的错误
+
 ## [2024.3.1] - 2024-03-01
 ### Added
 - ilds.match_data 匹配检查重复的时候，提示重复的字段名

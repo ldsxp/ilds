@@ -204,6 +204,8 @@ def split_excel_sheet(file, dst_dir=None):
 
     if dst_dir is None:
         dst_dir = file.parent / f'{file.stem} - 拆分'
+    elif isinstance(dst_dir, str):
+        dst_dir = Path(dst_dir)
 
     if not dst_dir.exists():
         dst_dir.mkdir()

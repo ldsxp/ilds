@@ -35,7 +35,7 @@ def get_columns_index(df, columns):
     return columns_index
 
 
-def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=True, is_print=True):
+def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True):
     df_list = []
 
     with pd.ExcelFile(file) as excel:
@@ -45,7 +45,14 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
             # 确保Excel文件中提供的 sheet_names 存在
             invalid_sheets = set(sheet_names) - set(excel.sheet_names)
             if invalid_sheets:
-                raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
+                raise ValueError(f"Excel 文件中不存在以下标题：{invalid_sheets}")
+
+            # 当严格模式开启时，检查是否有额外的表薄名称在文件中
+            if strict_mode:
+                extra_sheets = set(excel.sheet_names) - set(sheet_names)
+                if extra_sheets:
+                    raise ValueError(f"Excel 文件中包含了未在“{sheet_names}”中的额外标题：{extra_sheets}")
+
         if is_print:
             print('表薄名称列表：', sheet_names)
         # 通过表薄名字读取表单
@@ -140,7 +147,7 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     return data
 
 
-def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, is_print=True, **concat_kwargs):
+def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True, **concat_kwargs):
     """
     合并 Excel 表薄内容
 
@@ -148,10 +155,12 @@ def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_
     :param sheet_names: 要合并的表
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
+    :param strict_mode: 添加一个严格模式的参数，限制要合并文件的标题
+    :param is_print: 打印信息
     :return:
     """
-
-    df_list = get_df_list(file, sheet_names, concat_columns, add_source_column, is_print)
+    df_list = get_df_list(file=file, sheet_names=sheet_names, concat_columns=concat_columns, add_source_column=add_source_column, strict_mode=strict_mode,
+                          is_print=is_print)
     count = sum([len(df) for df in df_list])
     df = pd.concat(df_list, **concat_kwargs)  # result
     print('合并数据行数：', len(df), '导入数据行数统计：', count)

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.5.7] - 2024-05-07
+### Changed
+- ilds.pd.merging_excel_sheet 添加一个严格模式的参数，限制要合并文件的标题
+
 ## [2024.5.6] - 2024-05-06
 ### Fixed
 - ilds.pd.split_excel_sheet 修复保存目录为字符串路径的错误

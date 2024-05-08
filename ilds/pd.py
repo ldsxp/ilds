@@ -45,13 +45,7 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
             # 确保Excel文件中提供的 sheet_names 存在
             invalid_sheets = set(sheet_names) - set(excel.sheet_names)
             if invalid_sheets:
-                raise ValueError(f"Excel 文件中不存在以下标题：{invalid_sheets}")
-
-            # 当严格模式开启时，检查是否有额外的表薄名称在文件中
-            if strict_mode:
-                extra_sheets = set(excel.sheet_names) - set(sheet_names)
-                if extra_sheets:
-                    raise ValueError(f"Excel 文件中包含了未在“{sheet_names}”中的额外标题：{extra_sheets}")
+                raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
 
         if is_print:
             print('表薄名称列表：', sheet_names)
@@ -69,7 +63,19 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
             if add_source_column:
                 _df['本行来自'] = f"{os.path.split(file)[1]} - {sheet_name}"
             # 是否指定要合并的列
+            # 严格模式下检查工作表列是否与concat_columns完全匹配
             if concat_columns is not None:
+                # 检查指定列是否都在DataFrame中
+                missing_columns = set(concat_columns) - set(_df.columns)
+                if missing_columns:
+                    raise ValueError(f"工作表 '{sheet_name}' 中缺少以下指定列：{missing_columns}")
+
+                # 严格模式：检查是否有额外的列
+                if strict_mode:
+                    extra_columns = set(_df.columns) - set(concat_columns)
+                    if extra_columns:
+                        raise ValueError(f"工作表 '{sheet_name}' 包含未在指定标题中声明的额外列：{extra_columns}")
+
                 _df = _df[concat_columns]
             df_list.append(_df)
     return df_list

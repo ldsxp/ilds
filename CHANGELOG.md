@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.5.8-2] - 2024-05-08
+### Changed
+- ilds.pd.merging_excel_file_data 添加一个严格模式的参数，限制要合并文件的标题
+
 ## [2024.5.8] - 2024-05-08
 ### Fixed
 - ilds.pd.get_df_list 修复处理标题的错误

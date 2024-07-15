@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2024.7.15] - 2024-07-15
+### Added
+- ilds.pd.add_sorted_sequence_number 根据指定列的值生成排序序号，并将序号合并回原始DataFrame中
+
 ## [2024.5.8-2] - 2024-05-08
 ### Changed
 - ilds.pd.merging_excel_file_data 添加一个严格模式的参数，限制要合并文件的标题

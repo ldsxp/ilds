@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.6
+#   版本：0.7
 #   作者：lds
-#   日期：2023-04-27
+#   日期：2024-07-15
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
@@ -262,6 +262,31 @@ def writer_excel(obj, path, index=False, use_zip64=False):
             obj.to_excel(writer, sheet_name='Sheet1', index=index)
             if use_zip64:
                 writer.book.use_zip64()
+
+
+def add_sorted_sequence_number(df, sort_column, ascending=False, sort_name='排序序号'):
+    """
+    根据指定列的值生成排序序号，并将序号合并回原始DataFrame中
+
+    @param df: 输入的DataFrame
+    @param sort_column: 用于排序序号的列名
+    @param ascending: 排序方式 True 表示升序排列，从小到大；False表示降序排列，从大到小（默认）
+    @param sort_name: 排序列的名字
+    @return: 添加了排序序号的 pd.DataFrame
+    """
+    # 将指定列转换为数值类型，无法转换的值变为 NaN
+    df[sort_column] = pd.to_numeric(df[sort_column], errors='coerce')
+
+    # 创建一个排序后的DataFrame
+    df_sorted = df[[sort_column]].sort_values(by=sort_column, ascending=ascending).reset_index()
+
+    # 添加序号列
+    df_sorted[sort_name] = range(1, len(df_sorted) + 1)
+
+    # 合并'排序序号'回原始DataFrame
+    df = df.merge(df_sorted[['index', sort_name]], left_index=True, right_on='index').drop(columns=['index'])
+
+    return df
 
 
 def doc():

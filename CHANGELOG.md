@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.0.0] - 2024-07-18
+### Changed
+- 重命名版本号为 X.X.X
+
 ## [2024.7.15] - 2024-07-15
 ### Added
 - ilds.pd.add_sorted_sequence_number 根据指定列的值生成排序序号，并将序号合并回原始DataFrame中

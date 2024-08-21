@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.0.1] - 2024-08-21
+### Changed
+- ilds.pd.get_excel_data 支持用 sheet_names 指定要读取的表
+
 ## [2.0.0] - 2024-07-18
 ### Changed
 - 重命名版本号为 X.X.X

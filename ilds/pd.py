@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.7
+#   版本：0.8
 #   作者：lds
-#   日期：2024-07-15
+#   日期：2024-08-21
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
@@ -48,7 +48,7 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
                 raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
 
         if is_print:
-            print('读取的表薄名称列表：', sheet_names)
+            print('读取的表薄名称列表：', sheet_names, 'Excel表薄列表', excel.sheet_names)
         # 通过表薄名字读取表单
         # data['总表'] = pd.read_excel(excel, sheet_name='总表')
         # 读取全部表
@@ -81,7 +81,7 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
     return df_list
 
 
-def get_excel_data(file, columns=None, add_source_column=True, only_read_first_table=False, read_sheet_state=False,
+def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True, only_read_first_table=False, read_sheet_state=False,
                    is_print=True):
     """
     读取 Excel 数据
@@ -89,6 +89,7 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
     返回数据：'file_name', 'index', 'sheet_name', 'sheet_names', 'count', 'columns', 'df'
 
     :param file: Excel 文件
+    :param sheet_names: 指定要读取的表，参数是要读取的表名的列表
     :param columns: 指定要读取的列，我们会只读取这些数据，方便用来合并
     :param add_source_column: 添加内容来源
     :param only_read_first_table: 只读取第一个表格
@@ -111,9 +112,17 @@ def get_excel_data(file, columns=None, add_source_column=True, only_read_first_t
         sheet_state_data = {}
 
     with pd.ExcelFile(file) as excel:
-        sheet_names = excel.sheet_names
+        if sheet_names is None:
+            sheet_names = excel.sheet_names
+        else:
+            # 确保Excel文件中提供的 sheet_names 存在
+            invalid_sheets = set(sheet_names) - set(excel.sheet_names)
+            if invalid_sheets:
+                raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
+
         if is_print:
-            print('表薄名称列表：', sheet_names)
+            print('读取的表薄名称列表：', sheet_names, 'Excel表薄列表', excel.sheet_names)
+
         # 通过表薄名字读取表单
         # data['总表'] = pd.read_excel(excel, sheet_name='总表')
         # 读取全部表

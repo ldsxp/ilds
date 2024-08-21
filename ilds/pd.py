@@ -48,7 +48,7 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
                 raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
 
         if is_print:
-            print('表薄名称列表：', sheet_names)
+            print('读取的表薄名称列表：', sheet_names)
         # 通过表薄名字读取表单
         # data['总表'] = pd.read_excel(excel, sheet_name='总表')
         # 读取全部表

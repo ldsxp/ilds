@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.1.0] - 2024-08-28
+### Changed
+- ilds.pd.save_top_rows_all_sheets  读取Excel文件，保存所有工作表的前10行到一个新文件，尽可能保留原始格式
+- ilds.pd.save_dir_top_rows_all_sheets 读取文件夹中的Excel文件保存前10行到新表格
+
 ## [2.0.1] - 2024-08-21
 ### Changed
 - ilds.pd.get_excel_data 支持用 sheet_names 指定要读取的表

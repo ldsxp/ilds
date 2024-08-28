@@ -298,6 +298,52 @@ def add_sorted_sequence_number(df, sort_column, ascending=False, sort_name='排�
     return df
 
 
+def save_top_rows_all_sheets(input_file, output_file=None, num_rows=10):
+    """
+    读取Excel文件，保存所有工作表的前10行到一个新文件，尽可能保留原始格式
+
+    参数:
+    input_file (str): 原始Excel文件的路径。
+    output_file (str): 新Excel文件的保存路径。
+    num_rows (int): 要保存的行数，默认为10。
+    """
+    if output_file is None:
+        output_file = f'{input_file}_测试.xlsx'
+
+    # 一次性读取整个Excel文件
+    with pd.ExcelFile(input_file, engine='openpyxl') as xls:
+        sheet_names = xls.sheet_names  # 获取所有工作表的名称
+
+        # 使用ExcelWriter来写入新的Excel文件
+        with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+            # 遍历每个工作表
+            for sheet_name in sheet_names:
+                # 读取当前工作表的全部内容
+                df = pd.read_excel(xls, sheet_name=sheet_name)
+                # 截取前num_rows行
+                df_top_rows = df.head(num_rows)
+                # 写入到新文件的对应工作表中
+                df_top_rows.to_excel(writer, sheet_name=sheet_name, index=False)
+
+
+def save_dir_top_rows_all_sheets(file_dir, dst_dir=None, num_rows=10):
+    """
+    读取文件夹中的Excel文件保存前10行到新表格
+    """
+    file_dir = Path(file_dir)
+
+    if dst_dir is None:
+        dst_dir = file_dir / f'前十行数据'
+    elif isinstance(dst_dir, str):
+        dst_dir = Path(dst_dir)
+
+    if not dst_dir.exists():
+        dst_dir.mkdir()
+
+    for file in get_dir_files(file_dir, ext='.xlsx'):
+        save_top_rows_all_sheets(input_file=file, output_file=dst_dir / os.path.basename(file), num_rows=num_rows)
+
+
 def doc():
     """
     打印模块说明文档

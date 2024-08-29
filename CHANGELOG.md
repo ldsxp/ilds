@@ -4,14 +4,17 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.2.1] - 2024-08-29
+### Changed
+- ilds.excel_xlsx.save_dir_excel_specified_rows 保存的名字中添加行数
 
 ## [2.2.0] - 2024-08-29
 ### Changed
 - 删除 ilds.pd.save_top_rows_all_sheets  读取Excel文件，保存所有工作表的前10行到一个新文件，尽可能保留原始格式
 - 删除 ilds.pd.save_dir_top_rows_all_sheets 读取文件夹中的Excel文件保存前10行到新表格
 ### Added
-- ilds.pd.save_excel_specified_rows  从Excel文件中读取指定的行，并保存到新文件
-- ilds.pd.save_dir_excel_specified_rows 读取文件夹中的Excel文件保存前10行到新表格
+- ilds.excel_xlsx.save_excel_specified_rows  从Excel文件中读取指定的行，并保存到新文件
+- ilds.excel_xlsx.save_dir_excel_specified_rows 读取文件夹中的Excel文件保存前10行到新表格
 
 ## [2.1.0] - 2024-08-28
 ### Changed

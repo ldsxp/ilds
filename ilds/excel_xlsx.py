@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：excel_xlsx.py
-#   版本：0.5
+#   版本：0.6
 #   作者：lds
-#   日期：2023-05-16
+#   日期：2024-08-29
 #   语言：Python 3.X
 #   说明：读取excel文件内容
 # ---------------------------------------
@@ -310,7 +310,7 @@ def save_dir_excel_specified_rows(file_dir, dst_dir=None, num_rows=10):
         dst_dir.mkdir()
 
     for file in get_dir_files(file_dir, ext='.xlsx'):
-        save_excel_specified_rows(input_file=file, output_file=dst_dir / f'测试 {os.path.basename(file)}', start_row=1, end_row=num_rows + 1)
+        save_excel_specified_rows(input_file=file, output_file=dst_dir / f'{os.path.basename(file)} {num_rows}行.xlsx', start_row=1, end_row=num_rows + 1)
 
 
 def doc():

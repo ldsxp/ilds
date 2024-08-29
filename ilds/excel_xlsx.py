@@ -12,9 +12,12 @@
 import os
 from time import time
 from warnings import warn
+from pathlib import Path
+
+from .file import get_dir_files
 
 # ReadExcel
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from openpyxl.styles import numbers, is_date_format
 
 (
@@ -257,6 +260,57 @@ class ReadXlsx(object):
         self.sheet = self.wb[self.sheet_names[self.index]]
 
         return self.index
+
+
+def save_excel_specified_rows(input_file, output_file, start_row=1, end_row=11):
+    """
+    从Excel文件中读取指定的行，并保存到新文件
+
+    :param input_file: str，输入的Excel文件路径
+    :param output_file: str，输出的Excel文件路径
+    :param start_row: int，起始行（1为起始索引）
+    :param end_row: int，结束行（包含在结果内的索引）
+    """
+
+    # 加载输入工作簿
+    input_workbook = load_workbook(input_file)
+
+    # 创建一个新的工作簿
+    output_workbook = Workbook()
+    # 删除默认创建的第一张空表
+    del output_workbook['Sheet']
+
+    for sheet_name in input_workbook.sheetnames:
+        input_sheet = input_workbook[sheet_name]
+
+        # 创建一个新的工作表到输出工作簿中
+        output_sheet = output_workbook.create_sheet(title=sheet_name)
+
+        # 复制指定行到新的工作表中
+        for row_num in range(start_row, end_row + 1):
+            for col_num, cell in enumerate(input_sheet[row_num], 1):
+                output_sheet.cell(row=row_num - start_row + 1, column=col_num, value=cell.value)
+
+    # 保存到新文件
+    output_workbook.save(output_file)
+
+
+def save_dir_excel_specified_rows(file_dir, dst_dir=None, num_rows=10):
+    """
+    读取文件夹中的Excel文件保存前10行到新表格
+    """
+    file_dir = Path(file_dir)
+
+    if dst_dir is None:
+        dst_dir = file_dir / f'前十行数据'
+    elif isinstance(dst_dir, str):
+        dst_dir = Path(dst_dir)
+
+    if not dst_dir.exists():
+        dst_dir.mkdir()
+
+    for file in get_dir_files(file_dir, ext='.xlsx'):
+        save_excel_specified_rows(input_file=file, output_file=dst_dir / f'测试 {os.path.basename(file)}', start_row=1, end_row=num_rows + 1)
 
 
 def doc():

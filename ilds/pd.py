@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：pd.py
-#   版本：0.8
+#   版本：0.9
 #   作者：lds
-#   日期：2024-08-21
+#   日期：2024-09-12
 #   语言：Python 3.X
 #   说明：pandas 常用的函数集合，TODO 添加一些小抄在这里！
 # ---------------------------------------
@@ -271,6 +271,18 @@ def writer_excel(obj, path, index=False, use_zip64=False):
             obj.to_excel(writer, sheet_name='Sheet1', index=index)
             if use_zip64:
                 writer.book.use_zip64()
+
+
+def to_parquet(df, save_file):
+    """
+    保存为parquet数据函数，是为了记录使用方法
+    """
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_parquet.html
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_parquet.html
+    # 我们可以保存pyarrow数据，读取文件以后保存到当前文件夹的_d_文件夹中
+    # df = pd.read_excel(file, dtype_backend='pyarrow')
+    df.to_parquet(save_file)
+    # restored_df = pd.read_parquet('data.parquet')
 
 
 def add_sorted_sequence_number(df, sort_column, ascending=False, sort_name='排序序号'):

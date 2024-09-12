@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.2.2] - 2024-09-12
+### Changed
+- ilds.pd.to_parquet 保存parquet数据
+
 ## [2.2.1] - 2024-08-29
 ### Changed
 - ilds.excel_xlsx.save_dir_excel_specified_rows 保存的名字中添加行数

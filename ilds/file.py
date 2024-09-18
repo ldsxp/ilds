@@ -798,21 +798,20 @@ def json_read(path):
         return None
 
 
-def json_save(obj, path):
+def json_save(obj, path, indent=2):
     """
     保存 json 文件
     """
-
     if obj is None:
         return False
-    else:
-        try:
-            with open(path, 'w', encoding='utf-8') as f:
-                json.dump(obj, f, ensure_ascii=False, indent=2)
-            return True
-        except Exception as e:
-            print('json_save', e)
-            return False
+
+    try:
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(obj, f, ensure_ascii=False, indent=indent)
+        return True
+    except Exception as e:
+        print('Error saving JSON:', e)
+        return False
 
 
 def doc():

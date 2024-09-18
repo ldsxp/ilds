@@ -2,6 +2,8 @@
 
 **ilds** 是一个常用模块的集合，为了多平台，多电脑调用方便
 
+ilds is a collection of commonly used modules, for the convenience of multi-platform and multi-computer calls
+
 功能模块包含:
 
 * 获取文件md5

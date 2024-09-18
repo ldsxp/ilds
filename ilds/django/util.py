@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：util.py
-#   版本：0.3
+#   版本：0.4
 #   作者：lds
-#   日期：2019-01-21
+#   日期：2024-09-18
 #   语言：Python 3.X
 #   说明：常用的函数集合
 # ---------------------------------------
@@ -20,23 +20,30 @@ def django_setup(project_name=None, site_path=None):
     """
     设置 Django 运行环境
 
+    用法示例:
     from ilds.django.util import django_setup
     django_setup(r'mysite', site_path=None)
     """
 
-    if site_path is not None:
+    if site_path:
         sys.path.insert(0, site_path)
 
-    if project_name is None:
-        project_name = os.path.split(os.path.dirname(__file__))[-1]
-    print('项目：', project_name)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{}.settings".format(project_name))
+    if not project_name:
+        project_name = os.path.basename(os.path.dirname(__file__))
+
+    print(f'项目：{project_name}')
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"{project_name}.settings")
+
     try:
         import django
         django.setup()
     except ModuleNotFoundError as e:
         print("注：如果找不到 Django，请安装它: pip install django\n错误提示：", e)
-        exit()
+        exit(1)  # 使用非零退出代码表示程序异常退出
+    except Exception as e:
+        print("发生了意外错误：", e)
+        exit(1)
 
 
 def random_key():

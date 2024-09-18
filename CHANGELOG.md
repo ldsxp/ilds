@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.2.3] - 2024-09-18
+### Changed
+- ilds.django.util.django_setup 优化django初始化函数
+
 ## [2.2.2] - 2024-09-12
 ### Changed
 - ilds.pd.to_parquet 保存parquet数据

@@ -791,14 +791,11 @@ def json_read(path):
     读取 json 文件
     """
     try:
-        if not os.path.exists(path):
-            return False
         with open(path, 'r', encoding='utf-8') as f:
-            obj = json.load(f)
-        return obj
+            return json.load(f)
     except Exception as e:
-        print('json_read', e)
-        return False
+        print('Error reading JSON:', e)
+        return None
 
 
 def json_save(obj, path):

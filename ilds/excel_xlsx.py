@@ -218,7 +218,9 @@ class ReadXlsx(object):
                     # bg_color = fill.end_color.rgb  # end_color bgColor
                     # print(bg_color)
                     # print(c.data_type, c.number_format, is_date_format(c.number_format), c.value)
-                    if c.value is None and self.none_to_null_characters:
+                    if c.hyperlink and c.hyperlink.target:
+                        cell_value = c.hyperlink.target
+                    elif c.value is None and self.none_to_null_characters:
                         cell_value = ''
                     elif c.data_type == "n":
                         if c.number_format != "General" and is_date_format(c.number_format):

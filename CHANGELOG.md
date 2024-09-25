@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.2.4] - 2024-09-15
+### Fixed
+- ilds.excel_xlsx.ReadXlsx 修复读取链接的时候使用，表格文本和链接不同造成的错误
+
 ## [2.2.3] - 2024-09-18
 ### Changed
 - ilds.django.util.django_setup 优化django初始化函数

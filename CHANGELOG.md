@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.2.5] - 2024-09-27
+### Added
+- ilds.file.remove_empty_folders 删除空文件夹
+
 ## [2.2.4] - 2024-09-15
 ### Fixed
 - ilds.excel_xlsx.ReadXlsx 修复读取链接的时候使用，表格文本和链接不同造成的错误

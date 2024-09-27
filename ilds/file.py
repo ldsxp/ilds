@@ -2,9 +2,9 @@
 #
 # ---------------------------------------
 #   程序：file.py
-#   版本：0.9
+#   版本：0.10
 #   作者：lds
-#   日期：2020-12-05
+#   日期：2024-09-27
 #   语言：Python 3.X
 #   说明：常用的文件操作函数集合
 # ---------------------------------------
@@ -525,6 +525,39 @@ def save_file(s, file, mode='w', encoding='utf-8'):
     """保存字符内容到文件"""
     with open(file, mode, encoding=encoding) as fp:
         fp.write(s)
+
+
+def remove_empty_folders(path):
+    """
+    删除空文件夹
+
+    :param path:
+    :return:
+    """
+
+    if not os.path.exists(path):
+        print(f"没有找到文件夹：'{path}'")
+        return
+
+    # 遍历文件夹中的所有文件和子文件夹，先处理最深的文件夹
+    for root, dirs, files in os.walk(path, topdown=False):
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            # 检查文件夹是否为空
+            if not os.listdir(dir_path):
+                try:
+                    os.rmdir(dir_path)
+                    print(f"删除文件夹: {dir_path}")
+                except OSError as e:
+                    print(f"删除文件夹失败 {dir_path}: {e}")
+
+    # 最后查看当前目录是否为空文件夹
+    if not os.listdir(path):
+        try:
+            os.rmdir(path)
+            print(f"删除文件夹: {path}")
+        except OSError as e:
+            print(f"删除文件夹失败 {path}: {e}")
 
 
 def dir_compare(apath, bpath, diff_ext=None, out_dir=None):

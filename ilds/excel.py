@@ -255,6 +255,23 @@ class ReadExcel:
 
         return self.sheet_index
 
+    def create_sheet(self, title=None, index=None):
+        """ 创建表 """
+        self.sheet = self.wb.create_sheet(title=title, index=index)
+        return self.sheet
+
+    def delete_sheet(self, sheet_name):
+        """ 删除表 """
+        del self.wb[sheet_name]
+
+    def append(self, data):
+        """ 在当前工作表的底部添加一行 """
+        self.sheet.append(data)
+
+    def save(self, file_name):
+        """ 保存工作簿到文件 """
+        self.wb.save(file_name)
+
 
 def save_excel_specified_rows(input_file, output_file, start_row=1, end_row=11):
     """

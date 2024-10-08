@@ -16,9 +16,9 @@ from pathlib import Path
 
 from ilds.file import get_dir_files
 
-# ReadExcel
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import numbers, is_date_format
+from openpyxl.utils import column_index_from_string
 
 (
     XL_CELL_EMPTY,
@@ -307,13 +307,50 @@ def save_dir_excel_specified_rows(file_dir, dst_dir=None, num_rows=10):
         save_excel_specified_rows(input_file=file, output_file=dst_dir / f'{os.path.basename(file)} {num_rows}行.xlsx', start_row=1, end_row=num_rows + 1)
 
 
+def write_to_excel(file_name, sheet_name, data, start_cell='A1'):
+    try:
+        # 尝试加载存在的工作簿
+        workbook = load_workbook(file_name)
+        print(f"载入文件: {file_name}")
+    except FileNotFoundError:
+        # 如果文件不存在，创建一个新的工作簿
+        workbook = Workbook()
+        print(f"新建文件: {file_name}")
+
+    # 如果指定的工作表不存在，添加一个新的工作表
+    if sheet_name not in workbook.sheetnames:
+        sheet = workbook.create_sheet(title=sheet_name)
+        print(f"创建表: {sheet_name}")
+    else:
+        sheet = workbook[sheet_name]
+        print(f"写入表: {sheet_name}")
+
+    if start_cell is None:
+        # 直接写入表格
+        for row_data in data:
+            sheet.append(row_data)
+    else:
+        # 将起始单元格的列和行转换为数字索引
+        start_col = column_index_from_string(start_cell[0])
+        start_row = int(start_cell[1:])
+        # 将数据写入工作表
+        for row_index, row_data in enumerate(data):
+            for col_index, value in enumerate(row_data):
+                sheet.cell(row=start_row + row_index, column=start_col + col_index, value=value)
+
+    # 保存工作簿到文件
+    workbook.save(file_name)
+
+    print(f"写入数据到文件 {file_name} 的 {sheet_name} ，开始位置 {start_cell}")
+
+
 def doc():
     """
     打印模块说明文档
     """
     doc_text = """"""
     doc_text += '\n'
-    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ReadXlsx)
+    doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=ReadExcel)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_title_style)
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=get_excel_info)
 

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.3.0] - 2024-10-08
+### Added
+- ilds.file.excel 弃用 excel_xlsx 使用 excel 代替
+
 ## [2.2.5] - 2024-09-27
 ### Added
 - ilds.file.remove_empty_folders 删除空文件夹

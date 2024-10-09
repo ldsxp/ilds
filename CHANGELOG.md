@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.3.3] - 2024-10-09
+### Added
+- ilds.file.excel.ReadExcel 支持创建Excel
+
 ## [2.3.2] - 2024-10-08
 ### Added
 - ilds.file.excel.ReadExcel 支持写入数据

@@ -140,7 +140,7 @@ class ReadExcel:
         print(excel.set_sheet(10))  # 这个要判断下是否成功
         print(excel.next_sheet(), excel.sheet_index)
         """
-        # print('args', args,'kwargs',kwargs)
+        # print('args', args, 'kwargs', kwargs)
         # 打开的表索引，可以指定默认值
         self.sheet_index = kwargs.pop('sheet_index', 0)
 
@@ -159,7 +159,17 @@ class ReadExcel:
 
         # self.excel = 'xlsx'
         # 加载工作簿
-        self.wb = load_workbook(*args, **kwargs)
+        if args or 'filename' in kwargs:
+            try:
+                self.wb = load_workbook(*args, **kwargs)
+            except FileNotFoundError:
+                # 如果文件不存在，创建一个新的工作簿
+                self.wb = Workbook()
+                print(f'{args} {kwargs} 文件不存在，创建新表格')
+        else:
+            self.wb = Workbook()
+            print('创建新表格')
+
         self.sheet_names = self.wb.sheetnames
         self.set_sheet(self.sheet_index)
         # print(self.excel)

@@ -334,6 +334,45 @@ def save_dir_excel_specified_rows(file_dir, dst_dir=None, num_rows=10):
         save_excel_specified_rows(input_file=file, output_file=dst_dir / f'{os.path.basename(file)} {num_rows}行.xlsx', start_row=1, end_row=num_rows + 1)
 
 
+def split_excel(excel_file, save_dir=None, save_sheets=None, exclude=None):
+    """
+    拆分 Excel
+    """
+    if save_sheets is None:
+        # 加载Excel文件
+        original_wb = load_workbook(filename=excel_file)
+
+        # 获取所有的工作表名字
+        save_sheets = original_wb.sheetnames
+
+    # 循环保存表
+    for sheet_to_keep in save_sheets:
+
+        if exclude and sheet_to_keep in exclude:
+            print(f'忽略保存工作表: {sheet_to_keep}')
+
+        # 重新加载工作簿
+        wb = load_workbook(filename=excel_file)
+
+        # 获取所有的工作表名称
+        sheets = wb.sheetnames
+
+        # 删除除当前工作表外的其他工作表
+        for sheet_name in sheets:
+            if sheet_name != sheet_to_keep:
+                std = wb[sheet_name]
+                wb.remove(std)
+
+        if save_dir:
+            save_file = os.path.join(save_dir, f"{sheet_to_keep}.xlsx")
+        else:
+            save_file = f"{sheet_to_keep}.xlsx"
+
+        # 保存为新文件
+        wb.save(save_file)
+        print(f"工作表 '{sheet_to_keep}' 保存为 '{save_file}'")
+
+
 def write_to_excel(file_name, sheet_name, data, start_cell='A1'):
     try:
         # 尝试加载存在的工作簿

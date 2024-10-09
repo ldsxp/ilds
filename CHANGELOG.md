@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.3.4] - 2024-10-09
+### Added
+- ilds.file.excel.split_excel 拆分 Excel
+
 ## [2.3.3] - 2024-10-09
 ### Added
 - ilds.file.excel.ReadExcel 支持创建Excel

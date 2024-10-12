@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.4.0] - 2024-10-12
+### Changed
+- ilds.file.excel.SheetImageLoader 支持从Sheet载入图片，用于保存Excel中的图片，参考 https://github.com/ultr4nerd/openpyxl-image-loader 感谢 ultr4nerd 分享的代码
+
 ## [2.3.5] - 2024-10-12
 ### Changed
 - ilds.file.excel.ReadExcel 默认读取链接的实际地址

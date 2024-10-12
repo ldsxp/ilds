@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.3.5] - 2024-10-12
+### Changed
+- ilds.file.excel.ReadExcel 默认读取链接的实际地址
+
 ## [2.3.4] - 2024-10-09
 ### Added
 - ilds.file.excel.split_excel 拆分 Excel

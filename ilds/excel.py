@@ -151,6 +151,8 @@ class ReadExcel:
         self.conversion_format = True
         # 如果没有内容(None)的时候转换为空字符（需要设置 self.conversion_format = True）
         self.none_to_null_characters = True
+        # 默认读取链接的实际地址
+        self.is_hyperlink_target = True
 
         # 数字转字符串
 
@@ -237,8 +239,8 @@ class ReadExcel:
 
     def _convert_cell(self, cell):
         """根据单元格的数据类型和格式转换单元格的值"""
-        # print(cell.data_type, cell.number_format, is_date_format(cell.number_format), cell.value)
-        if cell.hyperlink and cell.hyperlink.target:
+        # print(cell.data_type, cell.number_format, is_date_format(cell.number_format), cell.value,cell)
+        if self.is_hyperlink_target and cell.hyperlink and cell.hyperlink.target:  # 我们没有使用 hasattr(cell, 'hyperlink') 是为了支持强制读取链接
             return cell.hyperlink.target
         if cell.value is None and self.none_to_null_characters:
             return ''

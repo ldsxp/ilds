@@ -347,7 +347,7 @@ class SheetImageLoader:
         """
         return cell in self._images or cell in self._external_images or cell in self._wps_images
 
-    def _get_image(self, data) -> Image:
+    def _get_image(self, data) -> bytes:
         """
         根据图像数据类型返回 PIL 图像
         """

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.4.2] - 2024-10-14
+### Changed
+- ilds.file.excel.SheetImageLoader 优化读取Excel图片代码
+
 ## [2.4.1] - 2024-10-12
 ### Fixed
 - ilds.file.excel.SheetImageLoader 修复引用Image错误

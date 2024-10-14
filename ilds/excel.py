@@ -156,13 +156,14 @@ class SheetImageLoader:
         self._wps_images = {}
         self.is_wps = None
 
-        sheet_images = sheet._images
-        for image in sheet_images:
+        self._load_images_from_sheet()
+        self.read_drawing_images()
+
+    def _load_images_from_sheet(self):
+        for image in self.sheet._images:
             row = image.anchor._from.row + 1
             col = string.ascii_uppercase[image.anchor._from.col]
-            self._images[f'{col}{row}'] = {'type': 'data', 'image': image._data}
-
-        self.read_drawing_images()
+            self._images[f'{col},{row}'] = {'type': 'data', 'image': image._data}
 
     def get_drawing_link(self, z, xml_file):
         """
@@ -356,15 +357,14 @@ class SheetImageLoader:
             response = requests.get(url)
             if response.status_code == 200:
                 return response.content
-            else:
-                raise ValueError(f"获取网络图片失败 {url}。状态代码: {response.status_code}")
+            raise ValueError(f"获取网络图片失败 {data['image']}。状态代码: {response.status_code}")
+
         if data['type'] == 'wps':
             filename = data['image'].replace('../media', 'xl/media')
             with zipfile.ZipFile(self.excel_file, 'r') as zip_file:
-                with zip_file.open(filename) as f:
-                    return f.read()
-        else:
-            return data['image']()
+                return zip_file.read(filename)
+
+        return data['image']()
 
     def get(self, cell) -> bytes:
         """
@@ -376,8 +376,8 @@ class SheetImageLoader:
             return self._get_image(self._external_images[cell])
         elif cell in self._wps_images:
             return self._get_image(self._wps_images[cell])
-        else:
-            raise ValueError("单元格 {} 不包含图像".format(cell))
+
+        raise ValueError(f"单元格 {cell} 不包含图像")
 
     def save_image(self, cell, file_name):
         """

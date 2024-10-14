@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.4.4] - 2024-10-14
+### Changed
+- ilds.file.excel.ReadExcel 添加一个变量，保存当前行的数据
+
 ## [2.4.3] - 2024-10-14
 ### Fixed
 - ilds.file.excel.SheetImageLoader 修复图片名字错误

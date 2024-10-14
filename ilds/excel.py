@@ -433,7 +433,7 @@ class ReadExcel:
 
         self.line = 0  # 当前行数
         self.sheet = None  # 当前表对象
-        self.row_data = {}  # row 当前行数据 line 当前行号
+        self.row_vals = []  # 转换以后的当前行数据
 
         # 转换表格格式
         self.conversion_format = True
@@ -522,7 +522,7 @@ class ReadExcel:
             else:
                 row_vals = [c.value for c in row]
 
-            self.row_data = {'row': row_vals, 'line': self.line}
+            self.row_vals = row_vals
             yield row_vals
             self.line += 1
 

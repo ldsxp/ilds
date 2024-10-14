@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.4.5] - 2024-10-14
+### Changed
+- ilds.file.excel.ReadExcel 当前行数据不用字典，因为可以直接读取到行数信息
+
 ## [2.4.4] - 2024-10-14
 ### Changed
 - ilds.file.excel.ReadExcel 添加一个变量，保存当前行的数据

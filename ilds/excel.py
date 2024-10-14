@@ -163,7 +163,7 @@ class SheetImageLoader:
         for image in self.sheet._images:
             row = image.anchor._from.row + 1
             col = string.ascii_uppercase[image.anchor._from.col]
-            self._images[f'{col},{row}'] = {'type': 'data', 'image': image._data}
+            self._images[f'{col}{row}'] = {'type': 'data', 'image': image._data}
 
     def get_drawing_link(self, z, xml_file):
         """

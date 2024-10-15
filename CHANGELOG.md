@@ -6,7 +6,7 @@
 
 ## [2.5.0] - 2024-10-15
 ### Added
-- ilds.file.update_requirements_file 更新 requirements 依赖
+- ilds.update_requirements_file 更新 requirements 依赖
 
 ## [2.4.5] - 2024-10-14
 ### Changed

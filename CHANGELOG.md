@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.5.1] - 2024-10-15
+### Changed
+- 优化读取图片
+
 ## [2.5.0] - 2024-10-15
 ### Added
 - ilds.update_requirements_file 更新 requirements 依赖

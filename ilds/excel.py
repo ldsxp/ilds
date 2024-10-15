@@ -25,6 +25,7 @@ from ilds.file import get_dir_files
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import numbers, is_date_format
 from openpyxl.utils import column_index_from_string
+from openpyxl.packaging.relationship import get_rels_path, get_dependents, get_rel
 
 (
     XL_CELL_EMPTY,
@@ -253,16 +254,16 @@ class SheetImageLoader:
 
         return {'link_data': link_data, 'wps_data': wps_data, }
 
-    def drawing_rels_external_images(self, z, index):
+    def drawing_rels_external_images(self, z, xml_path, ):
         # 先检查xml文件是否存在
         file_list = z.namelist()
+        rels_xml_path = get_rels_path(xml_path)
+        print(xml_path, rels_xml_path)
         # print("Excel 文件:", file_list)
-        drawing_xml_path = f'xl/drawings/drawing{index + 1}.xml'
-        drawing_rels_xml_path = f'xl/drawings/_rels/drawing{index + 1}.xml.rels'
-        if drawing_xml_path not in file_list or drawing_rels_xml_path not in file_list:
+        if xml_path not in file_list or rels_xml_path not in file_list:
             return
 
-        r = self.get_drawing_link(z, xml_file=drawing_xml_path)
+        r = self.get_drawing_link(z, xml_file=xml_path)
         # print(index, 'get_drawing_link', r)
         link_data = r['link_data']
 
@@ -270,7 +271,7 @@ class SheetImageLoader:
         namespace = {'rel': 'http://schemas.openxmlformats.org/package/2006/relationships'}
 
         # print(get_drawing_rels(z, ))
-        with z.open(drawing_rels_xml_path) as drawing:
+        with z.open(rels_xml_path) as drawing:
             # 解析XML文件
             tree = ET.parse(drawing)
             root = tree.getroot()
@@ -285,7 +286,7 @@ class SheetImageLoader:
                 # print(i, f'Id: {r_id}, Type: {type_}, Target: {target}, TargetMode: {target_mode}')
 
                 if r_id not in link_data:
-                    print(f'没有找到 {r_id} 的图片关联数据')
+                    print(f'没有找到 {r_id} 的图片关联数据', link_data)
                     continue
 
                 # print(f'col_row:{col_row} r_id:{r_id} target:{target} {link_data[r_id]}')
@@ -321,22 +322,28 @@ class SheetImageLoader:
         # 打开Excel文件
         with zipfile.ZipFile(self.excel_file, 'r') as z:
             # 读取docProps/app.xml文件
-            with z.open('docProps/app.xml') as app_xml:
-                content = app_xml.read().decode('utf-8')
-                # 检查内容中特定的字符串标识符
-                if 'Microsoft Excel' in content:
-                    self.is_wps = False
-                elif 'WPS Office' in content:
-                    self.is_wps = True
-                else:
-                    self.is_wps = None
-                # print(self.is_wps, content)
+            if self.is_wps is None:
+                with z.open('docProps/app.xml') as app_xml:
+                    content = app_xml.read().decode('utf-8')
+                    # 检查内容中特定的字符串标识符
+                    if 'Microsoft Excel' in content:
+                        self.is_wps = False
+                    elif 'WPS Office' in content:
+                        self.is_wps = True
+                    else:
+                        self.is_wps = None
+                    # print(self.is_wps, content)
             if self.is_wps:
-                self.drawing_rels_external_images(z, index=0)
+                # xml_path = f'xl/cellimages.xml'
+                # rels_xml_path = f'xl/_rels/cellimages.xml.rels'
+                xml_path = f'xl/drawings/drawing1.xml'
+                # rels_xml_path = f'xl/drawings/_rels/drawing1.xml.rels'
+                self.drawing_rels_external_images(z, xml_path=xml_path)
             else:
-                self.drawing_rels_external_images(z, index=index)
+                xml_path = f'xl/drawings/drawing{index + 1}.xml'
+                self.drawing_rels_external_images(z, xml_path=xml_path)
             # try:
-            #     self.drawing_rels_external_images(z, index=index)
+            #     self.drawing_rels_external_images(z, xml_path=xml_path)
             # except Exception as e:
             #     print(f'读取网络图片发生错误:{e},\nself._external_images:{self._external_images}')
             #     self._external_images = {}

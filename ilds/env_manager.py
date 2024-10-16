@@ -47,6 +47,16 @@ def get_latest_version(package_name):
         return None
 
 
+def get_current_version(package_name):
+    """
+    获取库的当前安装版本
+    """
+    try:
+        return pkg_resources.get_distribution(package_name).version
+    except pkg_resources.DistributionNotFound:
+        return None
+
+
 class EnvManager:
     def __init__(self):
         self.mirrors = {
@@ -137,10 +147,7 @@ class EnvManager:
                     python_version_part = None
 
                 # 获取安装版本
-                try:
-                    installed_version = pkg_resources.get_distribution(package_name).version
-                except pkg_resources.DistributionNotFound:
-                    installed_version = None
+                installed_version = get_current_version(package_name)
 
                 latest_version = get_latest_version(package_name)
 
@@ -266,6 +273,35 @@ class EnvManager:
             else:
                 print("无效的选择，请重新选择。")
 
+    def upgrade_pip(self):
+        """
+        Upgrade pip to the latest version.
+        """
+        current_version = get_current_version('pip')
+        latest_version = get_latest_version('pip')
+
+        if not latest_version:
+            print("无法获取 pip 的最新版本，稍后再试。")
+            return
+
+        if current_version == latest_version:
+            print(f"pip 已经是最新版本: {current_version}")
+            return
+
+        try:
+            command = [self.python_path, "-m", "pip", "install", "--upgrade", "pip"]
+
+            if self.mirror_url is None:
+                info = ""
+            else:
+                command.extend(["-i", self.mirror_url])
+                info = f"(使用镜像源: {self.mirror_url})"
+
+            subprocess.check_call(command)
+            print(f"pip 已经升级 {info} {current_version} -> {latest_version}")
+        except subprocess.CalledProcessError as e:
+            print(f"升级 pip 时出错: {e}")
+
     def main(self):
         while True:
             self.display_settings()
@@ -278,11 +314,9 @@ class EnvManager:
 
             print(f"{len(requirements_files) + 1} - 输入要{'更新' if self.is_save_requirements else '检查更新'}的 requirements 文件")
             print(f"{len(requirements_files) + 2} - 安装库")
-
-            # 如果更新内容存在，添加一个选项
-            print(f"{len(requirements_files) + 3} - 安装待更新的库【{len(self.update_list)}】")
-
-            print(f"{len(requirements_files) + 4} - 设置菜单")
+            print(f"{len(requirements_files) + 3} - 升级 pip (在PyCharm中会运行失败)")
+            print(f"{len(requirements_files) + 4} - 安装待更新的库【{len(self.update_list)}】")
+            print(f"{len(requirements_files) + 5} - 设置菜单")
             print("e - 退出")
 
             choice = input("请输入您的选择：").strip()
@@ -299,11 +333,13 @@ class EnvManager:
             elif choice == str(len(requirements_files) + 2):
                 self.manual_install_package()
             elif choice == str(len(requirements_files) + 3):
+                self.upgrade_pip()
+            elif choice == str(len(requirements_files) + 4):
                 if self.update_list:
                     self.install_update()
                 else:
                     print('没有待更新内容！')
-            elif choice == str(len(requirements_files) + 4):
+            elif choice == str(len(requirements_files) + 5):
                 self.settings_menu()
             elif choice == 'e':
                 break

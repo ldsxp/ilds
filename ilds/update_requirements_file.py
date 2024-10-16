@@ -32,6 +32,7 @@ class RequirementsUpdater:
             "e": ("退出更新", ''),
         }
         self.update_lines = []
+        self.is_save_requirements = True
 
     def choose_mirror(self):
         """
@@ -112,8 +113,9 @@ class RequirementsUpdater:
             except ValueError:
                 requirements_lines.append(line)
 
-        with open(requirements_file, 'w') as f:
-            f.writelines(requirements_lines)
+        if self.is_save_requirements:
+            with open(requirements_file, 'w') as f:
+                f.writelines(requirements_lines)
 
         if update_count:
             update = input(f"有 {update_count} 个需要更新的库\n输入任意字符按回车更新。直接按回车忽略更新，只保存到 {requirements_file} 文件中:")

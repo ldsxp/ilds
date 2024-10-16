@@ -109,7 +109,7 @@ class EnvManager:
         """
         更新 requirements.txt 中库的版本到最新版
         """
-        print(f"更新文件: {requirements_file}")
+        print(f"{'更新' if self.is_save_requirements else '检查更新'}文件: {requirements_file}")
         start = time.time()
 
         with open(requirements_file, 'r') as file:
@@ -152,7 +152,7 @@ class EnvManager:
                     requirements_lines.append(new_line)
                     self.update_list.append({'installed_version': installed_version, 'latest_version': latest_version, 'package_name': package_name,
                                              'python_version_part': python_version_part, })
-                    print(f"更新 {package_name}: {installed_version} -> {latest_version}")
+                    print(f"{package_name}: {installed_version} -> {latest_version}")
                     update_count += 1
                 else:
                     requirements_lines.append(line)
@@ -166,7 +166,7 @@ class EnvManager:
             with open(requirements_file, 'w') as f:
                 f.writelines(requirements_lines)
 
-        if update_count:
+        if self.is_save_requirements and update_count:
             update = input(f"有 {update_count} 个需要更新的库\n输入任意字符按回车更新。直接按回车忽略更新，只保存到 {requirements_file} 文件中:")
             if update:
                 self.update_environment(requirements_file)
@@ -215,7 +215,7 @@ class EnvManager:
 
     def manual_install_package(self):
         """
-        手动安装库
+        安装库
         """
         package_name = input("请输入要安装的库（可以指定版本，例如 `ilds==1.0.0`，或者只输入库名安装最新版本）：").strip()
         if not package_name:
@@ -274,10 +274,10 @@ class EnvManager:
             requirements_files = self.list_requirements_files()
 
             for index, filename in enumerate(requirements_files, start=1):
-                print(f"{index} - 更新 {filename}")
+                print(f"{index} - {'更新' if self.is_save_requirements else '检查更新'} {filename}")
 
-            print(f"{len(requirements_files) + 1} - 手动输入要更新的文件")
-            print(f"{len(requirements_files) + 2} - 手动安装库")
+            print(f"{len(requirements_files) + 1} - 输入要{'更新' if self.is_save_requirements else '检查更新'}的 requirements 文件")
+            print(f"{len(requirements_files) + 2} - 安装库")
 
             # 如果更新内容存在，添加一个选项
             print(f"{len(requirements_files) + 3} - 安装待更新的库【{len(self.update_list)}】")
@@ -291,7 +291,7 @@ class EnvManager:
                 filename = requirements_files[int(choice) - 1]
                 self.update_requirements_file(filename)
             elif choice == str(len(requirements_files) + 1):
-                filename = input("请输入要更新的文件：").strip()
+                filename = input(f"请输入要{'更新' if self.is_save_requirements else '检查更新'}的 requirements 文件：").strip()
                 if filename:
                     self.update_requirements_file(filename)
                 else:

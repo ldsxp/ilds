@@ -54,7 +54,7 @@ class EnvManager:
             "清华大学": "https://pypi.tuna.tsinghua.edu.cn/simple/",
             "PyPI": None,
         }
-        self.update_lines = []
+        self.update_list = []
         settings = load_settings()
         self.is_save_requirements = settings.get("is_save_requirements", True)
         self.selected_mirror_name = settings.get("selected_mirror_name", "PyPI")
@@ -117,7 +117,7 @@ class EnvManager:
 
         update_count = 0
         requirements_lines = []
-        self.update_lines = []
+        self.update_list = []
 
         for line in lines:
             stripped_line = line.strip()
@@ -128,19 +128,30 @@ class EnvManager:
             try:
                 req = pkg_resources.Requirement.parse(stripped_line)
                 package_name = req.project_name
+                # req_version = req.specs[0][1]
 
-                installed_version = None
+                # 获取 Python 版本限制
+                if ';' in line:
+                    python_version_part = line.split(';')[1].strip()
+                else:
+                    python_version_part = None
+
+                # 获取安装版本
                 try:
                     installed_version = pkg_resources.get_distribution(package_name).version
                 except pkg_resources.DistributionNotFound:
-                    pass
+                    installed_version = None
 
                 latest_version = get_latest_version(package_name)
 
                 if latest_version and (not installed_version or installed_version != latest_version):
-                    new_line = f"{package_name}=={latest_version}\n"
+                    if python_version_part is None:
+                        new_line = f"{package_name}=={latest_version}\n"
+                    else:
+                        new_line = f"{package_name}=={latest_version} ; {python_version_part}\n"
                     requirements_lines.append(new_line)
-                    self.update_lines.append(new_line)
+                    self.update_list.append({'installed_version': installed_version, 'latest_version': latest_version, 'package_name': package_name,
+                                             'python_version_part': python_version_part, })
                     print(f"更新 {package_name}: {installed_version} -> {latest_version}")
                     update_count += 1
                 else:
@@ -190,11 +201,12 @@ class EnvManager:
     def install_update(self):
         while True:
             print("更新内容:")
-            for idx, line in enumerate(self.update_lines, start=1):
-                print(f"{idx}: {line.strip()}")
+            for idx, data in enumerate(self.update_list, start=1):
+                print(f"{idx}: {data['package_name']} {data['installed_version']} -> {data['latest_version']}")
             selected = input("请输入要更新到环境中的更新内容编号或按回车返回主菜单：").strip()
-            if selected.isdigit() and 1 <= int(selected) <= len(self.update_lines):
-                chosen_line = self.update_lines[int(selected) - 1]
+            if selected.isdigit() and 1 <= int(selected) <= len(self.update_list):
+                data = self.update_list[int(selected) - 1]
+                chosen_line = f"{data['package_name']}=={data['latest_version']}"
                 print(f"正在更新选择的库: {chosen_line.strip()}")
                 self.update_selected_package(chosen_line)
             else:
@@ -268,7 +280,7 @@ class EnvManager:
             print(f"{len(requirements_files) + 2} - 手动安装库")
 
             # 如果更新内容存在，添加一个选项
-            print(f"{len(requirements_files) + 3} - 安装待更新的库【{len(self.update_lines)}】")
+            print(f"{len(requirements_files) + 3} - 安装待更新的库【{len(self.update_list)}】")
 
             print(f"{len(requirements_files) + 4} - 设置菜单")
             print("e - 退出")
@@ -287,7 +299,7 @@ class EnvManager:
             elif choice == str(len(requirements_files) + 2):
                 self.manual_install_package()
             elif choice == str(len(requirements_files) + 3):
-                if self.update_lines:
+                if self.update_list:
                     self.install_update()
                 else:
                     print('没有待更新内容！')

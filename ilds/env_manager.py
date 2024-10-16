@@ -1,9 +1,13 @@
 import os
 import sys
+import time
 import json
 import subprocess
 import pkg_resources
-from urllib import request
+
+from ilds.time import second_to_time_str
+
+import requests
 
 SETTINGS_FILE = 'env_settings.json'
 
@@ -32,12 +36,12 @@ def get_latest_version(package_name):
     """
     url = f"https://pypi.python.org/pypi/{package_name}/json"
     try:
-        with request.urlopen(url) as response:
-            if response.status == 200:
-                data = json.loads(response.read().decode())
-                return data['info']['version']
-            else:
-                return None
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data['info']['version']
+        else:
+            return None
     except Exception as e:
         print(f"获取 {package_name} 最新版本时出错: {e}")
         return None
@@ -108,6 +112,7 @@ class EnvManager:
         更新 requirements.txt 中库的版本到最新版
         """
         print(f"更新文件: {requirements_file}")
+        start = time.time()
 
         with open(requirements_file, 'r') as file:
             lines = file.readlines()
@@ -145,6 +150,8 @@ class EnvManager:
 
             except ValueError:
                 requirements_lines.append(line)
+
+        print(f'使用时间 {second_to_time_str(time.time() - start)}', )
 
         if self.is_save_requirements:
             with open(requirements_file, 'w') as f:

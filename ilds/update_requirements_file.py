@@ -5,6 +5,26 @@ import subprocess
 import pkg_resources
 from urllib import request
 
+SETTINGS_FILE = 'env_settings.json'
+
+
+def load_settings():
+    """
+    加载设置文件，如果不存在则使用默认设置
+    """
+    try:
+        with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print('打开设置文件出错', e)
+
+    return {"is_save_requirements": True, "selected_mirror": "0", }
+
+
+def save_settings(settings):
+    with open(SETTINGS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(settings, f, ensure_ascii=False, indent=2)
+
 
 def get_latest_version(package_name):
     """
@@ -23,26 +43,43 @@ def get_latest_version(package_name):
         return None
 
 
-class RequirementsUpdater:
+class EnvManager:
     def __init__(self):
         self.mirrors = {
-            "1": ("阿里", "https://mirrors.aliyun.com/pypi/simple/"),
-            "2": ("清华大学", "https://pypi.tuna.tsinghua.edu.cn/simple/"),
-            "0": ("默认 PyPI 源", None),
-            "e": ("退出更新", ''),
+            "阿里": "https://mirrors.aliyun.com/pypi/simple/",
+            "清华大学": "https://pypi.tuna.tsinghua.edu.cn/simple/",
+            "PyPI": None,
         }
         self.update_lines = []
-        self.is_save_requirements = True
+        settings = load_settings()
+        self.is_save_requirements = settings.get("is_save_requirements", True)
+        self.selected_mirror_name = settings.get("selected_mirror_name", "PyPI")
+        self.mirror_url = self.mirrors.get(self.selected_mirror_name, None)
 
     def choose_mirror(self):
         """
         镜像源菜单选择
         """
         print("请选择您想使用的源:")
-        for key, (name, url) in self.mirrors.items():
-            print(f"{key}: {name}" + (f" ({url})" if url else ""))
+        mirror_names = list(self.mirrors.keys())
+
+        for idx, name in enumerate(mirror_names, start=1):
+            url = self.mirrors[name]
+            print(f"{idx}: {name}" + (f" ({url})" if url else ""))
+
         choice = input("请输入你的选择: ").strip()
-        return self.mirrors.get(choice, (None, None))[1]
+
+        if choice.isdigit() and 1 <= int(choice) <= len(mirror_names):
+            self.selected_mirror_name = mirror_names[int(choice) - 1]
+            self.mirror_url = self.mirrors[self.selected_mirror_name]
+        else:
+            print("无效选择, 使用默认源。")
+            self.selected_mirror_name = "PyPI"
+            self.mirror_url = self.mirrors.get(self.selected_mirror_name, None)
+
+        settings = load_settings()
+        settings["selected_mirror_name"] = self.selected_mirror_name
+        save_settings(settings)
 
     def update_environment(self, requirements_file):
         """
@@ -51,18 +88,15 @@ class RequirementsUpdater:
         """
         python_path = sys.executable
         print(f"当前运行的 Python 解释器路径: {python_path}")
-        mirror_url = self.choose_mirror()
 
         try:
             command = [python_path, "-m", "pip", "install", "-r", requirements_file]
 
-            if mirror_url is None:
+            if self.mirror_url is None:
                 info = ""
-            elif not mirror_url:
-                return
             else:
-                command.extend(["-i", mirror_url])
-                info = f"(使用镜像源: {mirror_url})"
+                command.extend(["-i", self.mirror_url])
+                info = f"(使用镜像源: {self.mirror_url})"
 
             subprocess.check_call(command)
             print(f"已根据 {requirements_file} 更新当前环境中的库{info}")
@@ -134,21 +168,18 @@ class RequirementsUpdater:
         """
         package_name, version = package_line.split('==')
         python_path = sys.executable
-        mirror_url = self.choose_mirror()
 
         try:
             command = [python_path, "-m", "pip", "install", f"{package_name}=={version}"]
 
-            if mirror_url is None:
+            if self.mirror_url is None:
                 info = ""
-            elif not mirror_url:
-                return
             else:
-                command.extend(["-i", mirror_url])
-                info = f"(使用镜像源: {mirror_url})"
+                command.extend(["-i", self.mirror_url])
+                info = f"(使用镜像源: {self.mirror_url})"
 
             subprocess.check_call(command)
-            print(f"已将 {package_name} 更新到 {version},{info}")
+            print(f"已将 {package_name} 更新到 {version}{info}")
         except subprocess.CalledProcessError as e:
             print(f"更新 {package_name} 时出错: {e}")
 
@@ -162,26 +193,51 @@ class RequirementsUpdater:
             return
 
         python_path = sys.executable
-        mirror_url = self.choose_mirror()
 
         try:
             command = [python_path, "-m", "pip", "install", package_name]
 
-            if mirror_url is None:
+            if self.mirror_url is None:
                 info = ""
-            elif not mirror_url:
-                return
             else:
-                command.extend(["-i", mirror_url])
-                info = f"(使用镜像源: {mirror_url})"
+                command.extend(["-i", self.mirror_url])
+                info = f"(使用镜像源: {self.mirror_url})"
 
             subprocess.check_call(command)
-            print(f"已安装 {package_name},{info}")
+            print(f"已安装 {package_name}{info}")
         except subprocess.CalledProcessError as e:
             print(f"安装 {package_name} 时出错: {e}")
 
+    def display_settings(self):
+        print(f"保存文件: {'是' if self.is_save_requirements else '否'}, 镜像源: {self.selected_mirror_name}")
+
+    def settings_menu(self):
+
+        while True:
+            print("设置菜单:")
+            print(f"1 - 设置保存 requirements 文件为 {'否' if self.is_save_requirements else '是'}")
+            print("2 - 选择镜像源")
+            print("b - 返回主菜单")
+
+            choice = input("请输入您的选择: ").strip()
+
+            settings = load_settings()
+
+            if choice == "1":
+                self.is_save_requirements = not self.is_save_requirements
+                print(f"设置保存 requirements 文件 已设置为: {'是' if self.is_save_requirements else '否'}")
+                settings["is_save_requirements"] = self.is_save_requirements
+                save_settings(settings)
+            elif choice == "2":
+                self.choose_mirror()
+            elif choice == "b":
+                break
+            else:
+                print("无效的选择，请重新选择。")
+
     def main(self):
         while True:
+            self.display_settings()
             print("选择一个选项:")
 
             requirements_files = self.list_requirements_files()
@@ -190,13 +246,13 @@ class RequirementsUpdater:
                 print(f"{index} - 更新 {filename}")
 
             print(f"{len(requirements_files) + 1} - 手动输入要更新的文件")
-
             print(f"{len(requirements_files) + 2} - 手动安装库")
 
             # 如果更新内容存在，添加一个选项
             if self.update_lines:
                 print(f"{len(requirements_files) + 3} - 选择更新内容并更新到环境")
 
+            print(f"{len(requirements_files) + 4} - 设置菜单")
             print("e - 退出")
 
             choice = input("请输入您的选择：").strip()
@@ -212,7 +268,7 @@ class RequirementsUpdater:
                     print("文件不能为空，请重新输入。")
             elif choice == str(len(requirements_files) + 2):
                 self.manual_install_package()
-            elif (self.update_lines and choice == str(len(requirements_files) + 3)):
+            elif self.update_lines and choice == str(len(requirements_files) + 3):
                 print("更新内容:")
                 for idx, line in enumerate(self.update_lines, start=1):
                     print(f"{idx}: {line.strip()}")
@@ -223,6 +279,8 @@ class RequirementsUpdater:
                     self.update_selected_package(chosen_line)
                 else:
                     print("返回主菜单。")
+            elif choice == str(len(requirements_files) + 4):
+                self.settings_menu()
             elif choice == 'e':
                 break
             else:
@@ -230,8 +288,8 @@ class RequirementsUpdater:
 
 
 def main():
-    updater = RequirementsUpdater()
-    updater.main()
+    env_manager = EnvManager()
+    env_manager.main()
 
 
 if __name__ == '__main__':

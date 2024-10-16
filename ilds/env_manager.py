@@ -59,6 +59,7 @@ class EnvManager:
         self.is_save_requirements = settings.get("is_save_requirements", True)
         self.selected_mirror_name = settings.get("selected_mirror_name", "PyPI")
         self.mirror_url = self.mirrors.get(self.selected_mirror_name, None)
+        self.python_path = sys.executable
 
     def choose_mirror(self):
         """
@@ -90,11 +91,8 @@ class EnvManager:
         使用 pip 根据更新后的 requirements 文件更新当前环境
         支持使用自定义的国内源
         """
-        python_path = sys.executable
-        print(f"当前运行的 Python 解释器路径: {python_path}")
-
         try:
-            command = [python_path, "-m", "pip", "install", "-r", requirements_file]
+            command = [self.python_path, "-m", "pip", "install", "-r", requirements_file]
 
             if self.mirror_url is None:
                 info = ""
@@ -174,10 +172,9 @@ class EnvManager:
         更新选择的库到当前环境
         """
         package_name, version = package_line.split('==')
-        python_path = sys.executable
 
         try:
-            command = [python_path, "-m", "pip", "install", f"{package_name}=={version}"]
+            command = [self.python_path, "-m", "pip", "install", f"{package_name}=={version}"]
 
             if self.mirror_url is None:
                 info = ""
@@ -199,10 +196,8 @@ class EnvManager:
             print("库名称不能为空。")
             return
 
-        python_path = sys.executable
-
         try:
-            command = [python_path, "-m", "pip", "install", package_name]
+            command = [self.python_path, "-m", "pip", "install", package_name]
 
             if self.mirror_url is None:
                 info = ""
@@ -216,7 +211,10 @@ class EnvManager:
             print(f"安装 {package_name} 时出错: {e}")
 
     def display_settings(self):
-        print(f"保存文件: {'是' if self.is_save_requirements else '否'}, 镜像源: {self.selected_mirror_name}")
+        print('-' * 70)
+        print(f'Python: {self.python_path}')
+        print(f"保存文件: {'是' if self.is_save_requirements else '否'}\t镜像源: {self.selected_mirror_name}")
+        print('-' * 70)
 
     def settings_menu(self):
 
@@ -256,7 +254,7 @@ class EnvManager:
             print(f"{len(requirements_files) + 2} - 手动安装库")
 
             # 如果更新内容存在，添加一个选项
-            print(f"{len(requirements_files) + 3} - 选择待更新的库更新到环境({len(self.update_lines)}个待更新)")
+            print(f"{len(requirements_files) + 3} - 安装待更新的库【{len(self.update_lines)}】")
 
             print(f"{len(requirements_files) + 4} - 设置菜单")
             print("e - 退出")

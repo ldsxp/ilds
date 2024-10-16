@@ -187,6 +187,20 @@ class EnvManager:
         except subprocess.CalledProcessError as e:
             print(f"更新 {package_name} 时出错: {e}")
 
+    def install_update(self):
+        while True:
+            print("更新内容:")
+            for idx, line in enumerate(self.update_lines, start=1):
+                print(f"{idx}: {line.strip()}")
+            selected = input("请输入要更新到环境中的更新内容编号或按回车返回主菜单：").strip()
+            if selected.isdigit() and 1 <= int(selected) <= len(self.update_lines):
+                chosen_line = self.update_lines[int(selected) - 1]
+                print(f"正在更新选择的库: {chosen_line.strip()}")
+                self.update_selected_package(chosen_line)
+            else:
+                print("返回主菜单。")
+                break
+
     def manual_install_package(self):
         """
         手动安装库
@@ -272,23 +286,17 @@ class EnvManager:
                     print("文件不能为空，请重新输入。")
             elif choice == str(len(requirements_files) + 2):
                 self.manual_install_package()
-            elif self.update_lines and choice == str(len(requirements_files) + 3):
-                print("更新内容:")
-                for idx, line in enumerate(self.update_lines, start=1):
-                    print(f"{idx}: {line.strip()}")
-                selected = input("请输入要更新到环境中的更新内容编号或按回车返回：").strip()
-                if selected.isdigit() and 1 <= int(selected) <= len(self.update_lines):
-                    chosen_line = self.update_lines[int(selected) - 1]
-                    print(f"正在更新选择的库: {chosen_line.strip()}")
-                    self.update_selected_package(chosen_line)
+            elif choice == str(len(requirements_files) + 3):
+                if self.update_lines:
+                    self.install_update()
                 else:
-                    print("返回主菜单。")
+                    print('没有待更新内容！')
             elif choice == str(len(requirements_files) + 4):
                 self.settings_menu()
             elif choice == 'e':
                 break
             else:
-                print("无效输入，请重新输入。")
+                print("无效输入，请重新输入！")
 
 
 def main():

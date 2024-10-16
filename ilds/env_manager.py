@@ -256,8 +256,7 @@ class EnvManager:
             print(f"{len(requirements_files) + 2} - 手动安装库")
 
             # 如果更新内容存在，添加一个选项
-            if self.update_lines:
-                print(f"{len(requirements_files) + 3} - 选择更新内容并更新到环境")
+            print(f"{len(requirements_files) + 3} - 选择待更新的库更新到环境({len(self.update_lines)}个待更新)")
 
             print(f"{len(requirements_files) + 4} - 设置菜单")
             print("e - 退出")

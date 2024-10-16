@@ -31,6 +31,7 @@ class RequirementsUpdater:
             "0": ("默认 PyPI 源", None),
             "e": ("退出更新", ''),
         }
+        self.update_lines = []
 
     def choose_mirror(self):
         """
@@ -77,13 +78,14 @@ class RequirementsUpdater:
         with open(requirements_file, 'r') as file:
             lines = file.readlines()
 
-        update_lines = []
         update_count = 0
+        requirements_lines = []
+        self.update_lines = []
 
         for line in lines:
             stripped_line = line.strip()
             if not stripped_line or stripped_line.startswith('#'):
-                update_lines.append(line)
+                requirements_lines.append(line)
                 continue
 
             try:
@@ -100,17 +102,18 @@ class RequirementsUpdater:
 
                 if latest_version and (not installed_version or installed_version != latest_version):
                     new_line = f"{package_name}=={latest_version}\n"
-                    update_lines.append(new_line)
+                    requirements_lines.append(new_line)
+                    self.update_lines.append(new_line)
                     print(f"更新 {package_name}: {installed_version} -> {latest_version}")
                     update_count += 1
                 else:
-                    update_lines.append(line)
+                    requirements_lines.append(line)
 
             except ValueError:
-                update_lines.append(line)
+                requirements_lines.append(line)
 
         with open(requirements_file, 'w') as f:
-            f.writelines(update_lines)
+            f.writelines(requirements_lines)
 
         if update_count:
             update = input(f"有 {update_count} 个需要更新的库\n输入任意字符按回车更新。直接按回车忽略更新，只保存到 {requirements_file} 文件中:")

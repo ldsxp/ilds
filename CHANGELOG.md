@@ -4,6 +4,14 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.6.1] - 2024-10-16
+### Added
+- 支持升级 pip
+### Changed
+- 优化更新状态描述
+- 优化菜单
+- 保留Python限制部分的内容
+
 ## [2.6.0] - 2024-10-16
 ### Changed
 - 使用 env_manager 支持环境中的库安装和管理

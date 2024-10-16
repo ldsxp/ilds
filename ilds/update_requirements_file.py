@@ -129,6 +129,30 @@ class RequirementsUpdater:
         requirements_files = [f for f in files if 'requirements' in f and f.lower().endswith('.txt')]
         return requirements_files
 
+    def update_selected_package(self, package_line):
+        """
+        更新选择的库到当前环境
+        """
+        package_name, version = package_line.split('==')
+        python_path = sys.executable
+        mirror_url = self.choose_mirror()
+
+        try:
+            command = [python_path, "-m", "pip", "install", f"{package_name}=={version}"]
+
+            if mirror_url is None:
+                info = ""
+            elif not mirror_url:
+                return
+            else:
+                command.extend(["-i", mirror_url])
+                info = f"(使用镜像源: {mirror_url})"
+
+            subprocess.check_call(command)
+            print(f"已将 {package_name} 更新到 {version},{info}")
+        except subprocess.CalledProcessError as e:
+            print(f"更新 {package_name} 时出错: {e}")
+
     def main(self):
         while True:
             print("选择要更新的文件:")
@@ -139,6 +163,11 @@ class RequirementsUpdater:
                 print(f"{index} - 更新 {filename}")
 
             print(f"{len(requirements_files) + 1} - 手动输入要更新的文件")
+
+            # 如果更新内容存在，添加一个选项
+            if self.update_lines:
+                print(f"{len(requirements_files) + 2} - 选择更新内容并更新到环境")
+
             print("e - 退出")
 
             choice = input("请输入您的选择：").strip()
@@ -152,6 +181,17 @@ class RequirementsUpdater:
                     self.update_requirements_file(filename)
                 else:
                     print("文件不能为空，请重新输入。")
+            elif (self.update_lines and choice == str(len(requirements_files) + 2)):
+                print("更新内容:")
+                for idx, line in enumerate(self.update_lines, start=1):
+                    print(f"{idx}: {line.strip()}")
+                selected = input("请输入要更新到环境中的更新内容编号或按回车返回：").strip()
+                if selected.isdigit() and 1 <= int(selected) <= len(self.update_lines):
+                    chosen_line = self.update_lines[int(selected) - 1]
+                    print(f"正在更新选择的库: {chosen_line.strip()}")
+                    self.update_selected_package(chosen_line)
+                else:
+                    print("返回主菜单。")
             elif choice == 'e':
                 break
             else:

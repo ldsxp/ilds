@@ -41,7 +41,6 @@ class RequirementsUpdater:
         print("请选择您想使用的源:")
         for key, (name, url) in self.mirrors.items():
             print(f"{key}: {name}" + (f" ({url})" if url else ""))
-
         choice = input("请输入你的选择: ").strip()
         return self.mirrors.get(choice, (None, None))[1]
 
@@ -153,9 +152,37 @@ class RequirementsUpdater:
         except subprocess.CalledProcessError as e:
             print(f"更新 {package_name} 时出错: {e}")
 
+    def manual_install_package(self):
+        """
+        手动安装库
+        """
+        package_name = input("请输入要安装的库（可以指定版本，例如 `ilds==1.0.0`，或者只输入库名安装最新版本）：").strip()
+        if not package_name:
+            print("库名称不能为空。")
+            return
+
+        python_path = sys.executable
+        mirror_url = self.choose_mirror()
+
+        try:
+            command = [python_path, "-m", "pip", "install", package_name]
+
+            if mirror_url is None:
+                info = ""
+            elif not mirror_url:
+                return
+            else:
+                command.extend(["-i", mirror_url])
+                info = f"(使用镜像源: {mirror_url})"
+
+            subprocess.check_call(command)
+            print(f"已安装 {package_name},{info}")
+        except subprocess.CalledProcessError as e:
+            print(f"安装 {package_name} 时出错: {e}")
+
     def main(self):
         while True:
-            print("选择要更新的文件:")
+            print("选择一个选项:")
 
             requirements_files = self.list_requirements_files()
 
@@ -164,9 +191,11 @@ class RequirementsUpdater:
 
             print(f"{len(requirements_files) + 1} - 手动输入要更新的文件")
 
+            print(f"{len(requirements_files) + 2} - 手动安装库")
+
             # 如果更新内容存在，添加一个选项
             if self.update_lines:
-                print(f"{len(requirements_files) + 2} - 选择更新内容并更新到环境")
+                print(f"{len(requirements_files) + 3} - 选择更新内容并更新到环境")
 
             print("e - 退出")
 
@@ -181,7 +210,9 @@ class RequirementsUpdater:
                     self.update_requirements_file(filename)
                 else:
                     print("文件不能为空，请重新输入。")
-            elif (self.update_lines and choice == str(len(requirements_files) + 2)):
+            elif choice == str(len(requirements_files) + 2):
+                self.manual_install_package()
+            elif (self.update_lines and choice == str(len(requirements_files) + 3)):
                 print("更新内容:")
                 for idx, line in enumerate(self.update_lines, start=1):
                     print(f"{idx}: {line.strip()}")

@@ -398,48 +398,42 @@ class SheetImageLoader:
             f.write(self.get(cell))
 
 
-class ReadExcel:
+class Excel:
 
     def __init__(self, *args, **kwargs):
         """
         使用 openpyxl 读取 Excel 文件
 
         # 例子
-        excel_file = r"E:\my - 数据\其他\20180731 阿玲 参考\申请单G1.5(1)(1).xlsx"
-        # data_only=True 的时候不读取公式 , sheet_index=10
+        excel_file = r""
+        # data_only=True 的时候不读取公式
         # 读取大文件的时候添加 read_only=True
-        excel = ReadExcel(excel_file, data_only=True)
+        excel = Excel(excel_file, data_only=True)
         # 读取大文件的时候添加 read_only=True, data_only=True 的时候不读取公式
-        # excel = ReadExcel(excel_file, read_only=True, data_only=True)
+        # excel = Excel(excel_file, read_only=True, data_only=True)
 
         excel.debug = True
-        # print(excel.sheet_names)
+        print(excel.sheet_names)
 
         # 处理所有列表内容
         print('---------------------------------')
-        while 1:
+        for sheet_name in excel.sheet_names:
+            print('sheet_name', sheet_name)
+            excel.set_sheet(sheet_name)
             values = excel.values()
             titles = next(values)
             print(excel.sheet_name, titles)
 
             # values 返回的是迭代器
-            # for line in values:
-            #     data = {titles[i]: v for i, v in enumerate(line)}
-            #     print(excel.line, line, data)
+            for line in values:
+                data = {titles[i]: v for i, v in enumerate(line)}
+                print(excel.line, line, data)
 
-            if excel.next_sheet() is None:
-                break
         print('---------------------------------')
-
-        print(excel.set_sheet(10))  # 这个要判断下是否成功
-        print(excel.next_sheet(), excel.sheet_index)
         """
         # print('args', args, 'kwargs', kwargs)
-        # 打开的表索引，可以指定默认值
-        self.sheet_index = kwargs.pop('sheet_index', 0)
 
         self.line = 0  # 当前行数
-        self.sheet = None  # 当前表对象
         self.row_vals = []  # 转换以后的当前行数据
 
         # 转换表格格式
@@ -467,9 +461,9 @@ class ReadExcel:
             self.wb = Workbook()
             print('创建新表格')
 
-        self.sheet_names = self.wb.sheetnames
-        self.set_sheet(self.sheet_index)
         # print(self.excel)
+        # 获取当前活动工作表
+        self.sheet = self.wb.active
 
         # 调试模式
         self.debug = False
@@ -485,22 +479,27 @@ class ReadExcel:
         return self.sheet_name
 
     @property
+    def sheet_names(self):
+        """ 工作表的名称列表 """
+        return self.wb.sheetnames
+
+    @property
     def sheet_name(self):
         """ 获取当前表的名字 """
-        return self.sheet_names[self.sheet_index]
+        return self.sheet.title
 
     @property
     def max_row(self):
         """ 获取最大行数 """
         if self.debug:
-            print(f"title {self.title} sheet_index {self.sheet_index} 行 {self.sheet.max_row}")
+            print(f"sheet_name {self.sheet_name} 行 {self.sheet.max_row}")
         return self.sheet.max_row
 
     @property
     def max_column(self):
         """ 获取最大列数 """
         if self.debug:
-            print(f"title {self.title} sheet_index {self.sheet_index} 列 {self.sheet.max_column}")
+            print(f"sheet_name {self.sheet_name} 列 {self.sheet.max_column}")
         return self.sheet.max_column
 
     # @property
@@ -514,11 +513,7 @@ class ReadExcel:
     def values(self):
         """
         sheet 的数据集（列表）
-        xlsx 空表格是 None
-        xls  空表格是 ''
-        xlsx 0 是 0
-        xls  0 是 0.0
-        xls 的表达式不能显示
+
         返回可迭代结果
         """
         self.line = 0
@@ -549,19 +544,28 @@ class ReadExcel:
 
     def next_sheet(self):
         """ 切换到下一个表 """
-        return self.set_sheet(self.sheet_index + 1)
+        info = """
+        切换到下一个表以前我们用于循环获取表格的内容，现在使用下面的代码：
+        for sheet_name in excel.sheet_names:
+            print('sheet_name', sheet_name)
+            excel.set_sheet(sheet_name)
+        """
+        raise ValueError(info)
 
-    def set_sheet(self, sheet_index=None):
-        """ 根据索引设置当前表 """
-        if sheet_index is not None and 0 <= sheet_index < len(self.sheet_names):
-            self.sheet_index = sheet_index
-        else:
-            return None
+    def set_sheet(self, sheet_name):
+        """
+        根据索引或者表名设置当前使用的表
+
+        因为我们支持新建表，所以这里建议使用表名
+        """
+        if isinstance(sheet_name, int):
+            if 0 <= sheet_name < len(self.sheet_names):
+                sheet_name = self.sheet_names[sheet_name]
+            else:
+                raise ValueError(f"索引 {sheet_name} 的表不包含在 {self.sheet_names}")
 
         # 通过名字获取 sheet
-        self.sheet = self.wb[self.sheet_names[self.sheet_index]]
-
-        return self.sheet_index
+        self.sheet = self.wb[sheet_name]
 
     def create_sheet(self, title=None, index=None):
         """ 创建表 """
@@ -571,14 +575,20 @@ class ReadExcel:
     def delete_sheet(self, sheet_name):
         """ 删除表 """
         del self.wb[sheet_name]
+        # 获取当前活动工作表
+        self.sheet = self.wb.active
 
-    def append(self, data):
+    def append(self, iterable):
         """ 在当前工作表的底部添加一行 """
-        self.sheet.append(data)
+        self.sheet.append(iterable)
 
     def save(self, file_name):
         """ 保存工作簿到文件 """
         self.wb.save(file_name)
+
+
+# 因为我们支持写入了，所以修改了名字，并且保留了原来的名字
+ReadExcel = Excel
 
 
 def save_excel_specified_rows(input_file, output_file, start_row=1, end_row=11):
@@ -726,9 +736,11 @@ if __name__ == "__main__":
 
     # 例子
     excel_file = Path('..') / '-' / '测试文件.xlsx'
-    # data_only=True 的时候不读取公式 , sheet_index=10
+
+    # excel_file = r""
+    # data_only=True 的时候不读取公式
     # 读取大文件的时候添加 read_only=True
-    excel = ReadExcel(excel_file, data_only=True)
+    excel = Excel(excel_file, data_only=True)
     # 读取大文件的时候添加 read_only=True, data_only=True 的时候不读取公式
     # excel = ReadExcel(excel_file, read_only=True, data_only=True)
 
@@ -737,21 +749,18 @@ if __name__ == "__main__":
 
     # 处理所有列表内容
     print('---------------------------------')
-    while 1:
+    for sheet_name in excel.sheet_names:
+        print('sheet_name', sheet_name)
+        excel.set_sheet(sheet_name)
         values = excel.values()
         titles = next(values)
         print(excel.sheet_name, titles)
 
         # values 返回的是迭代器
-        # for line in values:
-        #     data = {titles[i]: v for i, v in enumerate(line)}
-        #     print(excel.line, line, data)
+        for line in values:
+            data = {titles[i]: v for i, v in enumerate(line)}
+            print(excel.line, line, data)
 
-        if excel.next_sheet() is None:
-            break
     print('---------------------------------')
-
-    print(excel.set_sheet(10))  # 这个要判断下是否成功
-    print(excel.next_sheet(), excel.sheet_index)
 
     print('用时 %.2f 秒' % (time() - t1))

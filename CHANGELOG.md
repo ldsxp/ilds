@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.7.0] - 2024-10-17
+### Changed
+- ReadExcel 改名为 Excel，并保留了 ReadExcel 的引用
+- 清理 sheet 索引相关的代码
+- sheet_name 名字直接使用 openpyxl 中的属性
+
 ## [2.6.1] - 2024-10-16
 ### Added
 - 支持升级 pip

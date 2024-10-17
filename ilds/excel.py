@@ -584,6 +584,7 @@ class Excel:
     def append(self, iterable):
         """ 在当前工作表的底部添加一行 """
         self.sheet.append(iterable)
+        self.line += 1
 
     def save(self, file_name):
         """ 保存工作簿到文件 """

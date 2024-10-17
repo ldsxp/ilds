@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.7.1] - 2024-10-17
+### Fixed
+- Excel 写入数据以后 增加 line
+
 ## [2.7.0] - 2024-10-17
 ### Changed
 - ReadExcel 改名为 Excel，并保留了 ReadExcel 的引用

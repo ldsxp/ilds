@@ -426,6 +426,9 @@ class Excel:
 
             # values 返回的是迭代器
             for line in values:
+                if not any(line):
+                    print(f'忽略内容为空的行: {line}')
+                    continue
                 data = {titles[i]: v for i, v in enumerate(line)}
                 print(excel.line, line, data)
 

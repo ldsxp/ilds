@@ -153,17 +153,21 @@ setup(
     ],
     # 需要安装的依赖包
     install_requires=[
-        'xlrd>=1.1.0',
-        'colorama',
-        'chardet',
-        'pyperclip',
         'requests',
-        'html2text',
-        'mistune',
-        'openpyxl>=3.1.2',
         # 'setuptools>=16.0',
-        # '+++',
     ],
+
+    extras_require={
+        'all': [
+            'xlrd>=1.1.0',
+            'colorama',
+            'chardet',
+            'pyperclip',
+            'html2text',
+            'mistune',
+            'openpyxl>=3.1.2',
+        ],
+    },
 
     # 此项需要，否则卸载时报windows error
     # zip_safe = False

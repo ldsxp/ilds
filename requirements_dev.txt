@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# error: pkg_resources.py2_warn
+setuptools==44.1.0
+
+# pip
+twine
+wheel

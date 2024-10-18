@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.8.0] - 2024-10-18
+### Added
+- installer.Packager 添加打包程序，解决放在不同地方，更新造成不便。
+
 ## [2.7.1] - 2024-10-17
 ### Fixed
 - Excel 写入数据以后 增加 line

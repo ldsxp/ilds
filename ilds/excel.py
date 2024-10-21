@@ -468,6 +468,11 @@ class Excel:
         # 获取当前活动工作表
         self.sheet = self.wb.active
 
+        # 插入新列数据
+        self.new_column_start_idx = None
+        self.header_idx = None
+        self.existing_headers = None
+
         # 调试模式
         self.debug = False
 
@@ -585,6 +590,50 @@ class Excel:
         """ 在当前工作表的底部添加一行 """
         self.sheet.append(iterable)
         self.line += 1
+
+    def insert_column_headers(self, headers, header_idx=1):
+        """ 插入标题行到当前表格 """
+        # 保存原表的最大列数 + 1，这个属性将用于插入新列数据
+        self.new_column_start_idx = self.sheet.max_column + 1
+        self.header_idx = header_idx
+        # 获取当前标题行的内容
+        self.existing_headers = [cell.value for cell in self.sheet[header_idx]]
+        print(f"现有标题行内容: {self.existing_headers} ，行长度 {len(self.existing_headers)} 最大列数 {self.sheet.max_column}")
+
+        # 将新的列标题插入到标题行
+        for offset, header in enumerate(headers):
+            col_idx = self.new_column_start_idx + offset
+            self.sheet.cell(row=header_idx, column=col_idx, value=header)
+
+    def insert_row_data(self, row_idx, row_data):
+        """ 插入行内容到当前表格 """
+        for col_offset, cell_value in enumerate(row_data):
+            current_col_idx = self.new_column_start_idx + col_offset
+            self.sheet.cell(row=row_idx, column=current_col_idx, value=cell_value)
+
+    def insert_data_rows_example(self):
+        """
+        插入列内容的列子
+        
+        excel.insert_data_rows_example()
+        excel.save(f'{excel_file} 处理结果.xlsx')
+        exit()
+        """
+
+        new_headers = ['内容', '信息', ]
+
+        self.insert_column_headers(headers=new_headers)
+
+        # 处理每一行的数据 (从第二行开始，因为第一行是标题行)
+        for row_idx, row_cells in enumerate(self.sheet.iter_rows(min_row=self.header_idx + 1), start=self.header_idx + 1):
+            row_vals = [self._convert_cell(c) for c in row_cells]
+            print(row_vals)
+
+            # 处理数据
+            rows = [f'内容-{row_vals[2]}', f'信息{row_idx}', ]
+
+            # 插入处理后的数据
+            self.insert_row_data(row_idx, rows)
 
     def save(self, file_name):
         """ 保存工作簿到文件 """
@@ -750,6 +799,10 @@ if __name__ == "__main__":
 
     excel.debug = True
     # print(excel.sheet_names)
+
+    # excel.insert_data_rows_example()
+    # excel.save(f'{excel_file} 处理结果.xlsx')
+    # exit()
 
     # 处理所有列表内容
     print('---------------------------------')

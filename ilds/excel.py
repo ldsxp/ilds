@@ -437,7 +437,7 @@ class Excel:
         # print('args', args, 'kwargs', kwargs)
 
         self.line = 0  # 当前行数
-        self.row_vals = []  # 转换以后的当前行数据
+        self.row_values = []  # 转换以后的当前行数据
 
         # 转换表格格式
         self.conversion_format = True
@@ -528,12 +528,12 @@ class Excel:
         for row in self.sheet.iter_rows():
             if self.conversion_format:
                 # 使用列表解析优化行值的提取
-                row_vals = [self._convert_cell(c) for c in row]
+                row_values = [self._convert_cell(c) for c in row]
             else:
-                row_vals = [c.value for c in row]
+                row_values = [c.value for c in row]
 
-            self.row_vals = row_vals
-            yield row_vals
+            self.row_values = row_values
+            yield row_values
             self.line += 1
 
     def _convert_cell(self, cell):
@@ -606,15 +606,15 @@ class Excel:
             self.sheet.cell(row=header_idx, column=col_idx, value=header)
 
     def insert_row_data(self, row_idx, row_data):
-        """ 插入行内容到当前表格 """
+        """ 插入行内容到新标题的列中 """
         for col_offset, cell_value in enumerate(row_data):
             current_col_idx = self.new_column_start_idx + col_offset
             self.sheet.cell(row=row_idx, column=current_col_idx, value=cell_value)
 
     def insert_data_rows_example(self):
         """
-        插入列内容的列子
-        
+        示例：插入列数据
+
         excel.insert_data_rows_example()
         excel.save(f'{excel_file} 处理结果.xlsx')
         exit()
@@ -626,14 +626,14 @@ class Excel:
 
         # 处理每一行的数据 (从第二行开始，因为第一行是标题行)
         for row_idx, row_cells in enumerate(self.sheet.iter_rows(min_row=self.header_idx + 1), start=self.header_idx + 1):
-            row_vals = [self._convert_cell(c) for c in row_cells]
-            print(row_vals)
+            row_values = [self._convert_cell(c) for c in row_cells]
+            print(row_values)
 
             # 处理数据
-            rows = [f'内容-{row_vals[2]}', f'信息{row_idx}', ]
+            processed_values = [f'内容-{row_values[2]}', f'信息{row_idx}', ]
 
             # 插入处理后的数据
-            self.insert_row_data(row_idx, rows)
+            self.insert_row_data(row_idx, processed_values)
 
     def save(self, file_name):
         """ 保存工作簿到文件 """

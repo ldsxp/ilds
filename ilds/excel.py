@@ -26,6 +26,7 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.styles import numbers, is_date_format
 from openpyxl.utils import column_index_from_string
 from openpyxl.packaging.relationship import get_rels_path, get_dependents, get_rel
+from openpyxl.styles import Font, Alignment, PatternFill
 
 (
     XL_CELL_EMPTY,
@@ -591,6 +592,18 @@ class Excel:
         self.sheet.append(iterable)
         self.line += 1
 
+    def get_header_style(self):
+        """
+        获取标题的格式
+        我们可以通过覆盖他来自定义格式
+        """
+        header_style = {
+            # 'font': Font(name='Arial', size=12, bold=True),
+            # 'alignment': Alignment(horizontal='center', vertical='center'),
+            'fill': PatternFill(start_color='b7d8eb', end_color='b7d8eb', fill_type='solid')
+        }
+        return header_style
+
     def insert_column_headers(self, headers, header_idx=1):
         """ 插入标题行到当前表格 """
         # 保存原表的最大列数 + 1，这个属性将用于插入新列数据
@@ -600,10 +613,19 @@ class Excel:
         self.existing_headers = [cell.value for cell in self.sheet[header_idx]]
         print(f"现有标题行内容: {self.existing_headers} ，行长度 {len(self.existing_headers)} 最大列数 {self.sheet.max_column}")
 
+        header_style = self.get_header_style()
+
         # 将新的列标题插入到标题行
         for offset, header in enumerate(headers):
             col_idx = self.new_column_start_idx + offset
-            self.sheet.cell(row=header_idx, column=col_idx, value=header)
+            cell = self.sheet.cell(row=header_idx, column=col_idx, value=header)
+            # 应用样式到单元格
+            if 'font' in header_style:
+                cell.font = header_style['font']
+            if 'alignment' in header_style:
+                cell.alignment = header_style['alignment']
+            if 'fill' in header_style:
+                cell.fill = header_style['fill']
 
     def insert_row_data(self, row_idx, row_data):
         """ 插入行内容到新标题的列中 """

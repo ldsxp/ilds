@@ -149,14 +149,14 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # 'Programming Language :: Python :: 3.4',  # 我们为了在老版系统安装，添加了这个，但是大部分功能都不支持 3.4
-        'Programming Language :: Python :: 3.6',
+        # 'Programming Language :: Python :: 3.6',
     ],
+    # python_requires='>=3.8',
     # 需要安装的依赖包
     install_requires=[
         'requests',
         # 'setuptools>=16.0',
     ],
-
     extras_require={
         'all': [
             'xlrd>=1.1.0',
@@ -168,7 +168,6 @@ setup(
             'openpyxl>=3.1.2',
         ],
     },
-
     # 此项需要，否则卸载时报windows error
     # zip_safe = False
 

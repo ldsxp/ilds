@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.9.2] - 2024-10-24
+### Changed
+- 删除关于 django 的代码，从 djlds 导入
+
 ## [2.9.1] - 2024-10-22
 ### Changed
 - 支持 Excel 设置插入标题的格式

@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.9.3] - 2024-10-24
+### Fixed
+- 修复删除 django 代码造成的导入错误
+
 ## [2.9.2] - 2024-10-24
 ### Changed
 - 删除关于 django 的代码，从 djlds 导入

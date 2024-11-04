@@ -11,10 +11,11 @@
 import os
 from pathlib import Path
 from collections import OrderedDict
+import hashlib
 
 from colorama import Fore, Back, Style
 
-from ilds.file import get_dir_files
+from ilds.file import get_dir_files, get_file_md5
 from openpyxl import load_workbook
 
 try:
@@ -160,6 +161,49 @@ def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True,
             data[sheet_name] = df_data
 
     return data
+
+
+def generate_cache_filename(file_path, file_hash, **read_excel_kwargs):
+    """
+    根据文件路径、文件内容哈希和读取参数生成缓存文件名
+    """
+    base_name = os.path.splitext(file_path)[0]
+    # 创建哈希对象
+    hash_obj = hashlib.md5()
+    # 更新哈希对象
+    hash_obj.update(str(read_excel_kwargs).encode('utf-8'))
+    hash_obj.update(file_hash.encode('utf-8'))
+    # 完整的哈希值用于命名缓存文件
+    hash_digest = hash_obj.hexdigest()
+    cache_file = f"{base_name}_{hash_digest}.cache"
+    return cache_file
+
+
+def load_excel_with_cache(file_path, **read_excel_kwargs):
+    """
+    从缓存加载 Excel文件
+
+    先根据文件内容和参数的哈希值生成缓存文件名，如果缓存文件存在直接读取，否则读取Excel文件并保存缓存
+    """
+    # 计算 Excel 文件的哈希值
+    file_hash = get_file_md5(file_path)
+    # 根据文件哈希和参数生成缓存文件名
+    cache_file = generate_cache_filename(file_path, file_hash, **read_excel_kwargs)
+
+    # 检查缓存文件是否存在
+    if os.path.exists(cache_file):
+        print(f"从缓存载入数据: {cache_file}")
+        return pd.read_parquet(cache_file)
+
+    # 如果缓存不存在或文件内容改变，则从 Excel 文件加载
+    print(f"从 Excel 载入数据: {file_path}")
+    df = pd.read_excel(file_path, dtype_backend='pyarrow', **read_excel_kwargs)
+
+    # 保存 DataFrame 到缓存（包括文件哈希以供验证）
+    df.to_parquet(cache_file)
+    print(f"保存到缓存: {cache_file}")
+
+    return df
 
 
 def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True, **concat_kwargs):

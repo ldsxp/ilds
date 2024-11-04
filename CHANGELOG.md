@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.10.0] - 2024-11-04
+### Added
+- ilds.pd.load_excel_with_cache 从缓存加载 Excel文件，为了解决大文件打开太慢的问题
+
 ## [2.9.3] - 2024-10-24
 ### Fixed
 - 修复删除 django 代码造成的导入错误

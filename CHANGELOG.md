@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.11.0] - 2024-11-26
+### Added
+- ilds.pd.aggregate_data 根据用户指定的列进行分组和汇总 DataFrame
+
 ## [2.10.0] - 2024-11-04
 ### Added
 - ilds.pd.load_excel_with_cache 从缓存加载 Excel文件，为了解决大文件打开太慢的问题

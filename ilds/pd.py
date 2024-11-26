@@ -163,6 +163,34 @@ def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True,
     return data
 
 
+def aggregate_data(df, group_columns, sum_columns):
+    """
+    根据用户指定的列进行分组和汇总 DataFrame
+
+    参数:
+        df (DataFrame): 输入 Pandas DataFrame
+        group_columns (list of str): 需要分组的列名列表
+        sum_columns (list of str): 需要汇总的列名列表
+
+    返回:
+        DataFrame: 经过分组和汇总的数据
+    """
+
+    # 检查输入列是否在DataFrame中
+    missing_cols = set(group_columns + sum_columns) - set(df.columns)
+    if missing_cols:
+        raise ValueError(f"以下的列不存在，不能分组和汇总: {missing_cols}")
+
+    # 将需要汇总的列中的缺失值填充为0
+    df[sum_columns] = df[sum_columns].fillna(0)
+    # 填充缺失值为空字符串
+    df[group_columns] = df[group_columns].fillna('')
+
+    # 创建聚合字典并进行分组汇总
+    agg_dict = {column: 'sum' for column in sum_columns}
+    return df.groupby(group_columns, as_index=False).agg(agg_dict)
+
+
 def generate_cache_filename(file_path, file_hash, **read_excel_kwargs):
     """
     根据文件路径、文件内容哈希和读取参数生成缓存文件名

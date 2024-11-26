@@ -182,7 +182,14 @@ def aggregate_data(df, group_columns, sum_columns):
         raise ValueError(f"以下的列不存在，不能分组和汇总: {missing_cols}")
 
     # 将需要汇总的列中的缺失值填充为0
-    df[sum_columns] = df[sum_columns].fillna(0)
+    # df[sum_columns] = df[sum_columns].fillna(0) # 我们在遇到None列的时候，这种方式会失败
+    for column in sum_columns:
+        try:
+            df[column] = df[column].fillna(0)
+        except Exception as e:
+            print(f'汇总列 “{column}” 填充数据失败，转为浮点数重新填充。错误信息：{e}')
+            df[column] = pd.to_numeric(df[column], errors='coerce')
+            df[column] = df[column].fillna(0)
     # 填充缺失值为空字符串
     df[group_columns] = df[group_columns].fillna('')
 

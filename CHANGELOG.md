@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.11.1] - 2024-11-26
+### Fixed
+- ilds.pd.aggregate_data 处理None列填充失败的错误
+
 ## [2.11.0] - 2024-11-26
 ### Added
 - ilds.pd.aggregate_data 根据用户指定的列进行分组和汇总 DataFrame

@@ -389,6 +389,24 @@ def add_sorted_sequence_number(df, sort_column, ascending=False, sort_name='排�
     return df
 
 
+def get_excel_max_rows_percentage(dataframe):
+    """
+    计算 DataFrame 数据占 Excel 最大行数的百分比
+    """
+    # Excel 2007及之后版本的最大行数
+    excel_max_rows = 1048576
+
+    # 获取 DataFrame 的行数
+    dataframe_rows = len(dataframe)
+
+    # 计算百分比
+    percentage = (dataframe_rows / excel_max_rows) * 100
+
+    # print(f'占 Excel 的 {percentage:.2f}%')
+
+    return percentage
+
+
 def doc():
     """
     打印模块说明文档

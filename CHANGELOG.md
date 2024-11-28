@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.12.0] - 2024-11-28
+### Fixed
+- ilds.pd.get_excel_max_rows_percentage 计算 DataFrame 数据占 Excel 最大行数的百分比
+
 ## [2.11.1] - 2024-11-26
 ### Fixed
 - ilds.pd.aggregate_data 处理None列填充失败的错误

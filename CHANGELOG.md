@@ -4,10 +4,14 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.14.0]
+### Added
+- ilds.file.save_pickle 将数据保存到 Pickle 文件
+- ilds.file.load_pickle 从 Pickle 文件读取数据
+
 ## [2.13.0]
 ### Fixed
 - ilds.pd.save_to_multiple_excel_files 安全保存到 Excel，在超过 Excel 最大行数的时候，保存为多个文件
-
 
 ## [2.12.0] - 2024-11-28
 ### Fixed

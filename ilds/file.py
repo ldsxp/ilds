@@ -26,6 +26,7 @@ from datetime import datetime
 from zlib import crc32
 import difflib
 import warnings
+import pickle
 
 from colorama import Fore, Back, Style
 
@@ -845,6 +846,29 @@ def json_save(obj, path, indent=2):
     except Exception as e:
         print('Error saving JSON:', e)
         return False
+
+
+def save_pickle(data, file_path):
+    """
+    将数据保存到 Pickle 文件
+
+    :param file_path: 数据保存的文件路径
+    :param data: 需要保存的数据，可以是任意可被 pickle 序列化的对象
+    """
+    with open(file_path, 'wb') as f:
+        pickle.dump(data, f)
+
+
+def load_pickle(file_path):
+    """
+    从 Pickle 文件读取数据
+
+    :param file_path: 数据读取的文件路径
+    :return: 读取的数据，如果发生错误则返回 None
+    """
+    with open(file_path, 'rb') as f:
+        data = pickle.load(f)
+    return data
 
 
 def doc():

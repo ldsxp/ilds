@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.15.0]
+### Added
+- 移动 ilds.pd 到 ilds.pd 文件夹中，功能函数放到不同文件
+
 ## [2.14.0]
 ### Added
 - ilds.file.save_pickle 将数据保存到 Pickle 文件

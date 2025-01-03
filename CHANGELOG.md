@@ -8,6 +8,10 @@
 ### Added
 - 移动 ilds.pd 到 ilds.pd 文件夹中，功能函数放到不同文件
 
+## [2.16.0]
+### Added
+- ilds.pd.ExcelTableReader 从指定的工作表读取表格，可以选择范围
+
 ## [2.14.0]
 ### Added
 - ilds.file.save_pickle 将数据保存到 Pickle 文件

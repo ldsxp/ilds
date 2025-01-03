@@ -220,3 +220,32 @@ def read_excel(excel_file, sheet_name=None, dtype_backend='pyarrow'):
     #     print(f"工作表名称: {sheet}")
     #     print(df.head())
     return dfs_all
+
+
+class ExcelTableReader:
+    def __init__(self, path_or_buffer):
+        self.excel_file = pd.ExcelFile(path_or_buffer)
+
+    def read_table(self, sheet_name, start_row=0, end_row=None, usecols=None):
+        """
+        从指定的工作表读取表格，可以选择范围
+        如果没有指定 end_row，将读取到表格的末尾
+
+        :param sheet_name: 工作表名称
+        :param start_row: 表格开始的行（基于0的索引）
+        :param end_row: 表格结束的行（基于0的索引，不包含在内），为 None 时读取到末尾
+        :param usecols: 指定要读取的列范围
+        :return: 包含表格数据的pandas数据框
+        """
+
+        if end_row is not None:
+            nrows = end_row - start_row
+        else:
+            nrows = None  # 读取 start_row 中的所有行
+
+        df = self.excel_file.parse(sheet_name=sheet_name, usecols=usecols, skiprows=start_row, nrows=nrows)
+
+        return df
+
+    def close(self):
+        del self.excel_file

@@ -3,6 +3,11 @@
 此项目的所有显着更改都将记录在此文件中。
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+"D:\git_ldsxp\ilds\ilds\\.py"
+
+## [2.18.0]
+### Added
+- 添加 wx.file_dialog 我们封装了 wxpython 文件对话框，方便在 GUI 使用
 
 ## [2.17.0]
 ### Changed

@@ -39,10 +39,13 @@ def get_digital_dup(array_like, *args):
     获取用来检查的数字内容
     """
     exists_dup = str(array_like[args[0]]).strip()
+    if not exists_dup:
+        return ''
     try:
         return str(int(exists_dup.split('.')[0]))
     except Exception as e:
         print(f'{exists_dup} {e}')
+    return ''
 
 
 def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, astype_str_list=None,
@@ -67,7 +70,7 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
     if dropna_subset is not None:
         old_count = len(df)
         df = df.dropna(how='all', subset=dropna_subset)
-        info = f'cleaning_data {dropna_subset} 删除空白内容：{old_count - len(df)} 行'
+        info = f'{dropna_subset} 删除空白内容：{old_count - len(df)} 行'
         print(info)
         infos.append(info)
 
@@ -83,7 +86,10 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
         if isinstance(astype_str_list, list):
             for astype_str in astype_str_list:
                 df[astype_str] = df[astype_str].astype(str)
+                print(f'{"." * 50}')
+                print(f'转换“{astype_str}”列的数据类型为字符串：')
                 print(df[astype_str].astype(str))
+                # print(f'{"." * 50}')
         # 处理用来检查重复的字段 清理无用符号
         if exists_subset is not None:
             df['检查重复'] = df.apply(get_exists_dup, axis=1, args=exists_subset)
@@ -111,8 +117,6 @@ def cleaning_data(df, is_digital=False, dropna_subset=None, exists_subset=None, 
         # print(df)
         df = pandas.DataFrame(replace_dict.values(), columns=df.columns)
         # print(df)
-
-    # print(infos)
 
     return {'infos': infos, 'data': df}
 
@@ -181,6 +185,7 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
     check_columns_index = get_columns_index(df2, check_columns)
 
     replace_count = 0
+    ignore_whitespace_count = 0
 
     # 设置要填充的列的值
     for replace_column in replace_columns:
@@ -205,6 +210,11 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
         except Exception as e:
             # print([df_line[k] for k in check_columns_index])
             raise ValueError('%s %s' % ([str(df_line[k]) for k in check_columns_index], e))
+
+        # 忽略空白内容的匹配
+        if not ch:
+            ignore_whitespace_count += 1
+            continue
 
         # if len(df1[df1['检查重复'].isin([ch])]) > 1:
         #     print(df1[df1['检查重复'].isin([ch])])
@@ -247,7 +257,8 @@ def match_data(df1, df2, check_columns, replace_columns, is_digital):
     # print(strstrip(''.join([df2.values[0][k] for k in check_columns_index])))
     # print(df2.values[0])
 
-    info = f'行数: {len(df2.values)}，填充: {replace_count}'
+    count = len(df2.values)
+    info = f'{"*" * 70}\n匹配总数: {count}，填充数据: {replace_count}，未找到: {count - replace_count - ignore_whitespace_count}，忽略空白: {ignore_whitespace_count}\n{"*" * 70}'
     print(info)
     infos.append(info)
 
@@ -268,6 +279,7 @@ def add_duplicate_tags(df1, df2, check_columns, tags_title="重复", tags_list=N
     check_columns_index = get_columns_index(df2, check_columns)
 
     chongfu_count = 0
+    ignore_whitespace_count = 0
 
     df2[tags_title] = tags_list[1]
     chongfu_col = df2.columns.get_loc(tags_title)
@@ -276,11 +288,15 @@ def add_duplicate_tags(df1, df2, check_columns, tags_title="重复", tags_list=N
     for i, df_line in enumerate(df2.values):
         # print(df_line)
         # print(''.join([df_line[k] for k in check_columns_index]))
+        check_str = ''.join([str(df_line[k]) for k in check_columns_index])
+        if not check_str:
+            ignore_whitespace_count += 1
+            continue
         try:
             if is_digital:
-                ch = cleaning_digital(''.join([str(df_line[k]) for k in check_columns_index]))
+                ch = cleaning_digital(check_str)
             else:
-                ch = cleaning_str(''.join([df_line[k] for k in check_columns_index]))
+                ch = cleaning_str(check_str)
         except Exception as e:
             # print([df_line[k] for k in check_columns_index])
             raise ValueError('%s %s' % ([df_line[k] for k in check_columns_index], e))
@@ -305,7 +321,8 @@ def add_duplicate_tags(df1, df2, check_columns, tags_title="重复", tags_list=N
     # print(strstrip(''.join([df2.values[0][k] for k in check_columns_index])))
     # print(df2.values[0])
 
-    info = f'行数：{len(df2.values)}, 重复: {chongfu_count}'
+    count = len(df2.values)
+    info = f'{"*" * 70}\n匹配总数: {count}，重复: {chongfu_count}，未找到: {count - chongfu_count - ignore_whitespace_count}，忽略空白: {ignore_whitespace_count}\n{"*" * 70}'
     print(info)
     infos.append(info)
 
@@ -332,22 +349,23 @@ def fill_in_the_matched_data(df, data, check_columns, replace_columns, is_digita
                       replace_columns=replace_columns)
     df = r['data']
     info = r['infos']
-    print(info)
+    # print(info)
     infos.extend(info)
 
     # print(df.columns)
-    print('填充匹配到的数据', '-' * 70)
-    info = f'文件A 表薄行数: {len(df)}'
+    print('——' * 30)
+    print('填充匹配到的数据......')
+    info = f'数据源数量: {len(df)}'
     print(info)
     infos.append(info)
-
     # 处理多表文件（匹配并替换内容）
     for sheet_name, df_data in data.items():
-        r = cleaning_data(df_data, is_digital=is_digital, dropna_subset=check_columns,
+        print(f'清理表格 “{sheet_name}” 的数据')
+        r = cleaning_data(df_data, is_digital=is_digital, dropna_subset=None,
                           astype_str_list=check_columns, replace_columns=None)
         df_data = r['data']
         info = r['infos']
-        print(info)
+        # print(info)
         infos.extend(info)
 
         # # 清理没有歌曲名和作者的行
@@ -379,16 +397,23 @@ def mark_duplicate(df, data, check_columns, is_digital=False):
     df = r['data']
     # print(df.columns)
 
+    print('——' * 30)
+    print('开始标记重复内容......')
+    info = f'数据源数量: {len(df)}'
+    print(info)
+    infos.append(info)
+
     # 处理多表文件（匹配并替换内容）
     for sheet_name, df_data in data.items():
-        r = cleaning_data(df_data, is_digital=is_digital, dropna_subset=check_columns,
+        print(f'清理表格 “{sheet_name}” 的数据')
+        r = cleaning_data(df_data, is_digital=is_digital, dropna_subset=None,
                           astype_str_list=check_columns, replace_columns=None)
         infos.extend(r['infos'])
         df_data = r['data']
 
         # 匹配两个文件中的数据 并把第一个文件内容存在第二个文件的数据标记重复
-        print('标记重复数据', '-' * 70)
-        info = f'表薄: {sheet_name}，行数: {len(df_data)}'
+        print('-' * 70)
+        info = f'标记重复数据 表薄: {sheet_name}，行数: {len(df_data)}'
         print(info)
         infos.append(info)
         # 默认标记重复

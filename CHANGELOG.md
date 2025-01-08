@@ -4,13 +4,17 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [2.15.0]
-### Added
-- 移动 ilds.pd 到 ilds.pd 文件夹中，功能函数放到不同文件
+## [2.17.0]
+### Changed
+- 移动 ilds.match_data 不清理要匹配的空白内容，添加更多信息提示，让人类更容易看懂
 
 ## [2.16.0]
 ### Added
 - ilds.pd.ExcelTableReader 从指定的工作表读取表格，可以选择范围
+
+## [2.15.0]
+### Added
+- 移动 ilds.pd 到 ilds.pd 文件夹中，功能函数放到不同文件
 
 ## [2.14.0]
 ### Added

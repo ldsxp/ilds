@@ -4,7 +4,7 @@ import sys
 import wx
 
 # 对话框扩展名过滤器
-WILDCARD = "Microsoft Office Excel (*.xlsx)|*.xlsx|" \
+WILDCARD = "Microsoft Office Excel (*.xls)|*.xls|" \
            "Python source (*.py)|*.py|" \
            "Compiled Python (*.pyc)|*.pyc|" \
            "SPAM files (*.spam)|*.spam|" \
@@ -29,6 +29,7 @@ def open_file_dialog(parent,
     :param default_file:
     :param dialog_wildcard:
     :param style:
+    :param set_value: 要设置变量的函数，例如：textCtrl.SetValue
     :return:
     """
 
@@ -81,6 +82,7 @@ def save_file_dialog(parent,
     :param default_file:
     :param dialog_wildcard:
     :param style:
+    :param set_value: 要设置变量的函数，例如：textCtrl.SetValue
     :return:
     """
 
@@ -113,8 +115,12 @@ def dir_dialog(parent,
                message='选择文件夹',
                default_path='',
                style=wx.DD_DEFAULT_STYLE,
-               name='',
-               set_value=None):
+               # pos=None,
+               # size=None,
+               # name=None,
+               set_value=None,
+               **kwargs
+               ):
     """
     选择文件夹对话框
 
@@ -122,11 +128,11 @@ def dir_dialog(parent,
     :param message:
     :param default_path: 默认路径
     :param style: 多个风格用 | 分割 wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST | wx.DD_CHANGE_DIR
+    :param set_value: 要设置变量的函数，例如：textCtrl.SetValue
     :return:
     """
     file_path = None
-
-    dlg = wx.DirDialog(parent, message, defaultPath=default_path, style=style)
+    dlg = wx.DirDialog(parent, message, defaultPath=default_path, style=style, **kwargs)
 
     # 显示对话框，并处理对话框选择结果
     if dlg.ShowModal() == wx.ID_OK:

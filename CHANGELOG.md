@@ -3,7 +3,10 @@
 此项目的所有显着更改都将记录在此文件中。
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
-"D:\git_ldsxp\ilds\ilds\\.py"
+
+## [2.19.0]
+### Added
+- 添加 wx.custom_checklist_dialog 自定义多选对话框，该对话框可以显示项目列表，允许用户选择一个或多个项目。并支持添加和删除项目
 
 ## [2.18.0]
 ### Added

@@ -4,7 +4,7 @@ import sys
 import wx
 
 # 对话框扩展名过滤器
-WILDCARD = "Microsoft Office Excel (*.xls)|*.xls|" \
+WILDCARD = "Microsoft Office Excel (*.xlsx)|*.xlsx|" \
            "Python source (*.py)|*.py|" \
            "Compiled Python (*.pyc)|*.pyc|" \
            "SPAM files (*.spam)|*.spam|" \

@@ -41,7 +41,7 @@ class CustomCheckListDialog(wx.Dialog):
         select_all_button.Bind(wx.EVT_BUTTON, self.OnSelectAll)
         button_hbox.Add(select_all_button, 1, wx.EXPAND | wx.LEFT, 5)
 
-        deselect_all_button = wx.Button(self, label='取消全选')
+        deselect_all_button = wx.Button(self, label='取消选择')
         deselect_all_button.Bind(wx.EVT_BUTTON, self.OnDeselectAll)
         button_hbox.Add(deselect_all_button, 1, wx.EXPAND | wx.LEFT, 5)
 

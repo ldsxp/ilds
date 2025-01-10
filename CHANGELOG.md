@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.19.1]
+### Changed
+- 添加 wx.custom_checklist_dialog 优化界面，让选择内容全部显示
+
 ## [2.19.0]
 ### Added
 - 添加 wx.custom_checklist_dialog 自定义多选对话框，该对话框可以显示项目列表，允许用户选择一个或多个项目。并支持添加和删除项目

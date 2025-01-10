@@ -6,3 +6,4 @@ pyperclip
 html2text
 mistune
 openpyxl>=3.1.2
+wxpython

@@ -136,7 +136,7 @@ if __name__ == '__main__':
                 print("列表是否修改:", is_modified)
             dialog.Destroy()
 
-            return False
+            return True  # 返回 True 以继续运行应用程序的事件循环，如果像本示例一样只有一个对话框，返回 False 也是合理的，因为关闭对话框程序也结束了
 
 
     app = MyApp()

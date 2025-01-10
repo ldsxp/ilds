@@ -7,7 +7,7 @@ class CustomCheckListDialog(wx.Dialog):
     """
 
     def __init__(self, parent, title, choices, default_selections=None):
-        super().__init__(parent, title=title)
+        super().__init__(parent, title=title, style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.original_choices = choices[:]  # 保存初始状态
         self.choices = choices[:]  # 工作列表
         self.default_selections = default_selections or []
@@ -15,7 +15,7 @@ class CustomCheckListDialog(wx.Dialog):
         self.added_items = []  # 新增的项目
         self.is_modified = False  # 标记列表是否被修改
         self.InitUI()
-        self.SetSize((400, 400))
+        self.SetSize((400, 500))
         self.Centre()
 
     def InitUI(self):
@@ -47,8 +47,9 @@ class CustomCheckListDialog(wx.Dialog):
 
         vbox.Add(button_hbox, 0, wx.EXPAND | wx.ALL, 10)
 
-        self.selected_text = wx.StaticText(self, label="选中: 无")
-        vbox.Add(self.selected_text, 0, wx.ALIGN_CENTER | wx.BOTTOM, 10)
+        self.selected_text_ctrl = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.VSCROLL)
+        self.selected_text_ctrl.SetMinSize((-1, 100))
+        vbox.Add(self.selected_text_ctrl, 2, wx.EXPAND | wx.ALL, 10)
 
         ok_button = wx.Button(self, wx.ID_OK, label='确定')
         cancel_button = wx.Button(self, wx.ID_CANCEL, label='取消')
@@ -94,9 +95,9 @@ class CustomCheckListDialog(wx.Dialog):
     def UpdateSelectedText(self):
         checked_items = self.GetCheckedItems()
         if checked_items:
-            self.selected_text.SetLabel(f"选中: {', '.join(checked_items)}")
+            self.selected_text_ctrl.SetValue(f"选中（{len(checked_items)}个）: {', '.join(checked_items)}")
         else:
-            self.selected_text.SetLabel("选中: 无")
+            self.selected_text_ctrl.SetValue("没有选择项目")
 
     def GetCheckedItems(self):
         return [self.choices[i] for i in range(len(self.choices)) if self.checklist.IsChecked(i)]
@@ -117,8 +118,8 @@ class CustomCheckListDialog(wx.Dialog):
 if __name__ == '__main__':
     class MyApp(wx.App):
         def OnInit(self):
-            choices = ["项目 1", "项目 2", "项目 3"]
-            default_selections = [0, 2]  # 预先选定 "项目 1" 和 "项目 3"
+            choices = ["项目 {}".format(i) for i in range(1, 101)]  # 增加更多项目以测试滚动条
+            default_selections = [0, 2]
             dialog = CustomCheckListDialog(None, "选择项目", choices, default_selections)
 
             if dialog.ShowModal() == wx.ID_OK:

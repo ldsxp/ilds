@@ -23,6 +23,7 @@ class CustomCheckListDialog(wx.Dialog):
 
         self.checklist = wx.CheckListBox(self, choices=self.choices)
         self.checklist.Bind(wx.EVT_CHECKLISTBOX, self.OnCheckItem)
+        self.checklist.Bind(wx.EVT_LISTBOX_DCLICK, self.OnEditCheckedItem)
         vbox.Add(self.checklist, 1, wx.EXPAND | wx.ALL, 10)
 
         self.checklist.SetCheckedItems(self.default_selections)
@@ -69,6 +70,19 @@ class CustomCheckListDialog(wx.Dialog):
             self.choices.append(new_item)
             self.added_items.append(new_item)  # 记录新增项目
             self.is_modified = True  # 标记列表已被修改
+
+    def OnEditCheckedItem(self, event):
+        index = self.checklist.GetSelection()
+        if index == wx.NOT_FOUND:
+            return
+
+        current_value = self.choices[index]
+        new_value = wx.GetTextFromUser(f"编辑内容: {current_value}", "编辑选中项目", current_value)
+        if new_value and new_value != current_value:
+            self.checklist.SetString(index, new_value)
+            self.choices[index] = new_value
+            self.is_modified = True  # 标记列表已被修改
+            self.UpdateSelectedText()
 
     def OnRemoveCheckedItems(self, event):
         checked_indices = [i for i in range(len(self.choices)) if self.checklist.IsChecked(i)]

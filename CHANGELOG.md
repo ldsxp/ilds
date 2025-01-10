@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.19.2]
+### Changed
+- 添加 wx.custom_checklist_dialog 支持双击编辑项目
+
 ## [2.19.1]
 ### Changed
 - 添加 wx.custom_checklist_dialog 优化界面，让选择内容全部显示

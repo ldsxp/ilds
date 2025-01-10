@@ -1,7 +1,8 @@
 -r requirements.txt
 
 # error: pkg_resources.py2_warn
-setuptools==44.1.0
+# ModuleNotFoundError: No module named 'distutils'
+setuptools==75.8.0
 
 # pip
 twine

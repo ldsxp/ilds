@@ -666,6 +666,67 @@ class Excel:
 ReadExcel = Excel
 
 
+class ExcelWriter:
+    """
+    写入数据到 Excel 文件
+
+    我们使用
+
+    # 使用上下文的例子：
+    with ExcelWriter("文件.xlsx") as excel_writer:
+        excel_writer.append(tities)  # 写入表头
+        for data_row in 数据列表:
+            excel_writer.append(data_row)  # 写入数据行
+    """
+
+    def __init__(self, filename, sheet_name='Sheet1'):
+        self.filename = filename
+        self.wb = Workbook()
+        self.ws = self.wb.active
+        self.ws.title = sheet_name
+
+    def append(self, row):
+        """
+        添加一行数据到 Excel 中
+
+        :param row: 要添加的数据行
+        """
+        self.ws.append(row)
+
+    def auto_adjust_column_width(self):
+        """
+        自动调整列宽以适应内容
+        """
+        for column in self.ws.columns:
+            max_length = 0
+            column = list(column)
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            self.ws.column_dimensions[column[0].column_letter].width = adjusted_width
+
+    def save(self):
+        """
+        保存 Excel 文件，带有检查文件存在的功能
+        """
+        if os.path.exists(self.filename):
+            print(f"警告: 文件 '{self.filename}' 已存在，将被覆盖")
+        self.auto_adjust_column_width()
+        self.wb.save(self.filename)
+
+    def __enter__(self):
+        # 进入上下文管理器时返回自身
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # 退出上下文管理器时自动保存
+        self.save()
+
+
 def save_excel_specified_rows(input_file, output_file, start_row=1, end_row=11):
     """
     从Excel文件中读取指定的行，并保存到新文件

@@ -3,14 +3,17 @@
 此项目的所有显着更改都将记录在此文件中。
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+## [2.20.0]
+### Added
+- 添加 ilds.pd.ExcelWriter 用于简单的写入 Excel 文件数据
 
 ## [2.19.2]
 ### Changed
-- 添加 wx.custom_checklist_dialog 支持双击编辑项目
+- wx.custom_checklist_dialog 支持双击编辑项目
 
 ## [2.19.1]
 ### Changed
-- 添加 wx.custom_checklist_dialog 优化界面，让选择内容全部显示
+- wx.custom_checklist_dialog 优化界面，让选择内容全部显示
 
 ## [2.19.0]
 ### Added

@@ -3,6 +3,11 @@
 此项目的所有显着更改都将记录在此文件中。
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+
+## [2.21.0]
+### Added
+- 添加 wx.error_dialog 错误信息提示框
+
 ## [2.20.0]
 ### Added
 - 添加 ilds.pd.ExcelWriter 用于简单的写入 Excel 文件数据

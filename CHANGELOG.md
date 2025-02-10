@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.22.0]
+### Added
+- 添加 wx.error_dialog 支持多条错误信息的提示框
+
 ## [2.21.0]
 ### Added
 - 添加 wx.error_dialog 错误信息提示框

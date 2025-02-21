@@ -4,12 +4,16 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.23.3]
+### Added
+- 添加 file.open_file 打开文件
+
 ## [2.23.2]
 ### Added
 - 更新 StatusBarMixin 例子
 
 ## [2.23.1]
-### Added
+### Fixed
 - 修复 StatusBarMixin 错误
 
 ## [2.23.0]

@@ -1,14 +1,4 @@
 ﻿# -*- coding: utf-8 -*-
-#
-# ---------------------------------------
-#   程序：file.py
-#   版本：0.10
-#   作者：lds
-#   日期：2024-09-27
-#   语言：Python 3.X
-#   说明：常用的文件操作函数集合
-# ---------------------------------------
-
 
 import os
 import sys
@@ -27,6 +17,8 @@ from zlib import crc32
 import difflib
 import warnings
 import pickle
+import platform
+import subprocess
 
 from colorama import Fore, Back, Style
 
@@ -869,6 +861,26 @@ def load_pickle(file_path):
     with open(file_path, 'rb') as f:
         data = pickle.load(f)
     return data
+
+
+def open_file(file_path):
+    if not os.path.exists(file_path):
+        print("文件不存在，请检查路径。")
+        return
+
+    system_name = platform.system()
+
+    try:
+        if system_name == 'Windows':
+            os.startfile(file_path)
+        elif system_name == 'Darwin':  # macOS
+            subprocess.run(['open', file_path], check=True)
+        elif system_name == 'Linux':
+            subprocess.run(['xdg-open', file_path], check=True)
+        else:
+            print(f"不支持的操作系统: {system_name}")
+    except Exception as e:
+        print(f"无法打开文件: {e}")
 
 
 def doc():

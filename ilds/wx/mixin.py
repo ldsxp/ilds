@@ -65,7 +65,11 @@ class StatusBar(StatusBarMixin):
         field = self.get_field_clicked(event)
         if field != -1:
             menu = wx.Menu()
-            menu.Append(wx.ID_ANY, f"选择字段 {field + 1}")
+
+            open_file_menu = wx.MenuItem(menu, wx.ID_ANY, '打开文件', )
+            menu.Append(open_file_menu)
+            self.Bind(wx.EVT_MENU, self.OnOpenFile, open_file_menu)
+
             self.PopupMenu(menu)
             menu.Destroy()
         else:
@@ -88,6 +92,10 @@ class StatusBar(StatusBarMixin):
     def on_timer(self, event):
         """定时更新状态栏"""
         self.update_status()
+
+    def OnOpenFile(self, event):
+        print('选择打开文件')
+        event.Skip()
 
 
 class MyFrame(wx.Frame, StatusBar):

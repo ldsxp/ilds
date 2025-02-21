@@ -53,6 +53,7 @@ class StatusBarMixin:
             wx.MessageBox(f"左键单击在状态栏的第 {field + 1} 列", "信息", wx.OK | wx.ICON_INFORMATION)
         else:
             wx.MessageBox("左键单击在状态栏的未知位置", "信息", wx.OK | wx.ICON_WARNING)
+        event.Skip()
 
     def on_left_dclick(self, event):
         # 处理左键双击
@@ -61,6 +62,7 @@ class StatusBarMixin:
             wx.MessageBox(f"左键双击在状态栏的第 {field + 1} 列", "信息", wx.OK | wx.ICON_INFORMATION)
         else:
             wx.MessageBox("左键双击在状态栏的未知位置", "信息", wx.OK | wx.ICON_WARNING)
+        event.Skip()
 
     def on_right_down(self, event):
         # 处理右键单击
@@ -69,6 +71,7 @@ class StatusBarMixin:
             wx.MessageBox(f"右键单击在状态栏的第 {field + 1} 列", "信息", wx.OK | wx.ICON_INFORMATION)
         else:
             wx.MessageBox("右键单击在状态栏的未知位置", "信息", wx.OK | wx.ICON_WARNING)
+        event.Skip()
 
 
 class MyFrame(wx.Frame, StatusBarMixin):

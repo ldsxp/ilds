@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.23.2]
+### Added
+- 更新 StatusBarMixin 例子
+
 ## [2.23.1]
 ### Added
 - 修复 StatusBarMixin 错误

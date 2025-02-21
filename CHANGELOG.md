@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.23.1]
+### Added
+- 修复 StatusBarMixin 错误
+
 ## [2.23.0]
 ### Added
 - 添加 wx.mixin 添加自定义的状态栏的 Mixin 类 StatusBarMixin

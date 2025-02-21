@@ -8,7 +8,6 @@ class StatusBarMixin:
     """
 
     def __init__(self, num_fields=3, field_widths=None, is_left_dclick=False):
-        super().__init__()
         self.num_fields = num_fields
         self.field_widths = field_widths if field_widths else [-1] * num_fields
 
@@ -17,11 +16,6 @@ class StatusBarMixin:
 
         # 设置每个字段的比例宽度
         self.status_bar.SetStatusWidths(self.field_widths)
-
-        # 定时器，用于状态栏时间更新
-        self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER, self.on_timer, self.timer)
-        self.timer.Start(1000)
 
         # 绑定鼠标事件，我们在同时支持左键单击和双击的时候，经常不能正确获取双击数据，所以我们要选择一个使用
         if is_left_dclick:
@@ -88,8 +82,9 @@ class MyFrame(wx.Frame, StatusBarMixin):
         StatusBarMixin.__init__(self, num_fields=num_fields, field_widths=field_widths)
 
         panel = wx.Panel(self)
-        self.timer = wx.Timer(self)
 
+        # 定时器，用于状态栏时间更新
+        self.timer = wx.Timer(self)
         # 设置定时器，每秒更新一次
         self.Bind(wx.EVT_TIMER, self.on_timer, self.timer)
         self.timer.Start(1000)

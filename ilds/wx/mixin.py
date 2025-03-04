@@ -30,9 +30,7 @@ class StatusBarMixin:
         """
         检查事件是否发生在状态栏的指定字段中
         """
-        field_rect = status_bar.GetFieldRect(field_index)
-        event_position = event.GetPosition()
-        return field_rect.Contains(event_position)
+        return status_bar.GetFieldRect(field_index).Contains(event.GetPosition())
 
 
 class StatusBar(StatusBarMixin):

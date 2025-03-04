@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.24.0]
+### Changed
+- wx.error_dialog 改为 message_dialog 通用的信息提示窗口
+
 ## [2.23.3]
 ### Added
 - 添加 file.open_file 打开文件

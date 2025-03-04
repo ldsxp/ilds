@@ -6,55 +6,83 @@ import wx
 import wx.adv
 
 
-class ErrorDialog(wx.Dialog):
-    def __init__(self, parent, error_message, title="错误", error_label='错误信息', error_file_path=None):
+class MessageDialog(wx.Dialog):
+    def __init__(self, parent, message, title="信息", label='信息', file_path=None):
         super().__init__(parent, title=title, size=(869, 969),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
-        self.error_message = error_message
-        self.error_file_path = error_file_path
+        self.message = message
+        self.file_path = file_path
 
         panel = wx.Panel(self)
 
-        # 创建用于显示错误信息的多行文本框
-        error_text_ctrl = wx.TextCtrl(panel, value=self.error_message,
-                                      style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
+        # 创建用于显示信息的多行文本框
+        message_text_ctrl = wx.TextCtrl(panel, value=self.message,
+                                        style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
 
-        # 创建关闭按钮
+        # 创建按钮
         close_button = wx.Button(panel, id=wx.ID_OK, label="关闭")
 
         # 创建布局管理器
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        if error_label:
-            error_label = wx.StaticText(panel, label=error_label)
-            sizer.Add(error_label, 0, wx.ALL | wx.CENTER, 5)
-        sizer.Add(error_text_ctrl, 1, wx.EXPAND | wx.ALL, 10)
-        # 创建按钮用于打开错误日志文件
-        if self.error_file_path and os.path.isfile(self.error_file_path):
-            path_label = wx.StaticText(panel, label=f"文件：{self.error_file_path}")
-            sizer.Add(path_label, 0, wx.ALL | wx.CENTER, 5)
-            open_log_button = wx.Button(panel, label="打开错误日志")
-            open_log_button.Bind(wx.EVT_BUTTON, self.on_open_log)
-            sizer.Add(open_log_button, 0, wx.ALL | wx.CENTER, 5)
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        sizer.Add(close_button, 0, wx.ALL | wx.CENTER, 5)
+        if label:
+            label_text = wx.StaticText(panel, label=label)
+            main_sizer.Add(label_text, 0, wx.ALL | wx.CENTER, 5)
 
-        panel.SetSizer(sizer)
+        main_sizer.Add(message_text_ctrl, 1, wx.EXPAND | wx.ALL, 10)
 
-    def on_open_log(self, event):
+        # 用于按钮的水平布局
+        button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        # 创建按钮用于打开文件（如果提供了文件路径）
+        if self.file_path and os.path.isfile(self.file_path):
+            path_label = wx.StaticText(panel, label=f"文件：{self.file_path}")
+            main_sizer.Add(path_label, 0, wx.ALL | wx.CENTER, 5)
+
+            open_file_button = wx.Button(panel, label="打开文件")
+            open_file_button.Bind(wx.EVT_BUTTON, self.on_open_file)
+            button_sizer.Add(open_file_button, 0, wx.ALL, 5)
+
+            open_dir_button = wx.Button(panel, label="打开文件所在目录")
+            open_dir_button.Bind(wx.EVT_BUTTON, self.on_open_directory)
+            button_sizer.Add(open_dir_button, 0, wx.ALL, 5)
+
+        button_sizer.Add(close_button, 0, wx.ALL, 5)
+
+        main_sizer.Add(button_sizer, 0, wx.ALL | wx.CENTER, 5)
+
+        panel.SetSizer(main_sizer)
+
+    def on_open_file(self, event):
         try:
             system_platform = platform.system()
-
             if system_platform == "Windows":
-                os.startfile(self.error_file_path)
+                os.startfile(self.file_path)
             elif system_platform == "Darwin":
-                subprocess.run(["open", self.error_file_path], check=True)
+                subprocess.run(["open", self.file_path], check=True)
             else:
-                subprocess.run(["xdg-open", self.error_file_path], check=True)
+                subprocess.run(["xdg-open", self.file_path], check=True)
 
         except Exception as e:
             print(f"Exception: {str(e)}")
-            wx.MessageBox(f"无法打开日志文件: {str(e)}", "错误", wx.ICON_ERROR)
+            wx.MessageBox(f"无法打开文件: {str(e)}", "错误", wx.ICON_ERROR)
+
+    def on_open_directory(self, event):
+        try:
+            directory = os.path.dirname(self.file_path)
+            system_platform = platform.system()
+
+            if system_platform == "Windows":
+                os.startfile(directory)
+            elif system_platform == "Darwin":
+                subprocess.run(["open", directory], check=True)
+            else:
+                subprocess.run(["xdg-open", directory], check=True)
+
+        except Exception as e:
+            print(f"Exception: {str(e)}")
+            wx.MessageBox(f"无法打开目录: {str(e)}", "错误", wx.ICON_ERROR)
 
 
 class MultiErrorDialog(wx.Dialog):
@@ -132,7 +160,7 @@ class MyApp(wx.App):
         error_file_path = r""
 
         # 创建并显示错误对话框
-        error_dialog = ErrorDialog(self.frame, error_message=error_message, title="错误", error_label='错误信息', error_file_path=error_file_path)
+        error_dialog = MessageDialog(self.frame, message=error_message, title='信息', label='普通信息', file_path=error_file_path)
         error_dialog.ShowModal()
         error_dialog.Destroy()
 
@@ -155,8 +183,8 @@ class MyMultiApp(wx.App):
 
         # 创建并显示错误对话框
         if len(errors) == 1:
-            error_dialog = ErrorDialog(self.frame, error_message=errors[0]['error_message'], title="错误", error_label=errors[0]['error_label'],
-                                       error_file_path=errors[0]['error_file_path'])
+            error_dialog = MessageDialog(self.frame, message=errors[0]['error_message'], title='错误', label=errors[0]['error_label'],
+                                         file_path=errors[0]['error_file_path'])
         else:
             error_dialog = MultiErrorDialog(self.frame, errors=errors)
 

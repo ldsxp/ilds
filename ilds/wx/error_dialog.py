@@ -85,9 +85,9 @@ class MessageDialog(wx.Dialog):
             wx.MessageBox(f"无法打开目录: {str(e)}", "错误", wx.ICON_ERROR)
 
 
-class MultiErrorDialog(wx.Dialog):
-    def __init__(self, parent, errors, title="错误"):
-        super().__init__(parent, title=f'{title} [{len(errors)}]', size=(869, 969),
+class MultiMessageDialog(wx.Dialog):
+    def __init__(self, parent, messages, title="信息"):
+        super().__init__(parent, title=f'{title} [{len(messages)}]', size=(869, 969),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         # 使用滚动窗口
@@ -97,27 +97,32 @@ class MultiErrorDialog(wx.Dialog):
         # 创建布局管理器
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # 为每个错误信息创建一组控件
-        for error in errors:
-            error_label = error.get('error_label', '错误信息')
-            error_message = error.get('error_message', '')
-            error_file_path = error.get('error_file_path', None)
+        # 为每条信息创建一组控件
+        for message in messages:
+            label = message.get('label', '信息')
+            message_text = message.get('message', '')
+            file_path = message.get('file_path', None)
 
-            # 创建错误信息的标签
-            error_label_ctrl = wx.StaticText(scroll_win, label=error_label)
-            sizer.Add(error_label_ctrl, 0, wx.ALL | wx.CENTER, 5)
+            # 创建信息的标签
+            label_ctrl = wx.StaticText(scroll_win, label=label)
+            sizer.Add(label_ctrl, 0, wx.ALL | wx.CENTER, 5)
 
-            # 创建用于显示错误信息的多行文本框
-            error_text_ctrl = wx.TextCtrl(scroll_win, value=error_message,
-                                          style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
-            error_text_ctrl.SetMinSize((400, 150))  # 设置最小尺寸
-            sizer.Add(error_text_ctrl, 0, wx.EXPAND | wx.ALL, 5)
+            # 创建用于显示信息的多行文本框
+            message_text_ctrl = wx.TextCtrl(scroll_win, value=message_text,
+                                            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
+            message_text_ctrl.SetMinSize((400, 150))  # 设置最小尺寸
+            sizer.Add(message_text_ctrl, 0, wx.EXPAND | wx.ALL, 5)
 
-            # 当提供日志文件路径且文件存在时，创建超链接控件
-            if error_file_path and os.path.isfile(error_file_path):
-                hyperlink = wx.adv.HyperlinkCtrl(scroll_win, label=error_file_path, url="")
-                hyperlink.Bind(wx.adv.EVT_HYPERLINK, lambda event, path=error_file_path: self.on_open_log(event, path))
+            # 当提供文件路径且文件存在时，创建超链接控件
+            if file_path and os.path.isfile(file_path):
+                hyperlink = wx.adv.HyperlinkCtrl(scroll_win, label=file_path, url="")
+                hyperlink.Bind(wx.adv.EVT_HYPERLINK, lambda event, path=file_path: self.on_open_file(event, path))
                 sizer.Add(hyperlink, 0, wx.ALL | wx.CENTER, 5)
+
+                # 创建一个打开目录的按钮
+                open_dir_button = wx.Button(scroll_win, label="打开文件所在目录")
+                open_dir_button.Bind(wx.EVT_BUTTON, lambda event, path=file_path: self.on_open_directory(event, path))
+                sizer.Add(open_dir_button, 0, wx.ALL | wx.CENTER, 5)
 
         # 设置滚动窗口的布局
         scroll_win.SetSizer(sizer)
@@ -135,20 +140,36 @@ class MultiErrorDialog(wx.Dialog):
         # 应用整体布局
         self.SetSizer(main_sizer)
 
-    def on_open_log(self, event, error_file_path):
+    def on_open_file(self, event, file_path):
         try:
             system_platform = platform.system()
 
             if system_platform == "Windows":
-                os.startfile(error_file_path)
+                os.startfile(file_path)
             elif system_platform == "Darwin":
-                subprocess.run(["open", error_file_path], check=True)
+                subprocess.run(["open", file_path], check=True)
             else:
-                subprocess.run(["xdg-open", error_file_path], check=True)
+                subprocess.run(["xdg-open", file_path], check=True)
 
         except Exception as e:
             print(f"Exception: {str(e)}")
-            wx.MessageBox(f"无法打开日志文件: {str(e)}", "错误", wx.ICON_ERROR)
+            wx.MessageBox(f"无法打开文件: {str(e)}", "错误", wx.ICON_ERROR)
+
+    def on_open_directory(self, event, file_path):
+        try:
+            directory = os.path.dirname(file_path)
+            system_platform = platform.system()
+
+            if system_platform == "Windows":
+                os.startfile(directory)
+            elif system_platform == "Darwin":
+                subprocess.run(["open", directory], check=True)
+            else:
+                subprocess.run(["xdg-open", directory], check=True)
+
+        except Exception as e:
+            print(f"Exception: {str(e)}")
+            wx.MessageBox(f"无法打开目录: {str(e)}", "错误", wx.ICON_ERROR)
 
 
 class MyApp(wx.App):
@@ -173,12 +194,12 @@ class MyMultiApp(wx.App):
 
         # 模拟多个错误信息，使用字典格式
         errors = [
-            {"error_message": "示例错误信息 1", "error_label": "错误信息 1", "error_file_path": r"path\to\log1.txt"},
-            {"error_message": "示例错误信息 2", "error_label": "错误信息 2", "error_file_path": r"path\to\log2.txt"},
-            {"error_message": "示例错误信息 3", "error_label": "错误信息 3", "error_file_path": r"path\to\log3.txt"},
+            {"message": "示例错误信息 1", "label": "错误信息 1", "file_path": r"path\to\log1.txt"},
+            {"message": "示例错误信息 2", "label": "错误信息 2", "file_path": r"path\to\log2.txt"},
+            {"message": "示例错误信息 3", "label": "错误信息 3", "file_path": r"path\to\log3.txt"},
             # 添加更多的错误信息来测试滚动
-            {"error_message": "示例错误信息 4", "error_label": "错误信息 4", "error_file_path": r"path\to\log4.txt"},
-            {"error_message": "示例错误信息 5", "error_label": "错误信息 5", "error_file_path": r"path\to\log5.txt"},
+            {"message": "示例错误信息 4", "label": "错误信息 4", "file_path": r"path\to\log4.txt"},
+            {"message": "示例错误信息 5", "label": "错误信息 5", "file_path": r"path\to\log5.txt"},
         ]
 
         # 创建并显示错误对话框
@@ -186,7 +207,7 @@ class MyMultiApp(wx.App):
             error_dialog = MessageDialog(self.frame, message=errors[0]['error_message'], title='错误', label=errors[0]['error_label'],
                                          file_path=errors[0]['error_file_path'])
         else:
-            error_dialog = MultiErrorDialog(self.frame, errors=errors)
+            error_dialog = MultiMessageDialog(self.frame, messages=errors)
 
         error_dialog.ShowModal()
         error_dialog.Destroy()

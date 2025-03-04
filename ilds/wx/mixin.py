@@ -26,6 +26,14 @@ class StatusBarMixin:
                 return i
         return -1
 
+    def is_event_in_status_bar_field(self, event, status_bar, field_index):
+        """
+        检查事件是否发生在状态栏的指定字段中
+        """
+        field_rect = status_bar.GetFieldRect(field_index)
+        event_position = event.GetPosition()
+        return field_rect.Contains(event_position)
+
 
 class StatusBar(StatusBarMixin):
     def __init__(self, num_fields=3, field_widths=None):

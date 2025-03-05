@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.24.1]
+### Changed
+- wx.message_dialog 打开窗口的时候默认滚动到文本框底部显示
+
 ## [2.24.0]
 ### Changed
 - wx.error_dialog 改为 message_dialog 通用的信息提示窗口

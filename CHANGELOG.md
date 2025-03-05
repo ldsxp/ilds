@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.24.2]
+### Changed
+- wx.message_dialog 修复不能显示底部内容的错误
+
 ## [2.24.1]
 ### Changed
 - wx.message_dialog 打开窗口的时候默认滚动到文本框底部显示

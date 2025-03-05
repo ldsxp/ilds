@@ -120,14 +120,11 @@ class MultiMessageDialog(wx.Dialog):
             # 创建用于显示信息的多行文本框
             message_text_ctrl = wx.TextCtrl(scroll_win, value=message_text,
                                             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
-            message_text_ctrl.SetMinSize((400, 150))  # 设置最小尺寸
+            message_text_ctrl.SetMinSize((400, 200))  # 设置最小尺寸
             sizer.Add(message_text_ctrl, 0, wx.EXPAND | wx.ALL, 5)
 
             # 滚动到文本框底部
             if scroll_to_bottom:
-                # 设置光标位置到文本末尾
-                message_text_ctrl.SetInsertionPointEnd()
-                # 滚动文本框到光标位置
                 message_text_ctrl.ShowPosition(message_text_ctrl.GetLastPosition())
 
             # 当提供文件路径且文件存在时，创建超链接控件

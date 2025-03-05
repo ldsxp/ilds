@@ -125,6 +125,9 @@ class MultiMessageDialog(wx.Dialog):
 
             # 滚动到文本框底部
             if scroll_to_bottom:
+                # 设置光标位置到文本末尾
+                message_text_ctrl.SetInsertionPointEnd()
+                # 滚动文本框到光标位置
                 message_text_ctrl.ShowPosition(message_text_ctrl.GetLastPosition())
 
             # 当提供文件路径且文件存在时，创建超链接控件

@@ -8,7 +8,7 @@ import wx.adv
 
 class MessageDialog(wx.Dialog):
     def __init__(self, parent, message, title="信息", label='信息', file_path=None, scroll_to_bottom=True):
-        super().__init__(parent, title=title, size=(869, 969),
+        super().__init__(parent, title=title, size=(1269, 969),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         self.message = message
@@ -97,7 +97,7 @@ class MessageDialog(wx.Dialog):
 
 class MultiMessageDialog(wx.Dialog):
     def __init__(self, parent, messages, title="信息", scroll_to_bottom=True):
-        super().__init__(parent, title=f'{title} [{len(messages)}]', size=(869, 969),
+        super().__init__(parent, title=f'{title} [{len(messages)}]', size=(1269, 969),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         # 使用滚动窗口

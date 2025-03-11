@@ -58,8 +58,10 @@ def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, con
                               is_print=is_print)
         all_len += sum([len(df) for df in df_list])
         frames.extend(df_list)
-
-    _df = pd.concat(frames, **concat_kwargs)  # result
+    if frames:
+        _df = pd.concat(frames, **concat_kwargs)  # result
+    else:
+        _df = pd.DataFrame()
     if is_print:
         print('合并数据行数：', len(_df), '原始数据行数：', all_len)
     return _df

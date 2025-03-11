@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.25.0]
+### Added
+- ilds.pd.match_dataframe 从Pandas数据中匹配满足特定条件的行
+### Fixed
+- 修复数据为空造成的合并错误
+
 ## [2.24.2]
 ### Changed
 - wx.message_dialog 修复不能显示底部内容的错误

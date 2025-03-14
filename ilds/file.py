@@ -7,9 +7,6 @@ import random
 import shutil
 # get_file_md5
 import hashlib
-# get_encoding
-import chardet
-from chardet.universaldetector import UniversalDetector
 # validateTitle
 import re
 from datetime import datetime
@@ -74,9 +71,10 @@ def exist_or_makedir(in_dir):
 def get_encoding(fromfile):
     """
     文件编码判断
-    :param fromfile: 
+    :param fromfile:
     :return: 编码格式
     """
+    from chardet.universaldetector import UniversalDetector
     with open(fromfile, 'rb') as f:
         detector = UniversalDetector()
         for line in f:
@@ -812,7 +810,7 @@ def synch_git_files(src, dst, remove_src=False):
         print(f'修改 {count} 需要删除的文件 {remove_count}')
 
 
-def json_read(path):
+def json_read(path, raise_error=True):
     """
     读取 json 文件
     """
@@ -820,11 +818,14 @@ def json_read(path):
         with open(path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
-        print('Error reading JSON:', e)
-        return None
+        if raise_error:
+            raise
+        else:
+            print('Error reading JSON:', e)
+            return None
 
 
-def json_save(obj, path, indent=2):
+def json_save(obj, path, indent=2, raise_error=True):
     """
     保存 json 文件
     """
@@ -836,8 +837,11 @@ def json_save(obj, path, indent=2):
             json.dump(obj, f, ensure_ascii=False, indent=indent)
         return True
     except Exception as e:
-        print('Error saving JSON:', e)
-        return False
+        if raise_error:
+            raise
+        else:
+            print('Error saving JSON:', e)
+            return False
 
 
 def save_pickle(data, file_path):
@@ -895,7 +899,7 @@ def doc():
         for x in sequence:
             counts[x] += 1
         return counts
-    
+
     """
     doc_text += '\n'
     doc_text += '{fun.__name__}{fun.__doc__}\n'.format(fun=is_file)

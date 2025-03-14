@@ -4,6 +4,11 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.25.1]
+### Changed
+- 在使用的时候在导入chardet
+- json默认返回错误信息
+
 ## [2.25.0]
 ### Added
 - ilds.pd.match_dataframe 从Pandas数据中匹配满足特定条件的行

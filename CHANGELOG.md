@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.25.2]
+### Added
+- wx.save_dict_list_to_excel 保存字典列表的数据为 Excel 文件
+
 ## [2.25.1]
 ### Changed
 - 在使用的时候在导入chardet

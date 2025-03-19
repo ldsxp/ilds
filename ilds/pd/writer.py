@@ -103,3 +103,36 @@ def writer_excel(obj, path, index=False, use_zip64=False):
             obj.to_excel(writer, sheet_name='Sheet1', index=index)
             if use_zip64:
                 writer.book.use_zip64()
+
+
+def save_dict_list_to_excel(dicts_list, save_file, rename_columns=None, properties=None):
+    """
+    保存字典列表的数据为 Excel 文件
+
+    # 属性例子
+    properties = {
+        'creator': '作者',
+        'title': '标题',
+        'subject': '主题',
+        'description': '备注',
+    }
+    """
+    # 将字典列表转换为 DataFrame
+    df = pd.DataFrame(dicts_list)
+
+    # 重命名标题
+    if rename_columns:
+        rename_dict = {col: rename_columns[col] for col in df.columns if col in rename_columns}
+        if rename_dict:
+            df = df.rename(columns=rename_dict)
+
+    with pd.ExcelWriter(save_file, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+        # 设置文档属性
+        if properties and isinstance(properties, dict):
+            workbook = writer.book
+            for k, v in properties.items():
+                setattr(workbook.properties, k, v)
+
+        print(f'保存Excel文件：{save_file}')

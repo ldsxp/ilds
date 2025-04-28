@@ -4,6 +4,12 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+
+## [2.26.0]
+### Changed
+- 更新configobj 到 5.1.0
+- 优化 split_excel_sheet 表格拆分功能
+
 ## [2.25.2]
 ### Added
 - wx.save_dict_list_to_excel 保存字典列表的数据为 Excel 文件

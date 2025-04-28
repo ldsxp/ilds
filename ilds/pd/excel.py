@@ -1,10 +1,7 @@
 import os
 from pathlib import Path
 
-import hashlib
-
 import pandas as pd
-
 from ilds.file import get_dir_files
 from ilds.pd.read import get_df_list
 
@@ -76,25 +73,16 @@ def split_excel_sheet(file, dst_dir=None):
     :return:
     """
     file = Path(file)
+    dst_dir = Path(dst_dir or (file.parent / f'{file.stem} - 拆分'))
+    dst_dir.mkdir(exist_ok=True)
 
-    if dst_dir is None:
-        dst_dir = file.parent / f'{file.stem} - 拆分'
-    elif isinstance(dst_dir, str):
-        dst_dir = Path(dst_dir)
-
-    if not dst_dir.exists():
-        dst_dir.mkdir()
-
-    xlsx = pd.ExcelFile(file)
-    sheet_names = xlsx.sheet_names
-    print('sheet_names', sheet_names)
-
-    for sheet_name in sheet_names:
-        df = xlsx.parse(sheet_name)
-        to_file = dst_dir / f"{sheet_name}{file.suffix}"
-        print(f"保存表薄: {sheet_name}, 文件: {to_file}")
-        with pd.ExcelWriter(to_file, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+    with pd.ExcelFile(file) as xlsx:
+        for sheet_name in xlsx.sheet_names:
+            df = xlsx.parse(sheet_name)
+            to_file = dst_dir / f"{sheet_name},{file.suffix}"
+            print(f"保存表: {sheet_name}, 文件: {to_file}")
+            with pd.ExcelWriter(to_file, engine='xlsxwriter') as writer:
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
 
     print(f"拆分完成，拆分文件保存在 '{dst_dir}' 文件夹中。")
 

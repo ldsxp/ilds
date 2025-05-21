@@ -16,6 +16,7 @@ import warnings
 import pickle
 import platform
 import subprocess
+from pathlib import Path
 
 from colorama import Fore, Back, Style
 
@@ -96,24 +97,30 @@ def validate_title(title):
     return new_title
 
 
-def replace_invalid_filename_char(filename, replaced_char='_', max=100):
+def replace_invalid_filename_char(filename, replaced_char='_', max_length=100):
     """
-    替换文件名中无效的字符。 默认用'_'替换。
+    替换文件名中无效的字符。默认用'_'替换。
 
-    :param filename:  要替换的文件名
-    :param replaced_char:  替换的字符
-    :return:
+    :param filename: 要替换的文件名
+    :param replaced_char: 替换的字符
+    :param max_length: 文件名的最大长度
+    :return: 替换后的文件名
     """
-    invalid_characaters = '\\/:*?"<>|\r\n\t'
-    for c in invalid_characaters:
-        filename = filename.replace(c, replaced_char)
+    if not replaced_char:
+        replaced_char = '_'
+
+    # 定义无效字符的正则表达式
+    invalid_characters_pattern = r'[\\/:*?"<>|\r\n\t]'
+
+    # 使用正则替换无效字符
+    filename = re.sub(invalid_characters_pattern, replaced_char, filename)
 
     # 清理空白符号
     filename = filename.strip()
 
     # 截断超过最大长度的字符
-    if len(filename) > max:
-        filename = f'{filename[:max - 3]}……'
+    if len(filename) > max_length:
+        filename = f'{filename[:max_length - 1]}…'
 
     return filename
 
@@ -272,11 +279,15 @@ def from_this_dir(file):
     return os.path.join(os.path.dirname(os.path.dirname(__file__)), file)
 
 
-def from_this_dir_2(file):
+def from_this_dir(file, is_str=True):
     """
-    获取本模块所在路径的全路径
+    获取运行模块所在路径的全路径
     """
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+    # 获取当前文件所在目录的Path对象，并返回与指定文件的组合路径
+    if is_str:
+        return str(Path(__file__).parent / file)
+    else:
+        return Path(__file__).parent / file
 
 
 def get_file_line_info():
@@ -350,9 +361,11 @@ def check_filename_available(file, make_dirs=False, dirs_name='重复'):
     :param dirs_name: 文件夹的名字
     :return: 不重复的文件路径
     """
-    import os
     if not os.path.exists(file):
         return file
+
+    f_path, f_file = os.path.split(file) if make_dirs else ('', '')
+    f_name, f_ext = os.path.splitext(f_file) if not make_dirs else os.path.splitext(file)
 
     num = 1
     if make_dirs:
@@ -364,8 +377,12 @@ def check_filename_available(file, make_dirs=False, dirs_name='重复'):
             new_file_name = os.path.join(f_path, f"{dirs_name}({num})", f_file)
         else:
             new_file_name = f"{f_name} ({num}){f_ext}"
+
         if not os.path.exists(new_file_name):
+            if make_dirs:
+                os.makedirs(os.path.dirname(new_file_name), exist_ok=True)
             return new_file_name
+
         num += 1
 
 
@@ -386,13 +403,13 @@ def exists_file_to_bak(file):
         # print((_file, _file2))
 
 
-def get_name(file):
+def get_name(file_path):
     """
-    获取路径中最后的文件名 不包括后缀名
+    获取路径中最后的文件名，不包括后缀名。
     """
-    # os.path.split 分离路径的目录名和文件名(dirname(), basename()) 元组，后一部分总是最后级别的目录或文件名
-    _, name = os.path.basename(file)
-    # 分离文件名和扩展名， 返回(filename,extension)元组，没有扩展名，扩展名返回空
+    # 获取路径的基本名称
+    name = os.path.basename(file_path)
+    # 分离文件名和扩展名
     ret_name, _ = os.path.splitext(name)
     return ret_name
 
@@ -402,25 +419,20 @@ def list_dir(file_dir):
     获取文件夹下的文件列表
     跳过目录、文件名前缀是.的文件
 
-    :param file_dir:
+    :param file_dir: 目标文件夹路径
     :return: 返回文件列表的生成器
     """
-    if os.path.isdir(file_dir):
-        for name in os.listdir(file_dir):
-            file = os.path.join(file_dir, name)
+    if not os.path.isdir(file_dir):
+        raise NotADirectoryError(f"{file_dir} is not a valid directory.")
 
-            # 跳过目录
-            if os.path.isdir(file):
-                continue
+    for name in os.listdir(file_dir):
+        if name.startswith('.'):
+            continue
 
-            # 跳过文件名前缀是.的文件
-            if name.startswith('.'):
-                continue
+        full_path = os.path.join(file_dir, name)
 
-            # print(file)
-            yield file
-    else:
-        raise NotADirectoryError(file_dir)
+        if os.path.isfile(full_path):
+            yield full_path
 
 
 def from_dir_func(dir_path, func, prefix='.', suffix='', *args, **kwargs):

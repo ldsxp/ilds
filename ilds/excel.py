@@ -236,7 +236,9 @@ class SheetImageLoader:
                         # print(r_link, r_embed)
                         if r_link:
                             if r_link in link_data:
-                                raise ValueError(f"已经存在 r_link {r_link} 单元格 {col_row}")
+                                _data = {'col_row': col_row, 'col': col, 'row': row, 'to_col': to_col, 'to_row': to_row, 'r_link': r_link, 'pic_name': pic_name, }
+                                info = f"已经存在 r_link {r_link} 单元格 {col_row}\n{link_data[r_link]}\n{_data}"
+                                raise ValueError(info)
                             link_data[r_link] = {'col_row': col_row, 'col': col, 'row': row, 'to_col': to_col, 'to_row': to_row, 'r_link': r_link,
                                                  'pic_name': pic_name, }
                         elif r_embed:

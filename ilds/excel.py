@@ -143,6 +143,7 @@ class SheetImageLoader:
     if image_loader.image_in('A4'):
         print("有图片!")
 
+    # https://openpyxl.readthedocs.io
     参考 https://github.com/ultr4nerd/openpyxl-image-loader
     """
 
@@ -151,21 +152,114 @@ class SheetImageLoader:
         加载工作表图像
         """
         self.excel_file = excel_file
+        self.z = zipfile.ZipFile(self.excel_file, 'r')
         self.wb = wb
         self.sheet = sheet
         self._images = {}
         self._external_images = {}
         self._wps_images = {}
         self.is_wps = None
+        self.cell_image = {}
+        self.is_cell_image = False
+        self.file_list = self.z.namelist()
 
         self._load_images_from_sheet()
+        self.load_cell_image()
         self.read_drawing_images()
 
     def _load_images_from_sheet(self):
+        # print(f'_load_images_from_sheet:{self.sheet._images}')
         for image in self.sheet._images:
             row = image.anchor._from.row + 1
             col = string.ascii_uppercase[image.anchor._from.col]
             self._images[f'{col}{row}'] = {'type': 'data', 'image': image._data}
+
+    def load_cell_image(self):
+        xml_path = f'xl/cellimages.xml'
+        rels_xml_path = get_rels_path(xml_path)
+
+        not_files = []
+
+        # 先检查xml文件是否存在
+        if xml_path not in self.file_list:
+            not_files.append(xml_path)
+
+        if rels_xml_path not in self.file_list:
+            not_files.append(rels_xml_path)
+
+        if not_files:
+            print(f'file_list:{self.file_list}')
+            print(f'load_cell_image 没有找到文件：{not_files}')
+            return
+
+        namespaces = {
+            'xdr': 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+            'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+            'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+            'etc': 'http://www.wps.cn/officeDocument/2017/etCustomData'
+        }
+        tag_name = 'etc:cellImage'
+
+        link_data = {}
+
+        with self.z.open(xml_path) as f:
+            # 解析XML内容
+            tree = ET.parse(f)
+            root = tree.getroot()
+
+            for cell_image in root.findall(tag_name, namespaces):
+                pic = cell_image.find('xdr:pic', namespaces)
+                nvPicPr = pic.find('xdr:nvPicPr', namespaces)
+                cNvPr = nvPicPr.find('xdr:cNvPr', namespaces)
+                blipFill = pic.find('xdr:blipFill', namespaces)
+                blip = blipFill.find('a:blip', namespaces)
+
+                pic_id = cNvPr.get('id')
+                pic_name = cNvPr.get('name')
+                r_embed = blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed')
+
+                image_info = {
+                    'id': pic_id,
+                    'name': pic_name,
+                    'embed': r_embed,
+                }
+                # print(image_info)
+
+                if r_embed:
+                    ...
+                    if r_embed in link_data:
+                        raise ValueError(f"已经存在 r_embed {r_embed} 单元格 {pic_name}")
+                    link_data[r_embed] = {'r_embed': r_embed, 'pic_name': pic_name, }
+
+                # self.cell_image[f'{col}{row}'] = {'type': 'data', 'image': image._data}
+
+        # XML命名空间
+        namespace = {'rel': 'http://schemas.openxmlformats.org/package/2006/relationships'}
+        # print(get_drawing_rels(z, ))
+        with self.z.open(rels_xml_path) as drawing:
+            # 解析XML文件
+            tree = ET.parse(drawing)
+            root = tree.getroot()
+
+            # 遍历所有Relationship元素
+            for i, relationship in enumerate(root.findall('rel:Relationship', namespace)):
+                r_id = relationship.get('Id')
+                type_ = relationship.get('Type')
+                target = relationship.get('Target')
+                target_mode = relationship.get('TargetMode')
+
+                # target_mode True 图片链接 None 图片文件
+
+                # print('load_cell_image', i, f'Id: {r_id}, Type: {type_}, Target: {target}, TargetMode: {target_mode}')
+
+                if r_id not in link_data:
+                    print(f'没有找到 {r_id} 的图片关联数据', link_data)
+                    continue
+
+                if target_mode:
+                    self.cell_image[link_data[r_id]['pic_name']] = {'type': 'url', 'image': target}
+                else:
+                    self.cell_image[link_data[r_id]['pic_name']] = {'type': 'file', 'image': target}
 
     def get_drawing_link(self, z, xml_file):
         """
@@ -175,12 +269,6 @@ class SheetImageLoader:
         :param xml_file:
         :return:
         """
-        # 定义命名空间
-        namespaces = {
-            'xdr': 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
-            'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-            'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
-        }
 
         link_data = {}
         wps_data = {}
@@ -190,8 +278,16 @@ class SheetImageLoader:
             tree = ET.parse(f)
             root = tree.getroot()
 
+            # 定义命名空间
+            namespaces = {
+                'xdr': 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+                'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+                'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
+            }
+            tag_name = 'xdr:twoCellAnchor'
+
             # 查找所有的twoCellAnchor元素
-            for i, anchor in enumerate(root.findall('xdr:twoCellAnchor', namespaces)):
+            for i, anchor in enumerate(root.findall(tag_name, namespaces)):
                 # edit_as = anchor.get('editAs')
 
                 col_row = None
@@ -257,22 +353,30 @@ class SheetImageLoader:
 
         return {'link_data': link_data, 'wps_data': wps_data, }
 
-    def drawing_rels_external_images(self, z, xml_path, ):
+    def drawing_rels_external_images(self, z, xml_path, rels_xml_path):
+        # print(f'drawing_rels_external_images(xml_path:{xml_path}) is_wps {self.is_wps} rels_xml_path:{rels_xml_path}')
+
+        not_files = []
+
         # 先检查xml文件是否存在
-        file_list = z.namelist()
-        rels_xml_path = get_rels_path(xml_path)
-        print(xml_path, rels_xml_path)
-        # print("Excel 文件:", file_list)
-        if xml_path not in file_list or rels_xml_path not in file_list:
+        if xml_path not in self.file_list:
+            not_files.append(xml_path)
+
+        if rels_xml_path not in self.file_list:
+            not_files.append(rels_xml_path)
+
+        if not_files:
+            print(f'file_list:{self.file_list}')
+            print(f'没有找到xml文件：{not_files}')
             return
 
         r = self.get_drawing_link(z, xml_file=xml_path)
-        # print(index, 'get_drawing_link', r)
+
         link_data = r['link_data']
+        # print('get_drawing_link', r)
 
         # XML命名空间
         namespace = {'rel': 'http://schemas.openxmlformats.org/package/2006/relationships'}
-
         # print(get_drawing_rels(z, ))
         with z.open(rels_xml_path) as drawing:
             # 解析XML文件
@@ -286,6 +390,8 @@ class SheetImageLoader:
                 target = relationship.get('Target')
                 target_mode = relationship.get('TargetMode')
 
+                # target_mode True 图片链接 None 图片文件
+
                 # print(i, f'Id: {r_id}, Type: {type_}, Target: {target}, TargetMode: {target_mode}')
 
                 if r_id not in link_data:
@@ -293,18 +399,17 @@ class SheetImageLoader:
                     continue
 
                 # print(f'col_row:{col_row} r_id:{r_id} target:{target} {link_data[r_id]}')
-                if self.is_wps:
-                    pic_name = link_data[r_id]['pic_name']
-                    if pic_name in self._wps_images:
-                        raise ValueError(f"单元格 {col_row} 已经存在图像 {r_id} {self._images[col_row]} >  {target}")
-                    if target_mode:
-                        self._wps_images[pic_name] = {'type': 'url', 'image': target}
-                    else:
-                        self._wps_images[pic_name] = {'type': 'wps', 'image': target}
-                else:
-                    if not target_mode:
-                        continue
-                    col_row = link_data[r_id]['col_row']
+                # if self.is_wps:
+                #     pic_name = link_data[r_id]['pic_name']
+                #     if pic_name in self._wps_images:
+                #         raise ValueError(f"单元格 {col_row} 已经存在图像 {r_id} {self._images[col_row]} >  {target}")
+                #     if target_mode:
+                #         self._wps_images[pic_name] = {'type': 'url', 'image': target}
+                #     else:
+                #         self._wps_images[pic_name] = {'type': 'wps', 'image': target}
+                # else:
+                col_row = link_data[r_id]['col_row']
+                if target_mode:
                     if col_row in self._images:
                         # image = self.get(col_row)
                         # image.show()
@@ -315,6 +420,9 @@ class SheetImageLoader:
                         raise ValueError(f"单元格 {col_row} 已经存在图像 {r_id} {self._external_images[col_row]} >  {target}")
 
                     self._external_images[col_row] = {'type': 'url', 'image': target}
+                else:
+                    if col_row not in self._images:
+                        self._images[col_row] = {'type': 'file', 'image': target}
 
     def read_drawing_images(self):
         """
@@ -322,35 +430,43 @@ class SheetImageLoader:
         """
         index = self.wb.sheetnames.index(self.sheet.title)
 
-        # 打开Excel文件
-        with zipfile.ZipFile(self.excel_file, 'r') as z:
-            # 读取docProps/app.xml文件
-            if self.is_wps is None:
-                with z.open('docProps/app.xml') as app_xml:
-                    content = app_xml.read().decode('utf-8')
-                    # 检查内容中特定的字符串标识符
-                    if 'Microsoft Excel' in content:
-                        self.is_wps = False
-                    elif 'WPS Office' in content:
-                        self.is_wps = True
-                    else:
-                        self.is_wps = None
-                    # print(self.is_wps, content)
-            if self.is_wps:
-                # xml_path = f'xl/cellimages.xml'
-                # rels_xml_path = f'xl/_rels/cellimages.xml.rels'
-                xml_path = f'xl/drawings/drawing1.xml'
-                # rels_xml_path = f'xl/drawings/_rels/drawing1.xml.rels'
-                self.drawing_rels_external_images(z, xml_path=xml_path)
-            else:
-                xml_path = f'xl/drawings/drawing{index + 1}.xml'
-                self.drawing_rels_external_images(z, xml_path=xml_path)
-            # try:
-            #     self.drawing_rels_external_images(z, xml_path=xml_path)
-            # except Exception as e:
-            #     print(f'读取网络图片发生错误:{e},\nself._external_images:{self._external_images}')
-            #     self._external_images = {}
-            #     pass
+        # 读取docProps/app.xml文件
+        if self.is_wps is None:
+            with self.z.open('docProps/app.xml') as app_xml:
+                content = app_xml.read().decode('utf-8')
+                # 检查内容中特定的字符串标识符
+                if 'Microsoft Excel' in content:
+                    self.is_wps = False
+                elif 'WPS Office' in content or 'Kingsoft Office' in content:
+                    self.is_wps = True
+                else:
+                    self.is_wps = None
+                # print(self.is_wps, content)
+
+        if self.is_wps:
+            # 我们虽然可以判断是否是wps保存的，但是他的图片还是分两种，一种是wps原生的还有一种是wps转为浮动图片的
+            # xml_path = f'xl/cellimages.xml'
+            # rels_xml_path = f'xl/_rels/cellimages.xml.rels'
+            xml_path = f'xl/drawings/drawing1.xml'
+            # rels_xml_path = f'xl/drawings/_rels/drawing1.xml.rels'
+            # if get_rels_path(f'xl/cellimages.xml') in self.file_list:
+            #     xml_path = f'xl/cellimages.xml'
+            #     self.is_cell_image = True
+            # elif get_rels_path(f'xl/drawings/drawing1.xml') in self.file_list:
+            #     xml_path = f'xl/drawings/drawing1.xml'
+            # else:
+            #     print('wps文件没事没有找到 rels 文件')
+            #     return
+            self.drawing_rels_external_images(self.z, xml_path=xml_path, rels_xml_path=get_rels_path(xml_path))
+        else:
+            xml_path = f'xl/drawings/drawing{index + 1}.xml'
+            self.drawing_rels_external_images(self.z, xml_path=xml_path, rels_xml_path=get_rels_path(xml_path))
+        # try:
+        #     self.drawing_rels_external_images(self.z, xml_path=xml_path)
+        # except Exception as e:
+        #     print(f'读取网络图片发生错误:{e},\nself._external_images:{self._external_images}')
+        #     self._external_images = {}
+        #     pass
 
     def image_in(self, cell):
         """
@@ -369,23 +485,35 @@ class SheetImageLoader:
                 return response.content
             raise ValueError(f"获取网络图片失败 {data['image']}。状态代码: {response.status_code}")
 
-        if data['type'] == 'wps':
-            filename = data['image'].replace('../media', 'xl/media')
+        if data['type'] == 'wps' or data['type'] == 'file':
+            # filename = data['image'].replace('../media', 'xl/media')
+            filename = f"xl/media/{os.path.basename(data['image'])}"
             with zipfile.ZipFile(self.excel_file, 'r') as zip_file:
                 return zip_file.read(filename)
 
         return data['image']()
 
-    def get(self, cell) -> bytes:
+    def get(self, cell, is_print=False) -> bytes:
         """
         从单元格中获取图像数据
         """
+        if is_print:
+            print(f'self._images : {self._images}')
+            print(f'self._external_images : {self._external_images}')
+            print(f'self._wps_images : {self._wps_images}')
+            print(f'self.cell_image : {self.cell_image}')
         if cell in self._images:
             return self._get_image(self._images[cell])
         elif cell in self._external_images:
             return self._get_image(self._external_images[cell])
         elif cell in self._wps_images:
             return self._get_image(self._wps_images[cell])
+
+        cell_id = parse_id(cell)
+        if cell_id in self._wps_images:
+            return self._get_image(self._wps_images[cell_id])
+        elif cell_id in self.cell_image:
+            return self._get_image(self.cell_image[cell_id])
 
         raise ValueError(f"单元格 {cell} 不包含图像")
 
@@ -399,6 +527,10 @@ class SheetImageLoader:
         """
         with open(file_name, 'wb') as f:
             f.write(self.get(cell))
+
+    def close(self):
+        """关闭打开的 ZipFile 文件"""
+        self.z.close()
 
 
 class Excel:

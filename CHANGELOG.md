@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.28.0]
+### Changed
+- 优化excel图片读取
+
 ## [2.27.0]
 ### Changed
 - 优化选择文件对话框相关函数

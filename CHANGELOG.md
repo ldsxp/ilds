@@ -4,6 +4,10 @@
 
 此项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.28.1]
+### Fixed
+- 修复读取excel图片失败的问题
+
 ## [2.28.0]
 ### Changed
 - 优化excel图片读取

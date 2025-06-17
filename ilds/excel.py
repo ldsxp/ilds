@@ -472,7 +472,8 @@ class SheetImageLoader:
         """
         检查指定单元格中是否有图像
         """
-        return cell in self._images or cell in self._external_images or cell in self._wps_images
+        cell_id = parse_id(cell)
+        return cell in self._images or cell in self._external_images or cell in self._wps_images or cell in self.cell_image or cell_id in self.cell_image
 
     def _get_image(self, data) -> bytes:
         """
@@ -508,6 +509,8 @@ class SheetImageLoader:
             return self._get_image(self._external_images[cell])
         elif cell in self._wps_images:
             return self._get_image(self._wps_images[cell])
+        elif cell in self.cell_image:
+            return self._get_image(self.cell_image[cell])
 
         cell_id = parse_id(cell)
         if cell_id in self._wps_images:

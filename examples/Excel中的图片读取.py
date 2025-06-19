@@ -8,7 +8,7 @@ wb = load_workbook(excel_file)
 print(excel_file)
 
 # sheet = wb['Sheet1']
-sheet = wb['0赞起结抖音破万赞前三名奖励288以报备为准冲冲冲（收集结果）']
+sheet = wb['去远方-付俊乐']
 
 # 将工作表放入加载器
 image_loader = SheetImageLoader(excel_file, wb, sheet)
@@ -18,6 +18,9 @@ print(f'is_wps {image_loader.is_wps}')
 # 并从指定单元格获取 Pillow 图像
 cell = 'I3'
 # cell = '=_xlfn.DISPIMG("ID_BED31091C6EF438D80F4DF82AFDDB362",1)'
+# cell = 'ID_3266AA5664634CF099944D03D6D5C952'
+cell = 'ID_11094CBE6413430A98A6546E502DE147'
+
 print(parse_id(cell))
 image_raw = image_loader.get(cell, is_print=True)
 

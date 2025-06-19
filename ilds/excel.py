@@ -163,6 +163,7 @@ class SheetImageLoader:
         self.is_cell_image = False
         self.file_list = self.z.namelist()
 
+        self.embed_repeat_data = {}
         self._load_images_from_sheet()
         self.load_cell_image()
         self.read_drawing_images()
@@ -228,10 +229,20 @@ class SheetImageLoader:
                 if r_embed:
                     ...
                     if r_embed in link_data:
-                        raise ValueError(f"已经存在 r_embed {r_embed} 单元格 {pic_name}")
+                        if r_embed not in self.embed_repeat_data:
+                            self.embed_repeat_data[r_embed] = set()
+                        self.embed_repeat_data[r_embed].add(link_data[r_embed]['pic_name'])
+                        self.embed_repeat_data[r_embed].add(pic_name)
+
                     link_data[r_embed] = {'r_embed': r_embed, 'pic_name': pic_name, }
 
                 # self.cell_image[f'{col}{row}'] = {'type': 'data', 'image': image._data}
+
+        if self.embed_repeat_data:
+            embed_repeat_infos = []
+            for k, v in self.embed_repeat_data.items():
+                embed_repeat_infos.append(f"r_embed {k} 重复 :{v}")
+            raise ValueError('\n'.join(embed_repeat_infos))
 
         # XML命名空间
         namespace = {'rel': 'http://schemas.openxmlformats.org/package/2006/relationships'}

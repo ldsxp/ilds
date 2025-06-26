@@ -90,7 +90,8 @@ def get_excel_max_rows_percentage(dataframe):
     return percentage
 
 
-def filter_and_pivot(df, filter_ids, filter_dates, row_label='数据日期', column_label='中央曲库ID', aggregate_column='CP分成收入', agg_func='sum', fill_value=None):
+def filter_and_pivot(df, filter_ids, filter_dates, row_label='数据日期', column_label='中央曲库ID', aggregate_column='CP分成收入', agg_func='sum', fill_value=None,
+                     is_debug=True, debug_info=print):
     """
     根据给定的中央曲库ID列表和数据日期列表过滤数据，并生成透视表。
 
@@ -107,13 +108,17 @@ def filter_and_pivot(df, filter_ids, filter_dates, row_label='数据日期', col
     返回：
     pandas DataFrame，透视表
     """
+    infos = []
 
     print(f'{"-" * 50}')
     print('筛选需要的数据')
     print(f'列:{list(df.columns)}')
     df_len = len(df)
     df_total = df[aggregate_column].sum()
-    print(f'数据行数 {df_len} 合计: {df_total}')
+    info = f'原始数据 行数 {df_len} 合计: {df_total}'
+    if is_debug:
+        debug_info(info)
+    infos.append(info)
 
     # 过滤出指定的column_label(默认：中央曲库ID)和row_label(默认：数据日期)的数据
     filtered_df = df[(df[column_label].isin(filter_ids)) & (df[row_label].isin(filter_dates))]
@@ -129,18 +134,24 @@ def filter_and_pivot(df, filter_ids, filter_dates, row_label='数据日期', col
     # 计算合计，并删除合计列
     # 保存合计行和列
     total_sum_a = pivot_table.loc['All', 'All']
-    print(f'计算合计A：{total_sum_a}')
     total_sum_b = pivot_table.loc['All'].drop('All').sum()
-    print(f'计算合计B：{total_sum_b}')
     # 计算占全部数据的百分比
-    print(f'占比：{round((total_sum_a / df_total) * 100, 2)}%')
+    info = f'计算合计A：{total_sum_a}\n计算合计B：{total_sum_b}\n占比：{round((total_sum_a / df_total) * 100, 2)}%'
+    if is_debug:
+        debug_info(info)
+    infos.append(info)
+
     # 删除合计行和列
     pivot_table = pivot_table.drop(index='All', columns='All')
 
     # 转置数据框使列为values(默认：中央曲库ID)
     result = pivot_table.T
 
-    print(f'找到：{len(result)} / {len(filter_ids)} = {round((len(result) / len(filter_ids)) * 100, 2)}%')
+    info = f'找到：{len(result)} / {len(filter_ids)} = {round((len(result) / len(filter_ids)) * 100, 2)}%'
+    if is_debug:
+        debug_info(info)
+    infos.append(info)
+
     print(f'{"-" * 50}')
 
-    return {'sum': total_sum_a, 'df': result}
+    return {'sum': total_sum_a, 'df': result, 'infos': infos}

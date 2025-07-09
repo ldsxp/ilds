@@ -17,7 +17,7 @@ def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None, is
     """
     将 Unix 时间戳(10位)转换为时间字符串，默认为 2018-01-23 01:23:45 格式
     """
-    d = datetime.datetime.fromtimestamp(time_stamp, tz)
+    d = datetime.datetime.fromtimestamp(float(time_stamp), tz)
     if is_str:
         date_str = d.strftime(format_string)
         return date_str

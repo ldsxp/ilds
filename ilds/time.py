@@ -15,14 +15,14 @@ import datetime
 
 def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None):
     """
-    将 10 位时间戳转换为时间字符串，默认为 2018-01-23 01:23:45 格式
+    将 Unix 时间戳(10位)转换为时间字符串，默认为 2018-01-23 01:23:45 格式
     """
     # time_array = time.localtime(time_stamp)
-    # str_date = time.strftime(format_string, time_array)
+    # date_str = time.strftime(format_string, time_array)
     # 时间戳转换成字符串日期时间(另一种方法)
     d = datetime.datetime.fromtimestamp(time_stamp, tz)
-    str_date = d.strftime(format_string)
-    return str_date
+    date_str = d.strftime(format_string)
+    return date_str
 
 
 def timestamp13_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None):
@@ -37,7 +37,7 @@ def timestamp13_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S", tz=None):
 
 def date_to_timestamp(date, format_string="%Y-%m-%d %H:%M:%S"):
     """
-    将时间字符串转换为 10 位时间戳，时间字符串默认为 2018-01-23 01:23:45 格式
+    将时间字符串转换为 Unix 时间戳(10位)，时间字符串默认为 2018-01-23 01:23:45 格式
     """
     time_array = time.strptime(date, format_string)
     time_stamp = int(time.mktime(time_array))

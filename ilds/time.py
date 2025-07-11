@@ -96,6 +96,34 @@ def get_now_time():
     return datetime.datetime.now().strftime("%H:%M:%S")
 
 
+def get_past_date(amount, period='days', start_of_day=False):
+    """
+    获取过去的时间，可选择是否将时间设定为零点
+
+    :param amount: 要回溯的数量，比如几天、几周或几个月前
+    :param period: 时间类型，支持 'days', 'weeks', 或 'months'
+    :param start_of_day: 布尔值，是否将时间设定为零点，默认不设定
+    :return: 计算得到的日期和时间
+    """
+    from dateutil.relativedelta import relativedelta
+
+    now = datetime.datetime.now()  # 获取当前的日期和时间
+
+    if period == 'days':
+        past_date = now - datetime.timedelta(days=amount)
+    elif period == 'weeks':
+        past_date = now - datetime.timedelta(weeks=amount)
+    elif period == 'months':
+        past_date = now - relativedelta(months=amount)
+    else:
+        raise ValueError("Invalid period. Use 'days', 'weeks', or 'months'.")
+
+    if start_of_day:
+        past_date = past_date.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    return past_date
+
+
 def date_style_transfomation(date, format_string1="%Y-%m-%d %H:%M:%S", format_string2="%Y-%m-%d %H-%M-%S"):
     """
     不同时间格式字符串的转换

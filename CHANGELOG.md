@@ -7,6 +7,10 @@
 ## TODO
 - 现在处理Excel图片的时候，图片重复的时候，我们就会停止读取，以后会支持重复图片的读取，因为图片重复也是正常现象
 
+## [2.29.0]
+### Added
+- ilds.time.get_past_date 获取过去的时间
+
 ## [2.28.3]
 ### Changed
 - 优化 filter_and_pivot 中的信息提示

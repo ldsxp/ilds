@@ -164,6 +164,7 @@ class SheetImageLoader:
         self.file_list = self.z.namelist()
 
         self.embed_repeat_data = {}
+        self.link_repeat_data = {}
         self._load_images_from_sheet()
         self.load_cell_image()
         self.read_drawing_images()
@@ -218,11 +219,13 @@ class SheetImageLoader:
                 pic_id = cNvPr.get('id')
                 pic_name = cNvPr.get('name')
                 r_embed = blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed')
+                r_link = blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}link')
 
                 image_info = {
                     'id': pic_id,
                     'name': pic_name,
                     'embed': r_embed,
+                    'link': r_link,
                 }
                 # print(image_info)
 
@@ -235,6 +238,14 @@ class SheetImageLoader:
                         self.embed_repeat_data[r_embed].add(pic_name)
 
                     link_data[r_embed] = {'r_embed': r_embed, 'pic_name': pic_name, }
+                elif r_link:
+                    if r_link in link_data:
+                        if r_link not in self.link_repeat_data:
+                            self.link_repeat_data[r_link] = set()
+                        self.link_repeat_data[r_link].add(link_data[r_link]['pic_name'])
+                        self.link_repeat_data[r_link].add(pic_name)
+
+                    link_data[r_link] = {'r_link': r_link, 'pic_name': pic_name, }
 
                 # self.cell_image[f'{col}{row}'] = {'type': 'data', 'image': image._data}
 
@@ -242,6 +253,12 @@ class SheetImageLoader:
             embed_repeat_infos = []
             for k, v in self.embed_repeat_data.items():
                 embed_repeat_infos.append(f"r_embed {k} 重复 :{v}")
+            raise ValueError('\n'.join(embed_repeat_infos))
+
+        if self.link_repeat_data:
+            embed_repeat_infos = []
+            for k, v in self.link_repeat_data.items():
+                embed_repeat_infos.append(f"r_link {k} 重复 :{v}")
             raise ValueError('\n'.join(embed_repeat_infos))
 
         # XML命名空间

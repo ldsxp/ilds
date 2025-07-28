@@ -8,8 +8,11 @@ import pandas as pd
 from openpyxl import load_workbook
 
 
-def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True):
+def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, exclude_sheets=None, is_print=True):
     df_list = []
+
+    if exclude_sheets is None:
+        exclude_sheets = []
 
     with pd.ExcelFile(file) as excel:
         if sheet_names is None:
@@ -19,6 +22,9 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
             invalid_sheets = set(sheet_names) - set(excel.sheet_names)
             if invalid_sheets:
                 raise ValueError(f"Excel 文件中不存在以下表格：{invalid_sheets}")
+
+        # 排除不需要处理的表薄
+        sheet_names = [sheet_name for sheet_name in sheet_names if sheet_name not in exclude_sheets]
 
         if is_print:
             print('读取的表薄名称列表：', sheet_names, 'Excel表薄列表', excel.sheet_names)

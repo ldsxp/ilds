@@ -6,7 +6,7 @@ from ilds.file import get_dir_files
 from ilds.pd.read import get_df_list
 
 
-def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True, **concat_kwargs):
+def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, exclude_sheets=None, is_print=True, **concat_kwargs):
     """
     合并 Excel 表薄内容
 
@@ -15,19 +15,20 @@ def merging_excel_sheet(file, sheet_names=None, concat_columns=None, add_source_
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :param strict_mode: 添加一个严格模式的参数，限制要合并文件的标题
+    :param exclude_sheets: 合并的时候要排除的表薄
     :param is_print: 打印信息
     :return:
     """
     df_list = get_df_list(file=file, sheet_names=sheet_names, concat_columns=concat_columns, add_source_column=add_source_column, strict_mode=strict_mode,
-                          is_print=is_print)
+                          exclude_sheets=exclude_sheets, is_print=is_print)
     count = sum([len(df) for df in df_list])
     df = pd.concat(df_list, **concat_kwargs)  # result
     print('合并数据行数：', len(df), '导入数据行数统计：', count)
     return df
 
 
-def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, is_print=True,
-                            **concat_kwargs):
+def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, concat_columns=None, add_source_column=True, strict_mode=False, exclude_sheets=None,
+                            is_print=True, **concat_kwargs):
     """
     合并多个 Excel 文件内容
 
@@ -37,6 +38,7 @@ def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, con
     :param concat_columns: 指定要合并的列名列表
     :param add_source_column: 是否添加原始来源
     :param strict_mode: 添加一个严格模式的参数，限制要合并文件的标题
+    :param exclude_sheets: 合并的时候要排除的表薄
     :param is_print: 打印信息
     :return:
     """
@@ -52,7 +54,7 @@ def merging_excel_file_data(file_dir_or_file_list, ext='', sheet_names=None, con
         if is_print:
             print('处理文件:', file)
         df_list = get_df_list(file=file, sheet_names=sheet_names, concat_columns=concat_columns, add_source_column=add_source_column, strict_mode=strict_mode,
-                              is_print=is_print)
+                              exclude_sheets=exclude_sheets, is_print=is_print)
         all_len += sum([len(df) for df in df_list])
         frames.extend(df_list)
     if frames:

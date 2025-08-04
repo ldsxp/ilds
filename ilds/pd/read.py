@@ -61,7 +61,7 @@ def get_df_list(file, sheet_names=None, concat_columns=None, add_source_column=T
 
 
 def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True, only_read_first_table=False, read_sheet_state=False,
-                   is_print=True):
+                   dtype_config=None, dtype_backend=None, is_print=True):
     """
     读取 Excel 数据
 
@@ -73,6 +73,8 @@ def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True,
     :param add_source_column: 添加内容来源
     :param only_read_first_table: 只读取第一个表格
     :param read_sheet_state: 读取表格的状态，这样就可以处理隐藏表格
+    :param dtype_config: 自定义列名到数据类型的映射字典。例如：{'UPC': str, 'ID': int}
+    :param dtype_backend: 数据类型后端，比如 'pyarrow'
     :param is_print: 打印读取信息
     :return: {'file_name', 'index', 'sheet_name', 'sheet_names', 'count', 'columns', 'df'}
     """
@@ -106,8 +108,25 @@ def get_excel_data(file, sheet_names=None, columns=None, add_source_column=True,
         # data['总表'] = pd.read_excel(excel, sheet_name='总表')
         # 读取全部表
         for index, sheet_name in enumerate(sheet_names):
+
+            # 读取数据以检查列名
+            temp_df = pd.read_excel(excel, sheet_name=sheet_name, nrows=0)
+
+            read_params = {'engine': 'openpyxl', 'sheet_name': sheet_name, 'header': 0, }
+
+            # 列中包含要自定义类型的列的时候才使用自定义
+            if dtype_config is not None:
+                dtype_override = {col: dtype for col, dtype in dtype_config.items() if col in temp_df.columns}
+                read_params['dtype'] = dtype_override
+
+            if dtype_backend:
+                read_params['dtype_backend'] = dtype_backend
+
+            if is_print:
+                print(f'读取Excel参数: {read_params}')
+
             sheet_state = sheet_state_data.get(sheet_name, None)
-            _df = pd.read_excel(excel, sheet_name=sheet_name, header=0)
+            _df = pd.read_excel(excel, **read_params)
             file_name = os.path.basename(file)
             count = len(_df)
 
